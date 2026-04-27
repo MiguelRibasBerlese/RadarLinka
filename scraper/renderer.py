@@ -1,5 +1,10 @@
-import json, os
+import json, os, locale
 from datetime import datetime, timezone
+
+_MESES_PT = [
+    '', 'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+]
 
 EVENTS_JSON = os.path.join(os.path.dirname(__file__), '..', 'web', 'events.json')
 OUTPUT_HTML = os.path.join(os.path.dirname(__file__), '..', 'web', 'index.html')
@@ -43,6 +48,34 @@ header {
     padding: 32px 24px 0;
     max-width: 1200px;
     margin: 0 auto;
+}
+.header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+.linka-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #1A1A1A;
+    border-radius: 6px;
+    padding: 8px 16px;
+    flex-shrink: 0;
+}
+.linka-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+    font-family: 'Source Sans 3', sans-serif;
+}
+.linka-logo {
+    height: 32px;
+    width: auto;
+    object-fit: contain;
 }
 .logo {
     font-family: 'Playfair Display', serif;
@@ -243,7 +276,8 @@ def render(eventos=None, stale=False):
         except FileNotFoundError:
             eventos = []
 
-    hoje = datetime.now().strftime('%d de %B de %Y')
+    now = datetime.now()
+    hoje = f'{now.day} de {_MESES_PT[now.month]} de {now.year}'
 
     banner = ''
     if stale:
@@ -291,7 +325,13 @@ def render(eventos=None, stale=False):
 <div class="particles"></div>
 {banner}
 <header>
-    <h1 class="logo">● RADAR</h1>
+    <div class="header-top">
+        <h1 class="logo">● RADAR</h1>
+        <div class="linka-badge">
+            <span class="linka-label">by</span>
+            <img src="linka.png" alt="LINKA" class="linka-logo">
+        </div>
+    </div>
     <p class="sub">Ribeirão Preto &nbsp;·&nbsp; Edição {hoje}</p>
     <div class="rule"></div>
 </header>
