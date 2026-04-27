@@ -55,27 +55,11 @@ header {
     justify-content: space-between;
     gap: 16px;
 }
-.linka-badge {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #1A1A1A;
-    border-radius: 6px;
-    padding: 8px 16px;
-    flex-shrink: 0;
-}
-.linka-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #888;
-    font-family: 'Source Sans 3', sans-serif;
-}
 .linka-logo {
-    height: 32px;
+    height: 52px;
     width: auto;
     object-fit: contain;
+    opacity: 0.9;
 }
 .logo {
     font-family: 'Playfair Display', serif;
@@ -327,10 +311,7 @@ def render(eventos=None, stale=False):
 <header>
     <div class="header-top">
         <h1 class="logo">● RADAR</h1>
-        <div class="linka-badge">
-            <span class="linka-label">by</span>
-            <img src="linka.png" alt="LINKA" class="linka-logo">
-        </div>
+        <img src="linka.png" alt="LINKA" class="linka-logo">
     </div>
     <p class="sub">Ribeirão Preto &nbsp;·&nbsp; Edição {hoje}</p>
     <div class="rule"></div>
