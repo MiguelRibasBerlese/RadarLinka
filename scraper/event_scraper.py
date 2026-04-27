@@ -1,3 +1,4 @@
+import re
 import requests, time, random
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
@@ -26,8 +27,18 @@ def scrape_sympla():
         url_evento = card.get('href', '')
         local_el = card.find('p')
         local = local_el.get_text(strip=True) if local_el else ''
+        # Extrai data do texto do card via regex (classes são hashes CSS — não usar seletores)
+        texto_card = card.get_text(' ', strip=True)
+        data_match = re.search(
+            r'(Segunda|Ter[cç]a|Quarta|Quinta|Sexta|S[aá]bado|Domingo)'
+            r',?\s+\d{1,2}\s+de\s+\w+(?:\s+[aà]s\s+\d{1,2}:\d{2})?'
+            r'|\d{1,2}\s+de\s+\w+(?:\s+a\s+\d{1,2}\s+de\s+\w+)?(?:\s+de\s+\d{4})?',
+            texto_card, re.IGNORECASE
+        )
+        data_raw = data_match.group(0).strip() if data_match else ''
         if titulo and len(titulo) > 5 and url_evento:
-            eventos.append({'titulo': titulo, 'url': url_evento, 'local': local, 'fonte': 'sympla'})
+            eventos.append({'titulo': titulo, 'url': url_evento, 'local': local,
+                            'data': data_raw, 'fonte': 'sympla'})
     time.sleep(random.uniform(1.0, 2.0))
     print(f'[scrape_sympla playwright] {len(eventos)} eventos encontrados')
     return eventos
@@ -83,9 +94,11 @@ def scrape_emribeirao():
             if any(p in url_evento for p in _NAO_EVENTO):
                 continue
             if titulo and len(titulo) > 5 and url_evento:
-                # Don't pass 'data' — publication date ≠ event date; let normalizer handle blank
+                data_raw = fetch_date_emribeirao(url_evento)
                 eventos.append({'titulo': titulo, 'url': url_evento,
-                                'local': 'Ribeirão Preto', 'fonte': 'emribeirao'})
+                                'local': 'Ribeirão Preto', 'data': data_raw,
+                                'fonte': 'emribeirao'})
+                time.sleep(random.uniform(1.0, 2.0))
         print(f'[scrape_emribeirao] {len(eventos)} eventos encontrados')
         return eventos
     except Exception as e:
@@ -129,6 +142,34 @@ def scrape_shopping():
     except Exception as e:
         print(f'[ERRO scrape_shopping] {e}')
         return []
+
+def fetch_date_emribeirao(url: str) -> str:
+    """Visita a página individual do EmRibeirão e extrai a data do evento."""
+    if not url:
+        return ''
+    try:
+        resp = requests.get(url, headers=HEADERS, timeout=20)
+        soup = BeautifulSoup(resp.text, 'html.parser')
+        texto = soup.get_text(' ', strip=True)
+        # Padrão: "Data: De 27 de abril a 1º de maio de 2026"
+        # ou    : "Data: 27 de abril de 2026"
+        match = re.search(
+            r'[Dd]ata[:\s]+(?:[Dd]e\s+)?'
+            r'(\d{1,2}(?:º)?)\s+de\s+(\w+)'
+            r'(?:\s+a\s+\d{1,2}(?:º)?\s+de\s+\w+)?'
+            r'(?:\s+de\s+(\d{4}))?',
+            texto
+        )
+        if match:
+            dia = match.group(1).replace('º', '').strip()
+            mes = match.group(2).strip()
+            ano = match.group(3) or str(__import__('datetime').date.today().year)
+            return f'{dia} de {mes} de {ano}'
+        return ''
+    except Exception as e:
+        print(f'[WARN fetch_date_emribeirao] {url}: {e}')
+        return ''
+
 
 def scrape_all():
     todos = []

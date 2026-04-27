@@ -1,83 +1,73 @@
 [
   {
     "titulo": "Fora do Quintal - Agilmar Ferreira - Ribeirão Preto-SP",
-    "data_iso": "",
+    "data_iso": "2026-05-23",
     "local": "Teatro Santarosa - Ribeirão Preto, SP",
     "url": "https://bileto.sympla.com.br/event/117591",
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Teatro",
-    "narrativa_ia": "Peça no Teatro Santarosa, Ribeirão Preto"
+    "narrativa_ia": "Peça no Teatro Santarosa em Ribeirão Preto"
   },
   {
     "titulo": "Gio Lisboa em Ribeirão Preto/SP  Gio da Família Brasileira",
-    "data_iso": "",
+    "data_iso": "2026-05-12",
     "local": "Teatro Municipal de Ribeirão Preto - Ribeirão Preto, SP",
     "url": "https://bileto.sympla.com.br/event/117607",
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Show",
-    "narrativa_ia": "Gio Lisboa se apresenta em Ribeirao Preto"
+    "narrativa_ia": "Gio Lisboa em Ribeirao Preto"
   },
   {
     "titulo": "Choro da Casa toca Pixinguinha",
-    "data_iso": "",
+    "data_iso": "2026-04-30",
     "local": "Teatro Santarosa - Ribeirão Preto, SP",
     "url": "https://bileto.sympla.com.br/event/119596",
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Show",
-    "narrativa_ia": "Choro da Casa no Teatro Santarosa, Ribeirao Preto."
+    "narrativa_ia": "Choro da Casa no Teatro Santarosa em Ribeirao Preto"
+  },
+  {
+    "titulo": "Era uma vez Mundo Encantado",
+    "data_iso": "2026-05-17",
+    "local": "Teatro Santarosa - Ribeirão Preto, SP",
+    "url": "https://bileto.sympla.com.br/event/119844",
+    "fonte": "sympla",
+    "descricao_bruta": "",
+    "categoria": "Teatro",
+    "narrativa_ia": "Era uma vez em Ribeirao Preto"
   },
   {
     "titulo": "Princesas - Ribeirão Preto/SP",
-    "data_iso": "",
+    "data_iso": "2026-06-21",
     "local": "Teatro Santarosa - Ribeirão Preto, SP",
     "url": "https://bileto.sympla.com.br/event/119412",
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Teatro",
-    "narrativa_ia": "Princesas no Teatro Santarosa em Ribeirao Preto"
-  },
-  {
-    "titulo": "QUALY (HAIKAISS) - GOA",
-    "data_iso": "",
-    "local": "GOA LOUNGE - Ribeirão Preto, SP",
-    "url": "https://www.sympla.com.br/evento/qualy-haikaiss-goa/3395984",
-    "fonte": "sympla",
-    "descricao_bruta": "",
-    "categoria": "Show",
-    "narrativa_ia": "Show em Ribeirao Preto"
-  },
-  {
-    "titulo": "BAILE - HIP HOP | FUNK | TRAP | HOUSE - GOA",
-    "data_iso": "",
-    "local": "GOA LOUNGE - Ribeirão Preto, SP",
-    "url": "https://www.sympla.com.br/evento/baile-hip-hop-funk-trap-house-goa/3393226",
-    "fonte": "sympla",
-    "descricao_bruta": "",
-    "categoria": "Festa",
-    "narrativa_ia": "Festa em Ribeirao Preto"
-  },
-  {
-    "titulo": "DO BLACK AO FURACÃO 2000 - NUGROOVE - GOA",
-    "data_iso": "",
-    "local": "GOA LOUNGE - Ribeirão Preto, SP",
-    "url": "https://www.sympla.com.br/evento/do-black-ao-furacao-2000-nugroove-goa/3392500",
-    "fonte": "sympla",
-    "descricao_bruta": "",
-    "categoria": "Show",
-    "narrativa_ia": "Show em Ribeirao Preto"
+    "narrativa_ia": "Peça no Teatro Santarosa, Ribeirão Preto."
   },
   {
     "titulo": "CLARA LIMA + AKIRA PRESIDENTE - GOA",
-    "data_iso": "",
+    "data_iso": "2026-05-17",
     "local": "GOA LOUNGE - Ribeirão Preto, SP",
     "url": "https://www.sympla.com.br/evento/clara-lima-akira-presidente-goa/3395739",
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Show",
     "narrativa_ia": "Show em Ribeirao Preto"
+  },
+  {
+    "titulo": "BAILE HIP HOP | FUNK | TRAP | HOUSE | BRS - GOA",
+    "data_iso": "2026-05-02",
+    "local": "GOA LOUNGE - Ribeirão Preto, SP",
+    "url": "https://www.sympla.com.br/evento/baile-hip-hop-funk-trap-house-brs-goa/3401810",
+    "fonte": "sympla",
+    "descricao_bruta": "",
+    "categoria": "Festa",
+    "narrativa_ia": "Festa em Ribeirao Preto"
   },
   {
     "titulo": "Arena Blues Festival 2026",
@@ -90,58 +80,38 @@
     "narrativa_ia": "Festival em Ribeirao Preto"
   },
   {
-    "titulo": "MC RODOLFINHO NO GALPÃO 20",
-    "data_iso": "",
-    "local": "Galpão 20 - Ribeirão Preto, SP",
-    "url": "https://www.sympla.com.br/evento/mc-rodolfinho-no-galpao-20/3379900",
-    "fonte": "sympla",
-    "descricao_bruta": "",
-    "categoria": "Show",
-    "narrativa_ia": "MC Rodolfinho se apresenta em Ribeirao Preto"
-  },
-  {
     "titulo": "BAILE DO BALACO 02/05",
-    "data_iso": "",
+    "data_iso": "2026-05-02",
     "local": "A Fábrica de Extintores - Ribeirão Preto, SP",
     "url": "https://www.sympla.com.br/evento/baile-do-balaco-02-05/3396055",
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Festa",
-    "narrativa_ia": "Baile no Balaco em Ribeirao Preto"
-  },
-  {
-    "titulo": "AI FESTIVAL Ribeirão Preto - Inteligência Artificial Para Todos",
-    "data_iso": "",
-    "local": "Local a definir - Ribeirão Preto, SP",
-    "url": "https://www.sympla.com.br/evento/ai-festival-ribeirao-preto-inteligencia-artificial-para-todos/3395041",
-    "fonte": "sympla",
-    "descricao_bruta": "",
-    "categoria": "Festival",
-    "narrativa_ia": "Festival em Ribeirao Preto"
+    "narrativa_ia": "Baile em Ribeirao Preto"
   },
   {
     "titulo": "Aquiles Priester Rebirth na Íntegra | Brasil Tour 2026 Ribeirão Preto/SP",
-    "data_iso": "",
+    "data_iso": "2026-05-12",
     "local": "VAT ROCK BAR CENTRO - Ribeirão Preto, SP",
     "url": "https://www.sympla.com.br/evento/aquiles-priester-rebirth-na-integra-brasil-tour-2026-ribeirao-preto-sp/3349350",
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Show",
-    "narrativa_ia": "Aquiles Priester se apresenta em Ribeirao Preto"
+    "narrativa_ia": "Aquiles Priester em Ribeirao Preto"
   },
   {
     "titulo": "Recomendo agora também em Ribeirão Preto - O melhor café de negócios da cidade.",
-    "data_iso": "",
+    "data_iso": "2026-05-06",
     "local": "Recomendo Ribeirão Preto - Ribeirão Preto, SP",
     "url": "https://www.sympla.com.br/evento/recomendo-agora-tambem-em-ribeirao-preto-o-melhor-cafe-de-negocios-da-cidade/3396236",
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Corporativo",
-    "narrativa_ia": "Encontro de negócios em Ribeirao Preto"
+    "narrativa_ia": "Encontro em Ribeirão Preto"
   },
   {
     "titulo": "School of Rock ao Vivo no Vila Dionísio: Show de Temporada",
-    "data_iso": "",
+    "data_iso": "2026-06-14",
     "local": "Vila Dionísio - Ribeirão Preto, SP",
     "url": "https://www.sympla.com.br/evento/school-of-rock-ao-vivo-no-vila-dionisio-show-de-temporada/3381889",
     "fonte": "sympla",
@@ -157,7 +127,7 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Festa",
-    "narrativa_ia": "Ribeirao Preto: evento de vinho"
+    "narrativa_ia": "Ribeirão Preto recebe evento de vinho no Shopping Iguatemi"
   },
   {
     "titulo": "PAMV 2026 - Clínica Médica e Cirúrgica de Grandes Animais",
@@ -167,7 +137,7 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Corporativo",
-    "narrativa_ia": "Evento no campus veterinário em Ribeirão Preto"
+    "narrativa_ia": "Evento no campus de Ribeirao Preto"
   },
   {
     "titulo": "PAMV 2026 - Clínica Cirúrgica e Anestesiologia em Pequenos Animais",
@@ -187,27 +157,7 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Corporativo",
-    "narrativa_ia": "PAMV no Campus veterinario em Ribeirao Preto"
-  },
-  {
-    "titulo": "NineMix",
-    "data_iso": "",
-    "local": "NINE CLUB - Ribeirão Preto, SP",
-    "url": "https://www.sympla.com.br/evento/ninemix/3392875",
-    "fonte": "sympla",
-    "descricao_bruta": "",
-    "categoria": "Show",
-    "narrativa_ia": "Evento no NINE CLUB em Ribeirao Preto"
-  },
-  {
-    "titulo": "Country Club",
-    "data_iso": "",
-    "local": "NINE CLUB - Ribeirão Preto, SP",
-    "url": "https://www.sympla.com.br/evento/country-club/3388613",
-    "fonte": "sympla",
-    "descricao_bruta": "",
-    "categoria": "Show",
-    "narrativa_ia": "Evento no NINE CLUB em Ribeirao Preto"
+    "narrativa_ia": "PAMV no campus de Ribeirao Preto"
   },
   {
     "titulo": "Vision Tech Summit - Indústria do Amanhã 2026",
@@ -217,11 +167,11 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Corporativo",
-    "narrativa_ia": "Ribeirao Preto recebe o Vision Tech Summit"
+    "narrativa_ia": "Ribeirao Preto recebe Vision Tech Summit"
   },
   {
     "titulo": "NUNCA FOI SORTE, SEMPRE FOI EXU. Luis Titoin",
-    "data_iso": "",
+    "data_iso": "2026-05-17",
     "local": "Sem Fronteiras Bar/ Cervejaria Macumba  - Ribeirão Preto, SP",
     "url": "https://www.sympla.com.br/evento/nunca-foi-sorte-sempre-foi-exu-luis-titoin/3363943",
     "fonte": "sympla",
@@ -230,8 +180,18 @@
     "narrativa_ia": "Luis Titoin no Sem Fronteiras Bar em Ribeirao Preto"
   },
   {
+    "titulo": "Noite de Metal no Vat Rock Bar",
+    "data_iso": "2026-05-01",
+    "local": "VAT ROCK BAR CENTRO - Ribeirão Preto, SP",
+    "url": "https://www.sympla.com.br/evento/noite-de-metal-no-vat-rock-bar/3399641",
+    "fonte": "sympla",
+    "descricao_bruta": "",
+    "categoria": "Show",
+    "narrativa_ia": "Noite de Metal em Ribeirao Preto"
+  },
+  {
     "titulo": "SANNY MACHADO no Ribeirão Comedy",
-    "data_iso": "",
+    "data_iso": "2026-05-17",
     "local": "Boteco Brazukis - Ribeirão Preto, SP",
     "url": "https://www.sympla.com.br/evento/sanny-machado-no-ribeirao-comedy/3347242",
     "fonte": "sympla",
@@ -240,33 +200,103 @@
     "narrativa_ia": "Sanny Machado no Ribeirão Comedy em Ribeirao Preto"
   },
   {
-    "titulo": "Agrishow 2026: Ribeirão Preto se Torna a Capital Mundial da Tecnologia Agrícola",
+    "titulo": "LD no Ribeirão Comedy",
+    "data_iso": "2026-05-31",
+    "local": "Boteco Brazukis - Ribeirão Preto, SP",
+    "url": "https://www.sympla.com.br/evento/ld-no-ribeirao-comedy/3356329",
+    "fonte": "sympla",
+    "descricao_bruta": "",
+    "categoria": "Show",
+    "narrativa_ia": "Comedia em Ribeirao Preto"
+  },
+  {
+    "titulo": "Country Club",
+    "data_iso": "2026-04-29",
+    "local": "NINE CLUB - Ribeirão Preto, SP",
+    "url": "https://www.sympla.com.br/evento/country-club/3388613",
+    "fonte": "sympla",
+    "descricao_bruta": "",
+    "categoria": "Show",
+    "narrativa_ia": "Evento no NINE CLUB em Ribeirao Preto"
+  },
+  {
+    "titulo": "SOM DE FACULDADE",
     "data_iso": "",
+    "local": "NINE CLUB - Ribeirão Preto, SP",
+    "url": "https://www.sympla.com.br/evento/som-de-faculdade/3400805",
+    "fonte": "sympla",
+    "descricao_bruta": "",
+    "categoria": "Show",
+    "narrativa_ia": "SOM DE FACULDADE no NINE CLUB em Ribeirao Preto"
+  },
+  {
+    "titulo": "XIV JESCOBAM - Jornada Acadêmica de Estética e Cosmética do CBM",
+    "data_iso": "",
+    "local": "Centro Universitário Barão de Mauá - Unidade Central - Ribeirão Preto, SP",
+    "url": "https://www.sympla.com.br/evento/xiv-jescobam-jornada-academica-de-estetica-e-cosmetica-do-cbm/3353556",
+    "fonte": "sympla",
+    "descricao_bruta": "",
+    "categoria": "Corporativo",
+    "narrativa_ia": "Jornada acadêmica em Ribeirão Preto"
+  },
+  {
+    "titulo": "Agrishow Ribeirão Preto começa gigante e vira palco de negócios, tecnologia e articulação política",
+    "data_iso": "",
+    "local": "Ribeirão Preto",
+    "url": "https://emribeirao.com/especiais/agrishow/agrishow-ribeirao-preto-comeca-gigante-e-vira-palco-de-negocios-tecnologia-e-articulacao-politica-72875/",
+    "fonte": "emribeirao",
+    "descricao_bruta": "",
+    "categoria": "Feira",
+    "narrativa_ia": "Agrishow em Ribeirao Preto"
+  },
+  {
+    "titulo": "Agrishow 2026 impulsiona turismo de negócios em Ribeirão Preto",
+    "data_iso": "",
+    "local": "Ribeirão Preto",
+    "url": "https://emribeirao.com/especiais/agrishow/agrishow-2026-impulsiona-turismo-de-negocios-em-ribeirao-preto-72870/",
+    "fonte": "emribeirao",
+    "descricao_bruta": "",
+    "categoria": "Corporativo",
+    "narrativa_ia": "Agrishow em Ribeirao Preto"
+  },
+  {
+    "titulo": "Orquestra Sinfônica Ribeirão Preto apresenta Mozart em concerto internacional no Pedro II",
+    "data_iso": "2026-05-09",
+    "local": "Ribeirão Preto",
+    "url": "https://emribeirao.com/lazer-e-cultura/orquestra-sinfonica-ribeirao-preto-apresenta-mozart-em-concerto-internacional-no-pedro-ii-72864/",
+    "fonte": "emribeirao",
+    "descricao_bruta": "",
+    "categoria": "Show",
+    "narrativa_ia": "Mozart em Ribeirao Preto"
+  },
+  {
+    "titulo": "Iguatemi Ribeirão Preto recebe espaço do Camarote Brahma para retirada e customização de abadás do Ribeirão Rodeio Music",
+    "data_iso": "",
+    "local": "Ribeirão Preto",
+    "url": "https://emribeirao.com/lazer-e-cultura/iguatemi-ribeirao-preto-recebe-espaco-do-camarote-brahma-para-retirada-e-customizacao-de-abadas-do-ribeirao-rodeio-music-72868/",
+    "fonte": "emribeirao",
+    "descricao_bruta": "",
+    "categoria": "Festa",
+    "narrativa_ia": "Ribeirao Preto: abadás personalizados"
+  },
+  {
+    "titulo": "Caminho da Capacitação chega à região de Ribeirão Preto e oferece cursos gratuitos em 15 municípios",
+    "data_iso": "",
+    "local": "Ribeirão Preto",
+    "url": "https://emribeirao.com/diversos/caminho-da-capacitacao-chega-a-regiao-de-ribeirao-preto-e-oferece-cursos-gratuitos-em-15-municipios-72866/",
+    "fonte": "emribeirao",
+    "descricao_bruta": "",
+    "categoria": "Corporativo",
+    "narrativa_ia": "Cursos gratuitos em Ribeirão Preto"
+  },
+  {
+    "titulo": "Agrishow 2026: Ribeirão Preto se Torna a Capital Mundial da Tecnologia Agrícola",
+    "data_iso": "2026-04-27",
     "local": "Ribeirão Preto",
     "url": "https://emribeirao.com/especiais/agrishow/agrishow-2026-ribeirao-preto-se-torna-a-capital-mundial-da-tecnologia-agricola-72862/",
     "fonte": "emribeirao",
     "descricao_bruta": "",
     "categoria": "Feira",
-    "narrativa_ia": "Ribeirao Preto recebe Agrishow"
-  },
-  {
-    "titulo": "USP Filarmônica leva trilha do filme Psicose ao palco do Theatro Pedro II",
-    "data_iso": "",
-    "local": "Ribeirão Preto",
-    "url": "https://emribeirao.com/lazer-e-cultura/usp-filarmonica-leva-trilha-do-filme-psicose-ao-palco-do-theatro-pedro-ii-72859/",
-    "fonte": "emribeirao",
-    "descricao_bruta": "",
-    "categoria": "Show",
-    "narrativa_ia": "USP Filarmônica em Ribeirão Preto"
-  },
-  {
-    "titulo": "Torresmofest Ribeirão Preto traz edição Lendas do Rock com entrada gratuita",
-    "data_iso": "",
-    "local": "Ribeirão Preto",
-    "url": "https://emribeirao.com/lazer-e-cultura/gastronomia/torresmofest-ribeirao-preto-traz-edicao-lendas-do-rock-com-entrada-gratuita-72853/",
-    "fonte": "emribeirao",
-    "descricao_bruta": "",
-    "categoria": "Festival",
-    "narrativa_ia": "Torresmofest em Ribeirão Preto"
+    "narrativa_ia": "Ribeirao Preto recebe Agrishow 2026"
   }
 ]

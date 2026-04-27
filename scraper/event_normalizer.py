@@ -5,16 +5,28 @@ import re
 TERMOS_RP = ['ribeirão preto', 'ribeirao preto', ', rp', '- rp', '(rp)']
 
 _MESES_PT = {
-    'janeiro': 'january', 'fevereiro': 'february', 'março': 'march',
-    'abril': 'april', 'maio': 'may', 'junho': 'june',
-    'julho': 'july', 'agosto': 'august', 'setembro': 'september',
-    'outubro': 'october', 'novembro': 'november', 'dezembro': 'december',
+    'janeiro': 'january',  'jan': 'january',
+    'fevereiro': 'february', 'fev': 'february',
+    'março': 'march',      'mar': 'march',
+    'abril': 'april',      'abr': 'april',
+    'maio': 'may',         'mai': 'may',
+    'junho': 'june',       'jun': 'june',
+    'julho': 'july',       'jul': 'july',
+    'agosto': 'august',    'ago': 'august',
+    'setembro': 'september', 'set': 'september',
+    'outubro': 'october',  'out': 'october',
+    'novembro': 'november', 'nov': 'november',
+    'dezembro': 'december', 'dez': 'december',
 }
 
 def _traduz_data_pt(data_str: str) -> str:
     s = data_str.lower()
+    # Remove prefixo de dia da semana: "Sábado, " / "Terça, " etc.
+    s = re.sub(r'^(segunda|ter[cç]a|quarta|quinta|sexta|s[aá]bado|domingo)[,\s]+', '', s)
+    # Substitui "às HH:MM" por "HH:MM" para o dateparser
+    s = s.replace('às ', '')
     for pt, en in _MESES_PT.items():
-        s = s.replace(pt, en)
+        s = re.sub(rf'\b{pt}\b', en, s)
     s = re.sub(r'\bde\b', '', s)
     return s.strip()
 
