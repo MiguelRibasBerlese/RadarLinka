@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RADAR — Agregador inteligente de eventos de Ribeirão Preto">
+    <title>RADAR — Ribeirão Preto</title>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: #F7F3EE;
+    color: #1A1A1A;
+    font-family: 'Source Sans 3', sans-serif;
+    min-height: 100vh;
+}
+
+/* Banner stale */
+.stale-banner {
+    background: #FEF9E7;
+    border-left: 4px solid #E67E22;
+    color: #7D6608;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Header */
+header {
+    padding: 32px 24px 0;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.logo {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(42px, 8vw, 80px);
+    font-weight: 900;
+    color: #5B2D8E;
+    letter-spacing: -2px;
+    line-height: 1;
+}
+.sub {
+    font-size: 13px;
+    color: #888;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 6px;
+}
+.rule {
+    height: 3px;
+    background: #5B2D8E;
+    margin: 16px 0 24px;
+    transform-origin: left;
+    animation: drawRule 0.6s ease forwards;
+}
+@keyframes drawRule { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* Filtros */
+.filtros {
+    max-width: 1200px;
+    margin: 0 auto 28px;
+    padding: 0 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.filtro-btn {
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    padding: 6px 14px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+}
+.filtro-btn:hover, .filtro-btn.active {
+    background: #5B2D8E;
+    border-color: #5B2D8E;
+    color: #fff;
+}
+
+/* Grid */
+.grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+@media (min-width: 640px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 960px) {
+    .grid { grid-template-columns: repeat(3, 1fr); }
+    .grid .card:first-child {
+        grid-column: span 2;
+    }
+}
+
+/* Card */
+.card {
+    background: #fff;
+    border: 1px solid #E0DAD0;
+    padding: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    perspective: 600px;
+}
+.card:hover {
+    transform: rotateY(3deg) translateY(-4px);
+    box-shadow: -6px 8px 24px rgba(91,45,142,0.12);
+}
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+    border-radius: 2px;
+    margin-bottom: 10px;
+}
+.card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(16px, 2.5vw, 22px);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    color: #1A1A1A;
+}
+.meta {
+    font-size: 12px;
+    color: #999;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+.narrativa {
+    font-size: 14px;
+    color: #555;
+    font-style: italic;
+    line-height: 1.5;
+    border-top: 1px solid #F0EBE3;
+    padding-top: 10px;
+    margin-top: 8px;
+}
+
+/* Vazio */
+.vazio {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #aaa;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+}
+
+/* Partículas */
+.particles {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+.particle {
+    position: absolute;
+    font-family: 'Playfair Display', serif;
+    color: #5B2D8E;
+    opacity: 0.04;
+    animation: fall linear infinite;
+    user-select: none;
+}
+@keyframes fall {
+    from { transform: translateY(-60px); }
+    to   { transform: translateY(110vh); }
+}
+
+main, header, .filtros { position: relative; z-index: 1; }
+</style>
+</head>
+<body>
+<div class="particles"></div>
+
+<header>
+    <h1 class="logo">● RADAR</h1>
+    <p class="sub">Ribeirão Preto &nbsp;·&nbsp; Edição 27 de April de 2026</p>
+    <div class="rule"></div>
+</header>
+
+<nav class="filtros">
+    <button class="filtro-btn active" data-cat="todos">Todos</button>
+    <button class="filtro-btn" data-cat="Corporativo">Corporativo</button>
+    <button class="filtro-btn" data-cat="Feira">Feira</button>
+    <button class="filtro-btn" data-cat="Festa">Festa</button>
+    <button class="filtro-btn" data-cat="Festival">Festival</button>
+    <button class="filtro-btn" data-cat="Show">Show</button>
+    <button class="filtro-btn" data-cat="Teatro">Teatro</button>
+
+</nav>
+
+<main class="grid">
+    
+    <article class="card" data-cat="Teatro" onclick="window.open('https://bileto.sympla.com.br/event/117591','_blank')">
+        <span class="badge" style="background:#1A5276">Teatro</span>
+        <h2>Fora do Quintal - Agilmar Ferreira - Ribeirão Preto-SP</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Teatro Santarosa - Ribeirão Preto, SP</p>
+        <p class="narrativa">Peça no Teatro Santarosa, Ribeirão Preto</p>
+    </article>
+    <article class="card" data-cat="Show" onclick="window.open('https://bileto.sympla.com.br/event/117607','_blank')">
+        <span class="badge" style="background:#C0392B">Show</span>
+        <h2>Gio Lisboa em Ribeirão Preto/SP  Gio da Família Brasileira</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Teatro Municipal de Ribeirão Preto - Ribeirão Preto, SP</p>
+        <p class="narrativa">Gio Lisboa se apresenta em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Show" onclick="window.open('https://bileto.sympla.com.br/event/119596','_blank')">
+        <span class="badge" style="background:#C0392B">Show</span>
+        <h2>Choro da Casa toca Pixinguinha</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Teatro Santarosa - Ribeirão Preto, SP</p>
+        <p class="narrativa">Choro da Casa no Teatro Santarosa, Ribeirao Preto.</p>
+    </article>
+    <article class="card" data-cat="Teatro" onclick="window.open('https://bileto.sympla.com.br/event/119412','_blank')">
+        <span class="badge" style="background:#1A5276">Teatro</span>
+        <h2>Princesas - Ribeirão Preto/SP</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Teatro Santarosa - Ribeirão Preto, SP</p>
+        <p class="narrativa">Princesas no Teatro Santarosa em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Show" onclick="window.open('https://www.sympla.com.br/evento/qualy-haikaiss-goa/3395984','_blank')">
+        <span class="badge" style="background:#C0392B">Show</span>
+        <h2>QUALY (HAIKAISS) - GOA</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; GOA LOUNGE - Ribeirão Preto, SP</p>
+        <p class="narrativa">Show em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Festa" onclick="window.open('https://www.sympla.com.br/evento/baile-hip-hop-funk-trap-house-goa/3393226','_blank')">
+        <span class="badge" style="background:#6C3483">Festa</span>
+        <h2>BAILE - HIP HOP | FUNK | TRAP | HOUSE - GOA</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; GOA LOUNGE - Ribeirão Preto, SP</p>
+        <p class="narrativa">Festa em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Show" onclick="window.open('https://www.sympla.com.br/evento/do-black-ao-furacao-2000-nugroove-goa/3392500','_blank')">
+        <span class="badge" style="background:#C0392B">Show</span>
+        <h2>DO BLACK AO FURACÃO 2000 - NUGROOVE - GOA</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; GOA LOUNGE - Ribeirão Preto, SP</p>
+        <p class="narrativa">Show em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Show" onclick="window.open('https://www.sympla.com.br/evento/clara-lima-akira-presidente-goa/3395739','_blank')">
+        <span class="badge" style="background:#C0392B">Show</span>
+        <h2>CLARA LIMA + AKIRA PRESIDENTE - GOA</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; GOA LOUNGE - Ribeirão Preto, SP</p>
+        <p class="narrativa">Show em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Festival" onclick="window.open('https://www.sympla.com.br/evento/arena-blues-festival-2026/3338881','_blank')">
+        <span class="badge" style="background:#B7770D">Festival</span>
+        <h2>Arena Blues Festival 2026</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Teatro de Arena Jaime Zeiger - Ribeirão Preto, SP</p>
+        <p class="narrativa">Festival em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Show" onclick="window.open('https://www.sympla.com.br/evento/mc-rodolfinho-no-galpao-20/3379900','_blank')">
+        <span class="badge" style="background:#C0392B">Show</span>
+        <h2>MC RODOLFINHO NO GALPÃO 20</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Galpão 20 - Ribeirão Preto, SP</p>
+        <p class="narrativa">MC Rodolfinho se apresenta em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Festa" onclick="window.open('https://www.sympla.com.br/evento/baile-do-balaco-02-05/3396055','_blank')">
+        <span class="badge" style="background:#6C3483">Festa</span>
+        <h2>BAILE DO BALACO 02/05</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; A Fábrica de Extintores - Ribeirão Preto, SP</p>
+        <p class="narrativa">Baile no Balaco em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Festival" onclick="window.open('https://www.sympla.com.br/evento/ai-festival-ribeirao-preto-inteligencia-artificial-para-todos/3395041','_blank')">
+        <span class="badge" style="background:#B7770D">Festival</span>
+        <h2>AI FESTIVAL Ribeirão Preto - Inteligência Artificial Para Todos</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Local a definir - Ribeirão Preto, SP</p>
+        <p class="narrativa">Festival em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Show" onclick="window.open('https://www.sympla.com.br/evento/aquiles-priester-rebirth-na-integra-brasil-tour-2026-ribeirao-preto-sp/3349350','_blank')">
+        <span class="badge" style="background:#C0392B">Show</span>
+        <h2>Aquiles Priester Rebirth na Íntegra | Brasil Tour 2026 Ribeirão Preto/SP</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; VAT ROCK BAR CENTRO - Ribeirão Preto, SP</p>
+        <p class="narrativa">Aquiles Priester se apresenta em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Corporativo" onclick="window.open('https://www.sympla.com.br/evento/recomendo-agora-tambem-em-ribeirao-preto-o-melhor-cafe-de-negocios-da-cidade/3396236','_blank')">
+        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <h2>Recomendo agora também em Ribeirão Preto - O melhor café de negócios da cidade.</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Recomendo Ribeirão Preto - Ribeirão Preto, SP</p>
+        <p class="narrativa">Encontro de negócios em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Show" onclick="window.open('https://www.sympla.com.br/evento/school-of-rock-ao-vivo-no-vila-dionisio-show-de-temporada/3381889','_blank')">
+        <span class="badge" style="background:#C0392B">Show</span>
+        <h2>School of Rock ao Vivo no Vila Dionísio: Show de Temporada</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Vila Dionísio - Ribeirão Preto, SP</p>
+        <p class="narrativa">School of Rock ao vivo em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Festa" onclick="window.open('https://www.sympla.com.br/evento/ribeirao-preto-na-trilha-do-vinho/3302962','_blank')">
+        <span class="badge" style="background:#6C3483">Festa</span>
+        <h2>Ribeirão Preto Na Trilha do Vinho</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Shopping Iguatemi Ribeirão Preto - Ribeirão Preto, SP</p>
+        <p class="narrativa">Ribeirao Preto: evento de vinho</p>
+    </article>
+    <article class="card" data-cat="Corporativo" onclick="window.open('https://www.sympla.com.br/evento/pamv-2026-clinica-medica-e-cirurgica-de-grandes-animais/3185703','_blank')">
+        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <h2>PAMV 2026 - Clínica Médica e Cirúrgica de Grandes Animais</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Campus veterinario Barão de Mauá - Ribeirão Preto, SP</p>
+        <p class="narrativa">Evento no campus veterinário em Ribeirão Preto</p>
+    </article>
+    <article class="card" data-cat="Corporativo" onclick="window.open('https://www.sympla.com.br/evento/pamv-2026-clinica-cirurgica-e-anestesiologia-em-pequenos-animais/3185712','_blank')">
+        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <h2>PAMV 2026 - Clínica Cirúrgica e Anestesiologia em Pequenos Animais</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Campus veterinario Barão de Mauá - Ribeirão Preto, SP</p>
+        <p class="narrativa">Evento no Campus veterinario Barão de Mauá, Ribeirao Preto.</p>
+    </article>
+    <article class="card" data-cat="Corporativo" onclick="window.open('https://www.sympla.com.br/evento/pamv-2026-clinica-medica-de-pequenos-animais/3185724','_blank')">
+        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <h2>PAMV 2026 - Clínica Médica de Pequenos Animais</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Campus veterinario Barão de Mauá - Ribeirão Preto, SP</p>
+        <p class="narrativa">PAMV no Campus veterinario em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Show" onclick="window.open('https://www.sympla.com.br/evento/ninemix/3392875','_blank')">
+        <span class="badge" style="background:#C0392B">Show</span>
+        <h2>NineMix</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; NINE CLUB - Ribeirão Preto, SP</p>
+        <p class="narrativa">Evento no NINE CLUB em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Show" onclick="window.open('https://www.sympla.com.br/evento/country-club/3388613','_blank')">
+        <span class="badge" style="background:#C0392B">Show</span>
+        <h2>Country Club</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; NINE CLUB - Ribeirão Preto, SP</p>
+        <p class="narrativa">Evento no NINE CLUB em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Corporativo" onclick="window.open('https://www.sympla.com.br/evento/vision-tech-summit-industria-do-amanha-2026/3361003','_blank')">
+        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <h2>Vision Tech Summit - Indústria do Amanhã 2026</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Multiplan Hall - Ribeirão Preto, SP</p>
+        <p class="narrativa">Ribeirao Preto recebe o Vision Tech Summit</p>
+    </article>
+    <article class="card" data-cat="Show" onclick="window.open('https://www.sympla.com.br/evento/nunca-foi-sorte-sempre-foi-exu-luis-titoin/3363943','_blank')">
+        <span class="badge" style="background:#C0392B">Show</span>
+        <h2>NUNCA FOI SORTE, SEMPRE FOI EXU. Luis Titoin</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Sem Fronteiras Bar/ Cervejaria Macumba  - Ribeirão Preto, SP</p>
+        <p class="narrativa">Luis Titoin no Sem Fronteiras Bar em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Show" onclick="window.open('https://www.sympla.com.br/evento/sanny-machado-no-ribeirao-comedy/3347242','_blank')">
+        <span class="badge" style="background:#C0392B">Show</span>
+        <h2>SANNY MACHADO no Ribeirão Comedy</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Boteco Brazukis - Ribeirão Preto, SP</p>
+        <p class="narrativa">Sanny Machado no Ribeirão Comedy em Ribeirao Preto</p>
+    </article>
+    <article class="card" data-cat="Feira" onclick="window.open('https://emribeirao.com/especiais/agrishow/agrishow-2026-ribeirao-preto-se-torna-a-capital-mundial-da-tecnologia-agricola-72862/','_blank')">
+        <span class="badge" style="background:#1E8449">Feira</span>
+        <h2>Agrishow 2026: Ribeirão Preto se Torna a Capital Mundial da Tecnologia Agrícola</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Ribeirão Preto</p>
+        <p class="narrativa">Ribeirao Preto recebe Agrishow</p>
+    </article>
+    <article class="card" data-cat="Show" onclick="window.open('https://emribeirao.com/lazer-e-cultura/usp-filarmonica-leva-trilha-do-filme-psicose-ao-palco-do-theatro-pedro-ii-72859/','_blank')">
+        <span class="badge" style="background:#C0392B">Show</span>
+        <h2>USP Filarmônica leva trilha do filme Psicose ao palco do Theatro Pedro II</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Ribeirão Preto</p>
+        <p class="narrativa">USP Filarmônica em Ribeirão Preto</p>
+    </article>
+    <article class="card" data-cat="Festival" onclick="window.open('https://emribeirao.com/lazer-e-cultura/gastronomia/torresmofest-ribeirao-preto-traz-edicao-lendas-do-rock-com-entrada-gratuita-72853/','_blank')">
+        <span class="badge" style="background:#B7770D">Festival</span>
+        <h2>Torresmofest Ribeirão Preto traz edição Lendas do Rock com entrada gratuita</h2>
+        <p class="meta">Data a confirmar &nbsp;·&nbsp; Ribeirão Preto</p>
+        <p class="narrativa">Torresmofest em Ribeirão Preto</p>
+    </article>
+</main>
+
+<script>
+const cards = document.querySelectorAll('.card');
+const btns  = document.querySelectorAll('.filtro-btn');
+
+btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const cat = btn.dataset.cat;
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        cards.forEach(card => {
+            const show = cat === 'todos' || card.dataset.cat === cat;
+            card.style.display = show ? '' : 'none';
+        });
+    });
+});
+
+// Partículas de letras
+const chars = 'RADAR●▪'.split('');
+const container = document.querySelector('.particles');
+if (container) {
+    for (let i = 0; i < 18; i++) {
+        const el = document.createElement('span');
+        el.className = 'particle';
+        el.textContent = chars[i % chars.length];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.fontSize = (14 + Math.random() * 28) + 'px';
+        el.style.animationDuration = (18 + Math.random() * 24) + 's';
+        el.style.animationDelay = -(Math.random() * 30) + 's';
+        container.appendChild(el);
+    }
+}
+</script>
+</body>
+</html>
