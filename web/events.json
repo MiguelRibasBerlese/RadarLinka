@@ -27,7 +27,7 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Show",
-    "narrativa_ia": "Choro da Casa no Teatro Santarosa em Ribeirao Preto"
+    "narrativa_ia": "Choro da Casa no Teatro Santarosa em Ribeirão Preto"
   },
   {
     "titulo": "Era uma vez Mundo Encantado",
@@ -47,7 +47,7 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Teatro",
-    "narrativa_ia": "Peça no Teatro Santarosa, Ribeirão Preto."
+    "narrativa_ia": "Princesas no Teatro Santarosa em Ribeirao Preto"
   },
   {
     "titulo": "CLARA LIMA + AKIRA PRESIDENTE - GOA",
@@ -87,7 +87,7 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Festa",
-    "narrativa_ia": "Baile em Ribeirao Preto"
+    "narrativa_ia": "Baile no coração de Ribeirão Preto"
   },
   {
     "titulo": "Aquiles Priester Rebirth na Íntegra | Brasil Tour 2026 Ribeirão Preto/SP",
@@ -107,7 +107,7 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Corporativo",
-    "narrativa_ia": "Encontro em Ribeirão Preto"
+    "narrativa_ia": "Encontro em Ribeirao Preto"
   },
   {
     "titulo": "School of Rock ao Vivo no Vila Dionísio: Show de Temporada",
@@ -127,7 +127,7 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Festa",
-    "narrativa_ia": "Ribeirão Preto recebe evento de vinho no Shopping Iguatemi"
+    "narrativa_ia": "Ribeirao Preto recebe evento de vinho no Iguatemi"
   },
   {
     "titulo": "PAMV 2026 - Clínica Médica e Cirúrgica de Grandes Animais",
@@ -137,7 +137,7 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Corporativo",
-    "narrativa_ia": "Evento no campus de Ribeirao Preto"
+    "narrativa_ia": "Evento no campus veterinário em Ribeirão Preto"
   },
   {
     "titulo": "PAMV 2026 - Clínica Cirúrgica e Anestesiologia em Pequenos Animais",
@@ -147,7 +147,7 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Corporativo",
-    "narrativa_ia": "Evento no Campus veterinario Barão de Mauá, Ribeirao Preto."
+    "narrativa_ia": "Evento no Campus veterinario em Ribeirao Preto"
   },
   {
     "titulo": "PAMV 2026 - Clínica Médica de Pequenos Animais",
@@ -167,7 +167,7 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Corporativo",
-    "narrativa_ia": "Ribeirao Preto recebe Vision Tech Summit"
+    "narrativa_ia": "Ribeirao Preto recebe o Vision Tech Summit"
   },
   {
     "titulo": "NUNCA FOI SORTE, SEMPRE FOI EXU. Luis Titoin",
@@ -177,7 +177,7 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Show",
-    "narrativa_ia": "Luis Titoin no Sem Fronteiras Bar em Ribeirao Preto"
+    "narrativa_ia": "Luis Titoin se apresenta em Ribeirao Preto"
   },
   {
     "titulo": "Noite de Metal no Vat Rock Bar",
@@ -227,7 +227,7 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Show",
-    "narrativa_ia": "SOM DE FACULDADE no NINE CLUB em Ribeirao Preto"
+    "narrativa_ia": "Som de Faculdade no NINE CLUB em Ribeirao Preto"
   },
   {
     "titulo": "XIV JESCOBAM - Jornada Acadêmica de Estética e Cosmética do CBM",
@@ -237,26 +237,16 @@
     "fonte": "sympla",
     "descricao_bruta": "",
     "categoria": "Corporativo",
-    "narrativa_ia": "Jornada acadêmica em Ribeirão Preto"
+    "narrativa_ia": "Jornada acadêmica em Ribeirao Preto"
   },
   {
     "titulo": "Agrishow Ribeirão Preto começa gigante e vira palco de negócios, tecnologia e articulação política",
-    "data_iso": "",
+    "data_iso": "2026-04-27",
     "local": "Ribeirão Preto",
     "url": "https://emribeirao.com/especiais/agrishow/agrishow-ribeirao-preto-comeca-gigante-e-vira-palco-de-negocios-tecnologia-e-articulacao-politica-72875/",
     "fonte": "emribeirao",
     "descricao_bruta": "",
     "categoria": "Feira",
-    "narrativa_ia": "Agrishow em Ribeirao Preto"
-  },
-  {
-    "titulo": "Agrishow 2026 impulsiona turismo de negócios em Ribeirão Preto",
-    "data_iso": "",
-    "local": "Ribeirão Preto",
-    "url": "https://emribeirao.com/especiais/agrishow/agrishow-2026-impulsiona-turismo-de-negocios-em-ribeirao-preto-72870/",
-    "fonte": "emribeirao",
-    "descricao_bruta": "",
-    "categoria": "Corporativo",
     "narrativa_ia": "Agrishow em Ribeirao Preto"
   },
   {
@@ -267,27 +257,7 @@
     "fonte": "emribeirao",
     "descricao_bruta": "",
     "categoria": "Show",
-    "narrativa_ia": "Mozart em Ribeirao Preto"
-  },
-  {
-    "titulo": "Iguatemi Ribeirão Preto recebe espaço do Camarote Brahma para retirada e customização de abadás do Ribeirão Rodeio Music",
-    "data_iso": "",
-    "local": "Ribeirão Preto",
-    "url": "https://emribeirao.com/lazer-e-cultura/iguatemi-ribeirao-preto-recebe-espaco-do-camarote-brahma-para-retirada-e-customizacao-de-abadas-do-ribeirao-rodeio-music-72868/",
-    "fonte": "emribeirao",
-    "descricao_bruta": "",
-    "categoria": "Festa",
-    "narrativa_ia": "Ribeirao Preto: abadás personalizados"
-  },
-  {
-    "titulo": "Caminho da Capacitação chega à região de Ribeirão Preto e oferece cursos gratuitos em 15 municípios",
-    "data_iso": "",
-    "local": "Ribeirão Preto",
-    "url": "https://emribeirao.com/diversos/caminho-da-capacitacao-chega-a-regiao-de-ribeirao-preto-e-oferece-cursos-gratuitos-em-15-municipios-72866/",
-    "fonte": "emribeirao",
-    "descricao_bruta": "",
-    "categoria": "Corporativo",
-    "narrativa_ia": "Cursos gratuitos em Ribeirão Preto"
+    "narrativa_ia": "Orquestra em Ribeirao Preto apresenta Mozart"
   },
   {
     "titulo": "Agrishow 2026: Ribeirão Preto se Torna a Capital Mundial da Tecnologia Agrícola",

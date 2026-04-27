@@ -151,20 +151,48 @@ def fetch_date_emribeirao(url: str) -> str:
         resp = requests.get(url, headers=HEADERS, timeout=20)
         soup = BeautifulSoup(resp.text, 'html.parser')
         texto = soup.get_text(' ', strip=True)
-        # Padrão: "Data: De 27 de abril a 1º de maio de 2026"
-        # ou    : "Data: 27 de abril de 2026"
-        match = re.search(
-            r'[Dd]ata[:\s]+(?:[Dd]e\s+)?'
-            r'(\d{1,2}(?:º)?)\s+de\s+(\w+)'
-            r'(?:\s+a\s+\d{1,2}(?:º)?\s+de\s+\w+)?'
-            r'(?:\s+de\s+(\d{4}))?',
-            texto
+
+        MESES = (
+            'janeiro|fevereiro|março|abril|maio|junho|'
+            'julho|agosto|setembro|outubro|novembro|dezembro'
         )
-        if match:
-            dia = match.group(1).replace('º', '').strip()
-            mes = match.group(2).strip()
-            ano = match.group(3) or str(__import__('datetime').date.today().year)
+
+        # Padrão 1 — explícito: "Data: De 27 de abril a 1º de maio de 2026"
+        m = re.search(
+            rf'[Dd]ata[:\s]+(?:De\s+)?(\d{{1,2}}(?:º)?)\s+de\s+({MESES})'
+            rf'(?:\s+a\s+\d{{1,2}}(?:º)?\s+de\s+(?:{MESES}))?'
+            rf'(?:\s+de\s+(\d{{4}}))?',
+            texto, re.IGNORECASE
+        )
+        if m:
+            dia = m.group(1).replace('º', '').strip()
+            mes = m.group(2).strip()
+            ano = m.group(3) or str(__import__('datetime').date.today().year)
             return f'{dia} de {mes} de {ano}'
+
+        # Padrão 2 — "no dia 8 de julho" / "acontece em 8 de julho de 2026"
+        m = re.search(
+            rf'(?:no dia|em|para)\s+(\d{{1,2}}(?:º)?)\s+de\s+({MESES})'
+            rf'(?:\s+de\s+(\d{{4}}))?',
+            texto, re.IGNORECASE
+        )
+        if m:
+            dia = m.group(1).replace('º', '').strip()
+            mes = m.group(2).strip()
+            ano = m.group(3) or str(__import__('datetime').date.today().year)
+            return f'{dia} de {mes} de {ano}'
+
+        # Padrão 3 — qualquer "DD de mês de AAAA" no texto
+        m = re.search(
+            rf'(\d{{1,2}}(?:º)?)\s+de\s+({MESES})\s+de\s+(\d{{4}})',
+            texto, re.IGNORECASE
+        )
+        if m:
+            dia = m.group(1).replace('º', '').strip()
+            mes = m.group(2).strip()
+            ano = m.group(3).strip()
+            return f'{dia} de {mes} de {ano}'
+
         return ''
     except Exception as e:
         print(f'[WARN fetch_date_emribeirao] {url}: {e}')
