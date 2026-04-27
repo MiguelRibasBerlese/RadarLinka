@@ -56,7 +56,7 @@ header {
     gap: 16px;
 }
 .linka-logo {
-    height: 52px;
+    height: 80px;
     width: auto;
     object-fit: contain;
     opacity: 0.9;
