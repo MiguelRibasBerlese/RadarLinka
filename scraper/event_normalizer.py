@@ -2,7 +2,39 @@ from dateutil import parser as dateparser
 from datetime import date
 import re
 
-TERMOS_RP = ['ribeirão preto', 'ribeirao preto', ', rp', '- rp', '(rp)']
+CIDADES_REGIAO = [
+    'ribeirão preto', 'ribeirao preto', 'ribeirão-preto',
+    'brodowski',
+    'batatais',
+    'serrana',
+    'jardinópolis', 'jardinopolis',
+    'cravinhos',
+    'sertãozinho', 'sertaozinho',
+    'guatapará', 'guatapara',
+    'dumont',
+    'serra azul',
+    'pradópolis', 'pradopolis',
+    'pontal',
+    'luís antônio', 'luis antonio',
+    'santa rosa de viterbo',
+]
+
+_NOMES_CORRETOS = [
+    'Ribeirão Preto', 'Ribeirão Preto', 'Ribeirão Preto',
+    'Brodowski',
+    'Batatais',
+    'Serrana',
+    'Jardinópolis', 'Jardinópolis',
+    'Cravinhos',
+    'Sertãozinho', 'Sertãozinho',
+    'Guatapará', 'Guatapará',
+    'Dumont',
+    'Serra Azul',
+    'Pradópolis', 'Pradópolis',
+    'Pontal',
+    'Luís Antônio', 'Luís Antônio',
+    'Santa Rosa de Viterbo',
+]
 
 _MESES_PT = {
     'janeiro': 'january',  'jan': 'january',
@@ -30,9 +62,17 @@ def _traduz_data_pt(data_str: str) -> str:
     s = re.sub(r'\bde\b', '', s)
     return s.strip()
 
-def _e_de_rp(local: str) -> bool:
+def _e_da_regiao(local: str) -> bool:
     local_lower = local.lower().strip()
-    return any(t in local_lower for t in TERMOS_RP)
+    return any(cidade in local_lower for cidade in CIDADES_REGIAO)
+
+def _extrair_cidade(local: str) -> str:
+    """Extrai o nome da cidade do campo local."""
+    local_lower = local.lower().strip()
+    for idx, cidade in enumerate(CIDADES_REGIAO):
+        if cidade in local_lower:
+            return _NOMES_CORRETOS[idx]
+    return 'Ribeirão Preto'  # fallback
 
 def normalize(evento_bruto: dict, fonte: str):
     titulo = (evento_bruto.get('titulo') or evento_bruto.get('nome') or '').strip()
@@ -43,11 +83,11 @@ def normalize(evento_bruto: dict, fonte: str):
 
     # Filtro geográfico — Ingresse retorna eventos nacionais
     if fonte == 'ingresse':
-        if not local or not _e_de_rp(local):
+        if not local or not _e_da_regiao(local):
             return None
 
     # Filtro geográfico leve para Sympla (segurança)
-    if fonte == 'sympla' and local and not _e_de_rp(local):
+    if fonte == 'sympla' and local and not _e_da_regiao(local):
         return None
 
     data_str = evento_bruto.get('data') or evento_bruto.get('date') or ''
@@ -66,6 +106,7 @@ def normalize(evento_bruto: dict, fonte: str):
         'titulo':          titulo,
         'data_iso':        data_iso,
         'local':           local,
+        'cidade':          _extrair_cidade(local),
         'url':             (evento_bruto.get('url') or '').strip(),
         'fonte':           fonte,
         'descricao_bruta': (evento_bruto.get('descricao') or

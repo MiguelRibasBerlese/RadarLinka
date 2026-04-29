@@ -212,26 +212,76 @@ header {
     to   { transform: translateY(110vh); }
 }
 
-main, header, .filtros { position: relative; z-index: 1; }
+main, header, .filtros, .filtros-cidade, .filtros-secao { position: relative; z-index: 1; }
+
+.filtros-secao {
+    max-width: 1200px;
+    margin: 0 auto 4px;
+    padding: 0 24px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #aaa;
+    font-family: 'Source Sans 3', sans-serif;
+}
+.filtros-cidade {
+    max-width: 1200px;
+    margin: 0 auto 20px;
+    padding: 0 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    border-top: 1px solid #E0DAD0;
+    padding-top: 16px;
+}
+.filtros-cidade .filtro-btn {
+    font-size: 11px;
+    padding: 4px 12px;
+    color: #777;
+    border-color: #ddd;
+}
+.filtros-cidade .filtro-btn.active {
+    background: #3B1A6E;
+    border-color: #3B1A6E;
+    color: #fff;
+}
 """
 
 JS = """
-const cards = document.querySelectorAll('.card');
-const btns  = document.querySelectorAll('.filtro-btn');
+const cardEls     = document.querySelectorAll('.card');
+const btnsCat     = document.querySelectorAll('.filtros .filtro-btn');
+const btnsCidade  = document.querySelectorAll('.filtros-cidade .filtro-btn');
 
-btns.forEach(btn => {
+let catAtiva    = 'todos';
+let cidadeAtiva = 'todas';
+
+function aplicarFiltros() {
+    cardEls.forEach(card => {
+        const catOk    = catAtiva    === 'todos'  || card.dataset.cat    === catAtiva;
+        const cidadeOk = cidadeAtiva === 'todas'  || card.dataset.cidade === cidadeAtiva;
+        card.style.display = (catOk && cidadeOk) ? '' : 'none';
+    });
+}
+
+btnsCat.forEach(btn => {
     btn.addEventListener('click', () => {
-        const cat = btn.dataset.cat;
-        btns.forEach(b => b.classList.remove('active'));
+        btnsCat.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        cards.forEach(card => {
-            const show = cat === 'todos' || card.dataset.cat === cat;
-            card.style.display = show ? '' : 'none';
-        });
+        catAtiva = btn.dataset.cat;
+        aplicarFiltros();
     });
 });
 
-// Partículas de letras
+btnsCidade.forEach(btn => {
+    btn.addEventListener('click', () => {
+        btnsCidade.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        cidadeAtiva = btn.dataset.cidade;
+        aplicarFiltros();
+    });
+});
+
+// Partículas
 const chars = 'RADAR●▪'.split('');
 const container = document.querySelector('.particles');
 if (container) {
@@ -274,6 +324,12 @@ def render(eventos=None, stale=False):
     for cat in cats_presentes:
         filtros_html += f'    <button class="filtro-btn" data-cat="{cat}">{cat}</button>\n'
 
+    # Cidades presentes para o filtro secundário
+    cidades_presentes = sorted({ev.get('cidade', 'Ribeirão Preto') for ev in eventos})
+    cidades_html = ''
+    for cidade in cidades_presentes:
+        cidades_html += f'<button class="filtro-btn" data-cidade="{cidade}">{cidade}</button>\n'
+
     # Cards
     cards_html = ''
     if not eventos:
@@ -295,9 +351,10 @@ def render(eventos=None, stale=False):
                 data = 'Data a confirmar'
             narr   = ev.get('narrativa_ia', '').replace('<', '&lt;').replace('>', '&gt;')
             url    = ev.get('url', '#')
+            cidade = ev.get('cidade', 'Ribeirão Preto')
 
             cards_html += f'''
-    <article class="card" data-cat="{cat}" onclick="window.open('{url}','_blank')">
+    <article class="card" data-cat="{cat}" data-cidade="{cidade}" onclick="window.open('{url}','_blank')">
         <span class="badge" style="background:{cor}">{cat}</span>
         <h2>{titulo}</h2>
         <p class="meta">{data} &nbsp;·&nbsp; {local}</p>
@@ -327,6 +384,12 @@ def render(eventos=None, stale=False):
 
 <nav class="filtros">
     {filtros_html}
+</nav>
+
+<p class="filtros-secao">Cidade</p>
+<nav class="filtros-cidade">
+    <button class="filtro-btn active" data-cidade="todas">Todas</button>
+    {cidades_html}
 </nav>
 
 <main class="grid">

@@ -6,7 +6,7 @@ def test_normalize_retorna_schema_completo():
     ev = {'titulo': 'Show de Rock', 'data': '2026-05-10',
           'url': 'http://x.com/1', 'local': 'Ribeirão Preto'}
     r = normalize(ev, 'sympla')
-    for campo in ['titulo', 'data_iso', 'local', 'url', 'fonte', 'descricao_bruta']:
+    for campo in ['titulo', 'data_iso', 'local', 'cidade', 'url', 'fonte', 'descricao_bruta']:
         assert campo in r, f'Campo {campo} ausente'
 
 def test_normalize_campo_ausente_vira_string_vazia():
@@ -43,3 +43,10 @@ def test_normalize_data_formato_ptbr():
     r = normalize(ev, 'ingresse')
     assert r is not None
     assert r['data_iso'] == '2026-05-23'
+
+def test_normalize_extrai_cidade_brodowski():
+    ev = {'titulo': 'Evento Teste', 'url': 'http://x.com/8',
+          'local': 'Centro de Brodowski - SP', 'data': '2026-06-20'}
+    r = normalize(ev, 'sympla')
+    assert r is not None
+    assert r['cidade'] == 'Brodowski'
