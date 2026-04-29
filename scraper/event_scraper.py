@@ -8,6 +8,7 @@ HEADERS = {
 }
 
 SYMPLA_URLS = [
+    # Ribeirão Preto e região metropolitana
     'https://www.sympla.com.br/eventos/ribeirao-preto-sp',
     'https://www.sympla.com.br/eventos/batatais-sp',
     'https://www.sympla.com.br/eventos/sertaozinho-sp',
@@ -22,25 +23,49 @@ SYMPLA_URLS = [
     'https://www.sympla.com.br/eventos/serra-azul-sp',
     'https://www.sympla.com.br/eventos/luis-antonio-sp',
     'https://www.sympla.com.br/eventos/guatapara-sp',
+    # Até 100km
+    'https://www.sympla.com.br/eventos/franca-sp',
+    'https://www.sympla.com.br/eventos/araraquara-sp',
+    'https://www.sympla.com.br/eventos/barretos-sp',
+    'https://www.sympla.com.br/eventos/jaboticabal-sp',
+    'https://www.sympla.com.br/eventos/bebedouro-sp',
+    'https://www.sympla.com.br/eventos/guariba-sp',
+    'https://www.sympla.com.br/eventos/monte-alto-sp',
+    # 100km a 200km
+    'https://www.sympla.com.br/eventos/sao-jose-do-rio-preto-sp',
+    'https://www.sympla.com.br/eventos/campinas-sp',
+    'https://www.sympla.com.br/eventos/uberaba-mg',
 ]
 
 # Fallback de local quando o card não traz o campo — permite que o normalizador
 # identifique a cidade correta em vez de usar o fallback 'Ribeirão Preto'.
 _SLUG_PARA_LOCAL = {
-    'ribeirao-preto':      'Ribeirão Preto - SP',
-    'batatais':            'Batatais - SP',
-    'sertaozinho':         'Sertãozinho - SP',
-    'serrana':             'Serrana - SP',
-    'jardinopolis':        'Jardinópolis - SP',
-    'cravinhos':           'Cravinhos - SP',
-    'brodowski':           'Brodowski - SP',
-    'pontal':              'Pontal - SP',
-    'santa-rosa-de-viterbo': 'Santa Rosa de Viterbo - SP',
-    'pradopolis':          'Pradópolis - SP',
-    'dumont':              'Dumont - SP',
-    'serra-azul':          'Serra Azul - SP',
-    'luis-antonio':        'Luís Antônio - SP',
-    'guatapara':           'Guatapará - SP',
+    'ribeirao-preto':         'Ribeirão Preto - SP',
+    'batatais':               'Batatais - SP',
+    'sertaozinho':            'Sertãozinho - SP',
+    'serrana':                'Serrana - SP',
+    'jardinopolis':           'Jardinópolis - SP',
+    'cravinhos':              'Cravinhos - SP',
+    'brodowski':              'Brodowski - SP',
+    'pontal':                 'Pontal - SP',
+    'santa-rosa-de-viterbo':  'Santa Rosa de Viterbo - SP',
+    'pradopolis':             'Pradópolis - SP',
+    'dumont':                 'Dumont - SP',
+    'serra-azul':             'Serra Azul - SP',
+    'luis-antonio':           'Luís Antônio - SP',
+    'guatapara':              'Guatapará - SP',
+    # Novas — até 100km
+    'franca':                 'Franca - SP',
+    'araraquara':             'Araraquara - SP',
+    'barretos':               'Barretos - SP',
+    'jaboticabal':            'Jaboticabal - SP',
+    'bebedouro':              'Bebedouro - SP',
+    'guariba':                'Guariba - SP',
+    'monte-alto':             'Monte Alto - SP',
+    # Novas — 100km a 200km
+    'sao-jose-do-rio-preto':  'São José do Rio Preto - SP',
+    'campinas':               'Campinas - SP',
+    'uberaba':                'Uberaba - MG',
 }
 
 def scrape_sympla():
@@ -48,12 +73,12 @@ def scrape_sympla():
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
         for url in SYMPLA_URLS:
-            cidade_slug = url.split('/')[-1].replace('-sp', '')
+            cidade_slug = url.split('/')[-1].replace('-sp', '').replace('-mg', '')
             local_fallback = _SLUG_PARA_LOCAL.get(cidade_slug, cidade_slug)
             try:
                 page = browser.new_page()
                 page.set_extra_http_headers({'User-Agent': HEADERS['User-Agent']})
-                page.goto(url, wait_until='networkidle', timeout=20000)
+                page.goto(url, wait_until='networkidle', timeout=35000)
                 page.wait_for_timeout(3000)
                 html = page.content()
                 page.close()
@@ -95,7 +120,7 @@ def scrape_sympla():
                                         'fonte': 'sympla'})
 
                 print(f'[sympla:{cidade_slug}] {len([e for e in eventos if cidade_slug.replace("-", " ") in e["local"].lower() or local_fallback in e["local"]])} eventos')
-                time.sleep(random.uniform(1.0, 2.0))
+                time.sleep(random.uniform(3.0, 5.0))
 
             except Exception as e:
                 print(f'[WARN sympla:{cidade_slug}] {e}')
@@ -104,7 +129,36 @@ def scrape_sympla():
         browser.close()
 
     print(f'[scrape_sympla] {len(eventos)} eventos no total')
-    return eventos
+
+    # Deduplicação 1 — por URL exata
+    vistos_url = set()
+    unicos_url = []
+    for ev in eventos:
+        if ev['url'] not in vistos_url:
+            vistos_url.add(ev['url'])
+            unicos_url.append(ev)
+
+    # Deduplicação 2 — por título normalizado
+    import unicodedata
+    def normalizar_titulo(t):
+        t = t.lower().strip()
+        t = unicodedata.normalize('NFKD', t)
+        t = ''.join(c for c in t if not unicodedata.combining(c))
+        t = re.sub(r'[^a-z0-9\s]', '', t)
+        t = re.sub(r'\s+', ' ', t).strip()
+        return t[:60]
+
+    vistos_titulo = set()
+    unicos_final = []
+    for ev in unicos_url:
+        titulo_norm = normalizar_titulo(ev.get('titulo', ''))
+        if titulo_norm and titulo_norm not in vistos_titulo:
+            vistos_titulo.add(titulo_norm)
+            unicos_final.append(ev)
+
+    removidos = len(eventos) - len(unicos_final)
+    print(f'[sympla DEDUP] {len(eventos)} brutos -> {len(unicos_final)} unicos ({removidos} duplicatas removidas)')
+    return unicos_final
 
 def scrape_ingresse():
     BASE = 'https://www.ingresse.com'
