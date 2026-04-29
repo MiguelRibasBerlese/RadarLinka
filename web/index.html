@@ -70,32 +70,60 @@ header {
 }
 @keyframes drawRule { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-/* Filtros */
-.filtros {
+/* ── Filtros dropdown ── */
+.filtros-wrapper {
     max-width: 1200px;
     margin: 0 auto 28px;
     padding: 0 24px;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 16px;
+    align-items: flex-end;
 }
-.filtro-btn {
-    background: none;
-    border: 1px solid #ccc;
-    border-radius: 2px;
-    padding: 6px 14px;
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: 12px;
-    letter-spacing: 1px;
+.filtro-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 200px;
+    flex: 1;
+}
+.filtro-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    cursor: pointer;
-    color: #555;
-    transition: all 0.2s;
+    color: #aaa;
+    font-family: 'Source Sans 3', sans-serif;
 }
-.filtro-btn:hover, .filtro-btn.active {
-    background: #5B2D8E;
+.filtro-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235B2D8E' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+    border: 1px solid #E0DAD0;
+    border-left: 3px solid #5B2D8E;
+    padding: 12px 40px 12px 16px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    color: #1A1A1A;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    border-radius: 0;
+}
+.filtro-select:focus {
+    outline: none;
     border-color: #5B2D8E;
-    color: #fff;
+    box-shadow: 0 0 0 3px rgba(91, 45, 142, 0.12);
+}
+.filtro-select:hover { border-color: #5B2D8E; }
+.filtro-count {
+    font-size: 11px;
+    color: #aaa;
+    font-family: 'Source Sans 3', sans-serif;
+    margin-top: 4px;
+}
+@media (max-width: 480px) {
+    .filtro-grupo { min-width: 100%; }
 }
 
 /* Grid */
@@ -197,39 +225,7 @@ header {
     to   { transform: translateY(110vh); }
 }
 
-main, header, .filtros, .filtros-cidade, .filtros-secao { position: relative; z-index: 1; }
-
-.filtros-secao {
-    max-width: 1200px;
-    margin: 0 auto 4px;
-    padding: 0 24px;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #aaa;
-    font-family: 'Source Sans 3', sans-serif;
-}
-.filtros-cidade {
-    max-width: 1200px;
-    margin: 0 auto 20px;
-    padding: 0 24px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    border-top: 1px solid #E0DAD0;
-    padding-top: 16px;
-}
-.filtros-cidade .filtro-btn {
-    font-size: 11px;
-    padding: 4px 12px;
-    color: #777;
-    border-color: #ddd;
-}
-.filtros-cidade .filtro-btn.active {
-    background: #3B1A6E;
-    border-color: #3B1A6E;
-    color: #fff;
-}
+main, header, .filtros-wrapper { position: relative; z-index: 1; }
 
 /* ── Popup de novidades ── */
 .popup-overlay {
@@ -410,41 +406,48 @@ main, header, .filtros, .filtros-cidade, .filtros-secao { position: relative; z-
     <div class="rule"></div>
 </header>
 
-<nav class="filtros">
-    <button class="filtro-btn active" data-cat="todos">Todos</button>
-    <button class="filtro-btn" data-cat="Corporativo">Corporativo</button>
-    <button class="filtro-btn" data-cat="Esporte">Esporte</button>
-    <button class="filtro-btn" data-cat="Feira">Feira</button>
-    <button class="filtro-btn" data-cat="Festa">Festa</button>
-    <button class="filtro-btn" data-cat="Festival">Festival</button>
-    <button class="filtro-btn" data-cat="Outro">Outro</button>
-    <button class="filtro-btn" data-cat="Show">Show</button>
-    <button class="filtro-btn" data-cat="Teatro">Teatro</button>
+<div class="filtros-wrapper">
+    <div class="filtro-grupo">
+        <label class="filtro-label" for="select-cat">Tipo de evento</label>
+        <select class="filtro-select" id="select-cat" onchange="aplicarFiltros()">
+            <option value="todos">Todos os tipos</option>
+            <option value="Corporativo">Corporativo (41)</option>
+<option value="Esporte">Esporte (7)</option>
+<option value="Feira">Feira (1)</option>
+<option value="Festa">Festa (28)</option>
+<option value="Festival">Festival (12)</option>
+<option value="Outro">Outro (51)</option>
+<option value="Show">Show (103)</option>
+<option value="Teatro">Teatro (6)</option>
 
-</nav>
+        </select>
+        <span class="filtro-count" id="count-label">249 eventos</span>
+    </div>
+    <div class="filtro-grupo">
+        <label class="filtro-label" for="select-cidade">Cidade</label>
+        <select class="filtro-select" id="select-cidade" onchange="aplicarFiltros()">
+            <option value="todas">Todas as cidades</option>
+            <option value="Araraquara">Araraquara (17)</option>
+<option value="Barretos">Barretos (18)</option>
+<option value="Batatais">Batatais (12)</option>
+<option value="Campinas">Campinas (66)</option>
+<option value="Cravinhos">Cravinhos (4)</option>
+<option value="Franca">Franca (21)</option>
+<option value="Guatapará">Guatapará (6)</option>
+<option value="Jaboticabal">Jaboticabal (2)</option>
+<option value="Jardinópolis">Jardinópolis (2)</option>
+<option value="Monte Alto">Monte Alto (4)</option>
+<option value="Pradópolis">Pradópolis (5)</option>
+<option value="Ribeirão Preto">Ribeirão Preto (25)</option>
+<option value="Santa Rosa de Viterbo">Santa Rosa de Viterbo (10)</option>
+<option value="Serrana">Serrana (14)</option>
+<option value="Sertãozinho">Sertãozinho (5)</option>
+<option value="São José do Rio Preto">São José do Rio Preto (18)</option>
+<option value="Uberaba">Uberaba (20)</option>
 
-<p class="filtros-secao">Cidade</p>
-<nav class="filtros-cidade">
-    <button class="filtro-btn active" data-cidade="todas">Todas</button>
-    <button class="filtro-btn" data-cidade="Araraquara">Araraquara</button>
-<button class="filtro-btn" data-cidade="Barretos">Barretos</button>
-<button class="filtro-btn" data-cidade="Batatais">Batatais</button>
-<button class="filtro-btn" data-cidade="Campinas">Campinas</button>
-<button class="filtro-btn" data-cidade="Cravinhos">Cravinhos</button>
-<button class="filtro-btn" data-cidade="Franca">Franca</button>
-<button class="filtro-btn" data-cidade="Guatapará">Guatapará</button>
-<button class="filtro-btn" data-cidade="Jaboticabal">Jaboticabal</button>
-<button class="filtro-btn" data-cidade="Jardinópolis">Jardinópolis</button>
-<button class="filtro-btn" data-cidade="Monte Alto">Monte Alto</button>
-<button class="filtro-btn" data-cidade="Pradópolis">Pradópolis</button>
-<button class="filtro-btn" data-cidade="Ribeirão Preto">Ribeirão Preto</button>
-<button class="filtro-btn" data-cidade="Santa Rosa de Viterbo">Santa Rosa de Viterbo</button>
-<button class="filtro-btn" data-cidade="Serrana">Serrana</button>
-<button class="filtro-btn" data-cidade="Sertãozinho">Sertãozinho</button>
-<button class="filtro-btn" data-cidade="São José do Rio Preto">São José do Rio Preto</button>
-<button class="filtro-btn" data-cidade="Uberaba">Uberaba</button>
-
-</nav>
+        </select>
+    </div>
+</div>
 
 <main class="grid">
     
@@ -1945,38 +1948,23 @@ main, header, .filtros, .filtros-cidade, .filtros-secao { position: relative; z-
 </main>
 
 <script>
-const cardEls     = document.querySelectorAll('.card');
-const btnsCat     = document.querySelectorAll('.filtros .filtro-btn');
-const btnsCidade  = document.querySelectorAll('.filtros-cidade .filtro-btn');
-
-let catAtiva    = 'todos';
-let cidadeAtiva = 'todas';
-
 function aplicarFiltros() {
-    cardEls.forEach(card => {
-        const catOk    = catAtiva    === 'todos'  || card.dataset.cat    === catAtiva;
-        const cidadeOk = cidadeAtiva === 'todas'  || card.dataset.cidade === cidadeAtiva;
-        card.style.display = (catOk && cidadeOk) ? '' : 'none';
+    const cat    = document.getElementById('select-cat').value;
+    const cidade = document.getElementById('select-cidade').value;
+    const cards  = document.querySelectorAll('.card');
+    let visiveis = 0;
+
+    cards.forEach(card => {
+        const catOk    = cat    === 'todos' || card.dataset.cat    === cat;
+        const cidadeOk = cidade === 'todas' || card.dataset.cidade === cidade;
+        const show = catOk && cidadeOk;
+        card.style.display = show ? '' : 'none';
+        if (show) visiveis++;
     });
+
+    const label = document.getElementById('count-label');
+    if (label) label.textContent = visiveis + ' evento' + (visiveis !== 1 ? 's' : '');
 }
-
-btnsCat.forEach(btn => {
-    btn.addEventListener('click', () => {
-        btnsCat.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        catAtiva = btn.dataset.cat;
-        aplicarFiltros();
-    });
-});
-
-btnsCidade.forEach(btn => {
-    btn.addEventListener('click', () => {
-        btnsCidade.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        cidadeAtiva = btn.dataset.cidade;
-        aplicarFiltros();
-    });
-});
 
 // Partículas
 const chars = 'RADAR●▪'.split('');

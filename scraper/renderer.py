@@ -115,32 +115,60 @@ header {
 }
 @keyframes drawRule { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
-/* Filtros */
-.filtros {
+/* ── Filtros dropdown ── */
+.filtros-wrapper {
     max-width: 1200px;
     margin: 0 auto 28px;
     padding: 0 24px;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 16px;
+    align-items: flex-end;
 }
-.filtro-btn {
-    background: none;
-    border: 1px solid #ccc;
-    border-radius: 2px;
-    padding: 6px 14px;
-    font-family: 'Source Sans 3', sans-serif;
-    font-size: 12px;
-    letter-spacing: 1px;
+.filtro-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 200px;
+    flex: 1;
+}
+.filtro-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    cursor: pointer;
-    color: #555;
-    transition: all 0.2s;
+    color: #aaa;
+    font-family: 'Source Sans 3', sans-serif;
 }
-.filtro-btn:hover, .filtro-btn.active {
-    background: #5B2D8E;
+.filtro-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235B2D8E' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+    border: 1px solid #E0DAD0;
+    border-left: 3px solid #5B2D8E;
+    padding: 12px 40px 12px 16px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    color: #1A1A1A;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+    border-radius: 0;
+}
+.filtro-select:focus {
+    outline: none;
     border-color: #5B2D8E;
-    color: #fff;
+    box-shadow: 0 0 0 3px rgba(91, 45, 142, 0.12);
+}
+.filtro-select:hover { border-color: #5B2D8E; }
+.filtro-count {
+    font-size: 11px;
+    color: #aaa;
+    font-family: 'Source Sans 3', sans-serif;
+    margin-top: 4px;
+}
+@media (max-width: 480px) {
+    .filtro-grupo { min-width: 100%; }
 }
 
 /* Grid */
@@ -242,39 +270,7 @@ header {
     to   { transform: translateY(110vh); }
 }
 
-main, header, .filtros, .filtros-cidade, .filtros-secao { position: relative; z-index: 1; }
-
-.filtros-secao {
-    max-width: 1200px;
-    margin: 0 auto 4px;
-    padding: 0 24px;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #aaa;
-    font-family: 'Source Sans 3', sans-serif;
-}
-.filtros-cidade {
-    max-width: 1200px;
-    margin: 0 auto 20px;
-    padding: 0 24px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    border-top: 1px solid #E0DAD0;
-    padding-top: 16px;
-}
-.filtros-cidade .filtro-btn {
-    font-size: 11px;
-    padding: 4px 12px;
-    color: #777;
-    border-color: #ddd;
-}
-.filtros-cidade .filtro-btn.active {
-    background: #3B1A6E;
-    border-color: #3B1A6E;
-    color: #fff;
-}
+main, header, .filtros-wrapper { position: relative; z-index: 1; }
 
 /* ── Popup de novidades ── */
 .popup-overlay {
@@ -408,38 +404,23 @@ main, header, .filtros, .filtros-cidade, .filtros-secao { position: relative; z-
 """
 
 JS = """
-const cardEls     = document.querySelectorAll('.card');
-const btnsCat     = document.querySelectorAll('.filtros .filtro-btn');
-const btnsCidade  = document.querySelectorAll('.filtros-cidade .filtro-btn');
-
-let catAtiva    = 'todos';
-let cidadeAtiva = 'todas';
-
 function aplicarFiltros() {
-    cardEls.forEach(card => {
-        const catOk    = catAtiva    === 'todos'  || card.dataset.cat    === catAtiva;
-        const cidadeOk = cidadeAtiva === 'todas'  || card.dataset.cidade === cidadeAtiva;
-        card.style.display = (catOk && cidadeOk) ? '' : 'none';
+    const cat    = document.getElementById('select-cat').value;
+    const cidade = document.getElementById('select-cidade').value;
+    const cards  = document.querySelectorAll('.card');
+    let visiveis = 0;
+
+    cards.forEach(card => {
+        const catOk    = cat    === 'todos' || card.dataset.cat    === cat;
+        const cidadeOk = cidade === 'todas' || card.dataset.cidade === cidade;
+        const show = catOk && cidadeOk;
+        card.style.display = show ? '' : 'none';
+        if (show) visiveis++;
     });
+
+    const label = document.getElementById('count-label');
+    if (label) label.textContent = visiveis + ' evento' + (visiveis !== 1 ? 's' : '');
 }
-
-btnsCat.forEach(btn => {
-    btn.addEventListener('click', () => {
-        btnsCat.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        catAtiva = btn.dataset.cat;
-        aplicarFiltros();
-    });
-});
-
-btnsCidade.forEach(btn => {
-    btn.addEventListener('click', () => {
-        btnsCidade.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        cidadeAtiva = btn.dataset.cidade;
-        aplicarFiltros();
-    });
-});
 
 // Partículas
 const chars = 'RADAR●▪'.split('');
@@ -477,18 +458,19 @@ def render(eventos=None, stale=False):
     if stale:
         banner = '<div class="stale-banner">⚠ Dados podem estar desatualizados — última atualização há mais de 48h.</div>'
 
-    # Categorias presentes para os filtros
+    # Options para dropdown de categorias
     cats_presentes = sorted({ev.get('categoria', 'Outro') for ev in eventos})
-
-    filtros_html = '<button class="filtro-btn active" data-cat="todos">Todos</button>\n'
+    cats_options_html = ''
     for cat in cats_presentes:
-        filtros_html += f'    <button class="filtro-btn" data-cat="{cat}">{cat}</button>\n'
+        n = sum(1 for ev in eventos if ev.get('categoria') == cat)
+        cats_options_html += f'<option value="{cat}">{cat} ({n})</option>\n'
 
-    # Cidades presentes para o filtro secundário
+    # Options para dropdown de cidades
     cidades_presentes = sorted({ev.get('cidade', 'Ribeirão Preto') for ev in eventos})
-    cidades_html = ''
+    cidades_options_html = ''
     for cidade in cidades_presentes:
-        cidades_html += f'<button class="filtro-btn" data-cidade="{cidade}">{cidade}</button>\n'
+        n = sum(1 for ev in eventos if ev.get('cidade', 'Ribeirão Preto') == cidade)
+        cidades_options_html += f'<option value="{cidade}">{cidade} ({n})</option>\n'
 
     # Popup de novidades
     version_data = CHANGELOG.get(RADAR_VERSION, {})
@@ -582,15 +564,23 @@ def render(eventos=None, stale=False):
     <div class="rule"></div>
 </header>
 
-<nav class="filtros">
-    {filtros_html}
-</nav>
-
-<p class="filtros-secao">Cidade</p>
-<nav class="filtros-cidade">
-    <button class="filtro-btn active" data-cidade="todas">Todas</button>
-    {cidades_html}
-</nav>
+<div class="filtros-wrapper">
+    <div class="filtro-grupo">
+        <label class="filtro-label" for="select-cat">Tipo de evento</label>
+        <select class="filtro-select" id="select-cat" onchange="aplicarFiltros()">
+            <option value="todos">Todos os tipos</option>
+            {cats_options_html}
+        </select>
+        <span class="filtro-count" id="count-label">{len(eventos)} eventos</span>
+    </div>
+    <div class="filtro-grupo">
+        <label class="filtro-label" for="select-cidade">Cidade</label>
+        <select class="filtro-select" id="select-cidade" onchange="aplicarFiltros()">
+            <option value="todas">Todas as cidades</option>
+            {cidades_options_html}
+        </select>
+    </div>
+</div>
 
 <main class="grid">
     {cards_html}
