@@ -396,6 +396,17 @@ main, header, .filtros-wrapper { position: relative; z-index: 1; }
 """
 
 JS = """
+// Data da edicao — sempre atual
+(function() {
+    const meses = [
+        'janeiro','fevereiro','março','abril','maio','junho',
+        'julho','agosto','setembro','outubro','novembro','dezembro'
+    ];
+    const hoje = new Date();
+    const el   = document.getElementById('data-edicao');
+    if (el) el.textContent = hoje.getDate() + ' de ' + meses[hoje.getMonth()] + ' de ' + hoje.getFullYear();
+})();
+
 function aplicarFiltros() {
     const cat    = document.getElementById('select-cat').value;
     const cidade = document.getElementById('select-cidade').value;
@@ -444,7 +455,6 @@ def render(eventos=None, stale=False):
             eventos = []
 
     now = datetime.now()
-    hoje = f'{now.day} de {_MESES_PT[now.month]} de {now.year}'
 
     banner = ''
     if stale:
@@ -552,7 +562,7 @@ def render(eventos=None, stale=False):
         <h1 class="logo">● RADAR</h1>
         <img src="linka.png" alt="LINKA" class="linka-logo">
     </div>
-    <p class="sub">Ribeirão Preto &nbsp;·&nbsp; Edição {hoje}</p>
+    <p class="sub">Ribeirão Preto &nbsp;·&nbsp; Edição <span id="data-edicao"></span></p>
     <div class="rule"></div>
 </header>
 
