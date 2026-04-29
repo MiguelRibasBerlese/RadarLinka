@@ -118,6 +118,93 @@ header {
     .filtros-wrapper { grid-template-columns: 1fr; }
 }
 
+/* ── Busca ── */
+.busca-wrapper {
+    max-width: 1200px;
+    margin: 0 auto 16px;
+    padding: 0 24px;
+}
+
+.busca-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.busca-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #aaa;
+    font-family: 'Source Sans 3', sans-serif;
+}
+
+.busca-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.busca-input {
+    width: 100%;
+    border: 1px solid #E0DAD0;
+    border-left: 3px solid #5B2D8E;
+    padding: 12px 40px 12px 16px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    color: #1A1A1A;
+    background: #fff;
+    border-radius: 0;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.busca-input::placeholder {
+    color: #bbb;
+}
+
+.busca-input:focus {
+    outline: none;
+    border-color: #5B2D8E;
+    box-shadow: 0 0 0 3px rgba(91, 45, 142, 0.12);
+}
+
+.busca-clear {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #bbb;
+    font-size: 18px;
+    line-height: 1;
+    display: none;
+    padding: 4px;
+    transition: color 0.2s;
+}
+
+.busca-clear:hover {
+    color: #5B2D8E;
+}
+
+.busca-clear.visible {
+    display: block;
+}
+
+.sem-resultado {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: #bbb;
+    display: none;
+}
+
+.sem-resultado.visible {
+    display: block;
+}
+
 /* Grid */
 .grid {
     max-width: 1200px;
@@ -217,7 +304,7 @@ header {
     to   { transform: translateY(110vh); }
 }
 
-main, header, .filtros-wrapper { position: relative; z-index: 1; }
+main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1; }
 
 /* ── Popup de novidades ── */
 .popup-overlay {
@@ -397,6 +484,23 @@ main, header, .filtros-wrapper { position: relative; z-index: 1; }
     <p class="sub">Ribeirão Preto &nbsp;·&nbsp; Edição <span id="data-edicao"></span></p>
     <div class="rule"></div>
 </header>
+
+<div class="busca-wrapper">
+    <div class="busca-grupo">
+        <label class="busca-label" for="busca-input">Buscar evento</label>
+        <div class="busca-input-wrapper">
+            <input
+                type="text"
+                id="busca-input"
+                class="busca-input"
+                placeholder="Digite o nome do evento, artista ou local..."
+                oninput="aplicarFiltros()"
+                autocomplete="off"
+            >
+            <button class="busca-clear" id="busca-clear" onclick="limparBusca()" title="Limpar">×</button>
+        </div>
+    </div>
+</div>
 
 <div class="filtros-wrapper">
     <div class="filtro-grupo">
@@ -1937,6 +2041,7 @@ main, header, .filtros-wrapper { position: relative; z-index: 1; }
         <p class="meta">09/05/2026 &nbsp;·&nbsp; Ribeirão Preto</p>
         <p class="narrativa">Mozart em Ribeirao Preto</p>
     </article>
+    <p class="sem-resultado" id="sem-resultado">Nenhum evento encontrado para essa busca.</p>
 </main>
 
 <script>
@@ -1954,19 +2059,53 @@ main, header, .filtros-wrapper { position: relative; z-index: 1; }
 function aplicarFiltros() {
     const cat    = document.getElementById('select-cat').value;
     const cidade = document.getElementById('select-cidade').value;
-    const cards  = document.querySelectorAll('.card');
+    const busca  = document.getElementById('busca-input').value
+                    .toLowerCase()
+                    .normalize('NFD')
+                    .replace(/[̀-ͯ]/g, '');
+
+    const cards    = document.querySelectorAll('.card');
+    const btnClear = document.getElementById('busca-clear');
+    const semRes   = document.getElementById('sem-resultado');
     let visiveis = 0;
+
+    if (btnClear) {
+        btnClear.classList.toggle('visible', busca.length > 0);
+    }
 
     cards.forEach(card => {
         const catOk    = cat    === 'todos' || card.dataset.cat    === cat;
         const cidadeOk = cidade === 'todas' || card.dataset.cidade === cidade;
-        const show = catOk && cidadeOk;
+
+        let buscaOk = true;
+        if (busca.length > 0) {
+            const texto = (card.textContent || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[̀-ͯ]/g, '');
+            buscaOk = texto.includes(busca);
+        }
+
+        const show = catOk && cidadeOk && buscaOk;
         card.style.display = show ? '' : 'none';
         if (show) visiveis++;
     });
 
     const label = document.getElementById('count-label');
     if (label) label.textContent = visiveis + ' evento' + (visiveis !== 1 ? 's' : '');
+
+    if (semRes) {
+        semRes.classList.toggle('visible', visiveis === 0);
+    }
+}
+
+function limparBusca() {
+    const input = document.getElementById('busca-input');
+    if (input) {
+        input.value = '';
+        input.focus();
+    }
+    aplicarFiltros();
 }
 
 // Partículas
