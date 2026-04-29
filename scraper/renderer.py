@@ -120,17 +120,15 @@ header {
     max-width: 1200px;
     margin: 0 auto 28px;
     padding: 0 24px;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 16px;
-    align-items: flex-end;
+    align-items: start;
 }
 .filtro-grupo {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    min-width: 200px;
-    flex: 1;
 }
 .filtro-label {
     font-size: 10px;
@@ -161,14 +159,8 @@ header {
     box-shadow: 0 0 0 3px rgba(91, 45, 142, 0.12);
 }
 .filtro-select:hover { border-color: #5B2D8E; }
-.filtro-count {
-    font-size: 11px;
-    color: #aaa;
-    font-family: 'Source Sans 3', sans-serif;
-    margin-top: 4px;
-}
-@media (max-width: 480px) {
-    .filtro-grupo { min-width: 100%; }
+@media (max-width: 600px) {
+    .filtros-wrapper { grid-template-columns: 1fr; }
 }
 
 /* Grid */
@@ -571,7 +563,6 @@ def render(eventos=None, stale=False):
             <option value="todos">Todos os tipos</option>
             {cats_options_html}
         </select>
-        <span class="filtro-count" id="count-label">{len(eventos)} eventos</span>
     </div>
     <div class="filtro-grupo">
         <label class="filtro-label" for="select-cidade">Cidade</label>
@@ -581,6 +572,7 @@ def render(eventos=None, stale=False):
         </select>
     </div>
 </div>
+<p id="count-label" style="max-width:1200px;margin:-16px auto 20px;padding:0 24px;font-size:11px;color:#aaa;font-family:'Source Sans 3',sans-serif;">{len(eventos)} eventos</p>
 
 <main class="grid">
     {cards_html}
