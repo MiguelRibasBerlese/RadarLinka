@@ -9,6 +9,36 @@ _MESES_PT = [
 EVENTS_JSON = os.path.join(os.path.dirname(__file__), '..', 'web', 'events.json')
 OUTPUT_HTML = os.path.join(os.path.dirname(__file__), '..', 'web', 'index.html')
 
+RADAR_VERSION = "1.2.0"
+
+CHANGELOG = {
+    "1.2.0": {
+        "titulo": "Cobertura expandida para 200km",
+        "novidades": [
+            "249 eventos de 11 cidades da região",
+            "Franca, Araraquara, Barretos, Jaboticabal, Bebedouro, Guariba, Monte Alto, São José do Rio Preto, Campinas e Uberaba",
+            "Deduplicação inteligente — sem eventos repetidos entre cidades",
+            "60% das duplicatas removidas automaticamente",
+        ]
+    },
+    "1.1.0": {
+        "titulo": "Datas e expansão regional",
+        "novidades": [
+            "Datas dos eventos agora no formato DD/MM/YYYY",
+            "Filtro por cidade adicionado na interface",
+            "Logo LINKA no header",
+        ]
+    },
+    "1.0.0": {
+        "titulo": "Lançamento do RADAR MVP",
+        "novidades": [
+            "27 eventos de Ribeirão Preto",
+            "Categorização por IA",
+            "Interface estilo jornal",
+        ]
+    },
+}
+
 BADGE_CORES = {
     'Show':        '#C0392B',
     'Festa':       '#6C3483',
@@ -245,6 +275,136 @@ main, header, .filtros, .filtros-cidade, .filtros-secao { position: relative; z-
     border-color: #3B1A6E;
     color: #fff;
 }
+
+/* ── Popup de novidades ── */
+.popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 8, 6, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeInOverlay 0.4s ease forwards;
+}
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+.popup-overlay.hidden { display: none; }
+
+.popup-box {
+    background: #F7F3EE;
+    border: 1px solid #E0DAD0;
+    border-top: 5px solid #5B2D8E;
+    max-width: 520px;
+    width: 100%;
+    padding: 36px 40px;
+    animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    position: relative;
+}
+@keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+.popup-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+.popup-badge {
+    background: #5B2D8E;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-family: 'Source Sans 3', sans-serif;
+}
+.popup-edicao {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #aaa;
+    font-family: 'Source Sans 3', sans-serif;
+}
+.popup-rule {
+    height: 2px;
+    background: #5B2D8E;
+    margin: 14px 0;
+    transform-origin: left;
+    transform: scaleX(0);
+    animation: drawRule 0.6s ease 0.3s forwards;
+}
+.popup-titulo {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 900;
+    color: #1A1A1A;
+    line-height: 1.2;
+    margin-bottom: 8px;
+}
+.popup-subtitulo {
+    font-size: 13px;
+    color: #888;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    font-family: 'Source Sans 3', sans-serif;
+}
+.popup-lista {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.popup-lista li {
+    font-size: 15px;
+    color: #333;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.5;
+    font-family: 'Source Sans 3', sans-serif;
+}
+.popup-lista li::before {
+    content: '●';
+    position: absolute;
+    left: 0;
+    color: #5B2D8E;
+    font-size: 8px;
+    top: 5px;
+}
+.popup-btn {
+    display: inline-block;
+    background: #5B2D8E;
+    color: #fff;
+    border: none;
+    padding: 14px 28px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    transition: background 0.2s, transform 0.15s;
+    border-radius: 2px;
+}
+.popup-btn:hover {
+    background: #3B1A6E;
+    transform: translateY(-1px);
+}
+@media (max-width: 480px) {
+    .popup-box { padding: 24px 20px; }
+}
 """
 
 JS = """
@@ -330,6 +490,45 @@ def render(eventos=None, stale=False):
     for cidade in cidades_presentes:
         cidades_html += f'<button class="filtro-btn" data-cidade="{cidade}">{cidade}</button>\n'
 
+    # Popup de novidades
+    version_data = CHANGELOG.get(RADAR_VERSION, {})
+    popup_titulo = version_data.get('titulo', 'Atualizacao disponivel')
+    popup_novidades = version_data.get('novidades', [])
+    novidades_html = ''.join(f'<li>{item}</li>\n' for item in popup_novidades)
+
+    popup_html = f'''<div id="radar-popup-overlay" class="popup-overlay">
+    <div class="popup-box">
+        <div class="popup-header">
+            <span class="popup-badge">v{RADAR_VERSION}</span>
+            <span class="popup-edicao">EDIÇÃO ESPECIAL</span>
+        </div>
+        <div class="popup-rule"></div>
+        <h2 class="popup-titulo">{popup_titulo}</h2>
+        <p class="popup-subtitulo">O que há de novo nesta edição:</p>
+        <ul class="popup-lista">
+            {novidades_html}        </ul>
+        <div class="popup-rule"></div>
+        <button class="popup-btn" onclick="fecharPopup()">Continuar para o RADAR →</button>
+    </div>
+</div>
+<script>
+(function() {{
+    var POPUP_KEY = 'radar_visto_v{RADAR_VERSION}';
+    window.fecharPopup = function() {{
+        var overlay = document.getElementById('radar-popup-overlay');
+        if (overlay) {{
+            overlay.style.animation = 'fadeInOverlay 0.3s ease reverse forwards';
+            setTimeout(function() {{ overlay.classList.add('hidden'); }}, 280);
+        }}
+        localStorage.setItem(POPUP_KEY, '1');
+    }};
+    if (localStorage.getItem(POPUP_KEY)) {{
+        var overlay = document.getElementById('radar-popup-overlay');
+        if (overlay) overlay.classList.add('hidden');
+    }}
+}})();
+</script>'''
+
     # Cards
     cards_html = ''
     if not eventos:
@@ -371,6 +570,7 @@ def render(eventos=None, stale=False):
     <style>{CSS}</style>
 </head>
 <body>
+{popup_html}
 <div class="particles"></div>
 {banner}
 <header>
