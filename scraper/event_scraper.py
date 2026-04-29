@@ -9,19 +9,6 @@ HEADERS = {
 
 SYMPLA_URLS = [
     'https://www.sympla.com.br/eventos/ribeirao-preto-sp',
-    'https://www.sympla.com.br/eventos/batatais-sp',
-    'https://www.sympla.com.br/eventos/sertaozinho-sp',
-    'https://www.sympla.com.br/eventos/serrana-sp',
-    'https://www.sympla.com.br/eventos/jardinopolis-sp',
-    'https://www.sympla.com.br/eventos/cravinhos-sp',
-    'https://www.sympla.com.br/eventos/brodowski-sp',
-    'https://www.sympla.com.br/eventos/pontal-sp',
-    'https://www.sympla.com.br/eventos/santa-rosa-de-viterbo-sp',
-    'https://www.sympla.com.br/eventos/pradopolis-sp',
-    'https://www.sympla.com.br/eventos/dumont-sp',
-    'https://www.sympla.com.br/eventos/serra-azul-sp',
-    'https://www.sympla.com.br/eventos/luis-antonio-sp',
-    'https://www.sympla.com.br/eventos/guatapara-sp',
 ]
 
 # Fallback de local quando o card não traz o campo — permite que o normalizador
@@ -65,6 +52,7 @@ def scrape_sympla():
                     print(f'[sympla:{cidade_slug}] 0 eventos — pulando')
                     continue
 
+                n_adicionados = 0
                 for card in cards:
                     titulo = card.get('data-name', '').strip()
                     if not titulo:
@@ -93,8 +81,9 @@ def scrape_sympla():
                         eventos.append({'titulo': titulo, 'url': url_evento,
                                         'local': local, 'data': data_raw,
                                         'fonte': 'sympla'})
+                        n_adicionados += 1
 
-                print(f'[sympla:{cidade_slug}] {len([e for e in eventos if cidade_slug.replace("-", " ") in e["local"].lower() or local_fallback in e["local"]])} eventos')
+                print(f'[sympla:{cidade_slug}] {n_adicionados} eventos')
                 time.sleep(random.uniform(1.0, 2.0))
 
             except Exception as e:
