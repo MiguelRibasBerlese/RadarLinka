@@ -16,6 +16,18 @@ def run():
     normalizados = [e for e in normalizados if e is not None]
     print(f'      {len(normalizados)} eventos validos apos filtro geografico')
 
+    # Deduplicação por URL — a Sympla repete eventos de RP nas páginas das cidades vizinhas
+    vistos = set()
+    unicos = []
+    for ev in normalizados:
+        chave = ev.get('url', '') or ev.get('titulo', '')
+        if chave not in vistos:
+            vistos.add(chave)
+            unicos.append(ev)
+    if len(unicos) < len(normalizados):
+        print(f'      {len(normalizados) - len(unicos)} duplicatas removidas → {len(unicos)} eventos unicos')
+    normalizados = unicos
+
     print(f'[3/3] Classificando com IA (~{len(normalizados) * 2}s)...')
     classificados = []
     for i, ev in enumerate(normalizados, 1):

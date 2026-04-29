@@ -7,40 +7,103 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36'
 }
 
+SYMPLA_URLS = [
+    'https://www.sympla.com.br/eventos/ribeirao-preto-sp',
+    'https://www.sympla.com.br/eventos/batatais-sp',
+    'https://www.sympla.com.br/eventos/sertaozinho-sp',
+    'https://www.sympla.com.br/eventos/serrana-sp',
+    'https://www.sympla.com.br/eventos/jardinopolis-sp',
+    'https://www.sympla.com.br/eventos/cravinhos-sp',
+    'https://www.sympla.com.br/eventos/brodowski-sp',
+    'https://www.sympla.com.br/eventos/pontal-sp',
+    'https://www.sympla.com.br/eventos/santa-rosa-de-viterbo-sp',
+    'https://www.sympla.com.br/eventos/pradopolis-sp',
+    'https://www.sympla.com.br/eventos/dumont-sp',
+    'https://www.sympla.com.br/eventos/serra-azul-sp',
+    'https://www.sympla.com.br/eventos/luis-antonio-sp',
+    'https://www.sympla.com.br/eventos/guatapara-sp',
+]
+
+# Fallback de local quando o card não traz o campo — permite que o normalizador
+# identifique a cidade correta em vez de usar o fallback 'Ribeirão Preto'.
+_SLUG_PARA_LOCAL = {
+    'ribeirao-preto':      'Ribeirão Preto - SP',
+    'batatais':            'Batatais - SP',
+    'sertaozinho':         'Sertãozinho - SP',
+    'serrana':             'Serrana - SP',
+    'jardinopolis':        'Jardinópolis - SP',
+    'cravinhos':           'Cravinhos - SP',
+    'brodowski':           'Brodowski - SP',
+    'pontal':              'Pontal - SP',
+    'santa-rosa-de-viterbo': 'Santa Rosa de Viterbo - SP',
+    'pradopolis':          'Pradópolis - SP',
+    'dumont':              'Dumont - SP',
+    'serra-azul':          'Serra Azul - SP',
+    'luis-antonio':        'Luís Antônio - SP',
+    'guatapara':           'Guatapará - SP',
+}
+
 def scrape_sympla():
+    eventos = []
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
-        page = browser.new_page()
-        page.set_extra_http_headers({'User-Agent': HEADERS['User-Agent']})
-        page.goto('https://www.sympla.com.br/eventos/ribeirao-preto-sp', wait_until='networkidle')
-        page.wait_for_timeout(4000)
-        html = page.content()
+        for url in SYMPLA_URLS:
+            cidade_slug = url.split('/')[-1].replace('-sp', '')
+            local_fallback = _SLUG_PARA_LOCAL.get(cidade_slug, cidade_slug)
+            try:
+                page = browser.new_page()
+                page.set_extra_http_headers({'User-Agent': HEADERS['User-Agent']})
+                page.goto(url, wait_until='networkidle', timeout=20000)
+                page.wait_for_timeout(3000)
+                html = page.content()
+                page.close()
+
+                soup = BeautifulSoup(html, 'html.parser')
+                cards = soup.select('a.sympla-card')
+
+                if not cards:
+                    print(f'[sympla:{cidade_slug}] 0 eventos — pulando')
+                    continue
+
+                for card in cards:
+                    titulo = card.get('data-name', '').strip()
+                    if not titulo:
+                        titulo_el = card.find(['h2', 'h3', 'h4', 'strong', 'span'])
+                        titulo = titulo_el.get_text(strip=True) if titulo_el else ''
+
+                    url_evento = card.get('href', '')
+                    if url_evento and not url_evento.startswith('http'):
+                        url_evento = 'https://www.sympla.com.br' + url_evento
+
+                    local_el = card.find(class_=lambda c: c and 'local' in c.lower())
+                    local = local_el.get_text(strip=True) if local_el else ''
+                    if not local:
+                        local = local_fallback
+
+                    texto_card = card.get_text(' ', strip=True)
+                    data_match = re.search(
+                        r'(Segunda|Ter[cç]a|Quarta|Quinta|Sexta|S[aá]bado|Domingo)'
+                        r',?\s+\d{1,2}\s+de\s+\w+(?:\s+[aà]s\s+\d{1,2}:\d{2})?'
+                        r'|\d{1,2}\s+de\s+\w+(?:\s+a\s+\d{1,2}\s+de\s+\w+)?(?:\s+de\s+\d{4})?',
+                        texto_card, re.IGNORECASE
+                    )
+                    data_raw = data_match.group(0).strip() if data_match else ''
+
+                    if titulo and len(titulo) > 5 and url_evento:
+                        eventos.append({'titulo': titulo, 'url': url_evento,
+                                        'local': local, 'data': data_raw,
+                                        'fonte': 'sympla'})
+
+                print(f'[sympla:{cidade_slug}] {len([e for e in eventos if cidade_slug.replace("-", " ") in e["local"].lower() or local_fallback in e["local"]])} eventos')
+                time.sleep(random.uniform(1.0, 2.0))
+
+            except Exception as e:
+                print(f'[WARN sympla:{cidade_slug}] {e}')
+                continue
+
         browser.close()
-    soup = BeautifulSoup(html, 'html.parser')
-    eventos = []
-    cards = soup.select('a.sympla-card')
-    for card in cards:
-        titulo = card.get('data-name') or ''
-        if not titulo:
-            h3 = card.find('h3')
-            titulo = h3.get_text(strip=True) if h3 else ''
-        url_evento = card.get('href', '')
-        local_el = card.find('p')
-        local = local_el.get_text(strip=True) if local_el else ''
-        # Extrai data do texto do card via regex (classes são hashes CSS — não usar seletores)
-        texto_card = card.get_text(' ', strip=True)
-        data_match = re.search(
-            r'(Segunda|Ter[cç]a|Quarta|Quinta|Sexta|S[aá]bado|Domingo)'
-            r',?\s+\d{1,2}\s+de\s+\w+(?:\s+[aà]s\s+\d{1,2}:\d{2})?'
-            r'|\d{1,2}\s+de\s+\w+(?:\s+a\s+\d{1,2}\s+de\s+\w+)?(?:\s+de\s+\d{4})?',
-            texto_card, re.IGNORECASE
-        )
-        data_raw = data_match.group(0).strip() if data_match else ''
-        if titulo and len(titulo) > 5 and url_evento:
-            eventos.append({'titulo': titulo, 'url': url_evento, 'local': local,
-                            'data': data_raw, 'fonte': 'sympla'})
-    time.sleep(random.uniform(1.0, 2.0))
-    print(f'[scrape_sympla playwright] {len(eventos)} eventos encontrados')
+
+    print(f'[scrape_sympla] {len(eventos)} eventos no total')
     return eventos
 
 def scrape_ingresse():
