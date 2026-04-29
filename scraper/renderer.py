@@ -284,7 +284,15 @@ def render(eventos=None, stale=False):
             cor   = BADGE_CORES.get(cat, '#95A5A6')
             titulo = ev.get('titulo', '').replace('<', '&lt;').replace('>', '&gt;')
             local  = ev.get('local', '') or 'Ribeirão Preto'
-            data   = ev.get('data_iso', '') or 'Data a confirmar'
+            data_iso = ev.get('data_iso', '')
+            if data_iso:
+                try:
+                    dt = datetime.strptime(data_iso, '%Y-%m-%d')
+                    data = dt.strftime('%d/%m/%Y')
+                except:
+                    data = data_iso
+            else:
+                data = 'Data a confirmar'
             narr   = ev.get('narrativa_ia', '').replace('<', '&lt;').replace('>', '&gt;')
             url    = ev.get('url', '#')
 
