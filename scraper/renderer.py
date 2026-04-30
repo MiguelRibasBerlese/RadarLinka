@@ -304,6 +304,7 @@ header {
     border: 1px solid #E0DAD0;
     border-radius: 16px;
     padding: 20px;
+    position: relative;
     cursor: pointer;
     perspective: 600px;
     opacity: 0;
@@ -561,6 +562,43 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
 @media (max-width: 480px) {
     .popup-box { padding: 24px 20px; }
 }
+footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 32px 24px;
+    margin-top: 40px;
+    border-top: 1px solid #E0DAD0;
+    font-size: 13px;
+    color: #aaa;
+    font-family: 'Source Sans 3', sans-serif;
+}
+footer a {
+    color: #5B2D8E;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+footer a:hover {
+    border-bottom-color: #5B2D8E;
+}
+.card-link-hint {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #5B2D8E;
+    font-family: 'Source Sans 3', sans-serif;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.2s, transform 0.2s;
+}
+.card:hover .card-link-hint {
+    opacity: 1;
+    transform: translateX(0);
+}
 """
 
 JS = """
@@ -677,6 +715,43 @@ def render(eventos=None, stale=False):
 
     now = datetime.now()
 
+    # Ordenar: eventos com data primeiro (por data asc), sem data no final
+    def sort_key(ev):
+        d = ev.get('data_iso', '')
+        if d:
+            return (0, d)
+        return (1, '')
+
+    eventos = sorted(eventos, key=sort_key)
+
+    # Limpar sufixos de cidade dos títulos
+    import re as _re
+    SUFIXOS_CIDADE = [
+        ' - Ribeirão Preto-SP', ' - Ribeirão Preto - SP',
+        ' - Ribeirão Preto', ' | Ribeirão Preto',
+        ' - Franca-SP', ' - Franca - SP', ' - Franca',
+        ' - Araraquara-SP', ' - Araraquara - SP', ' - Araraquara',
+        ' - Barretos-SP', ' - Barretos - SP', ' - Barretos',
+        ' - Campinas-SP', ' - Campinas - SP', ' - Campinas',
+        ' - São José do Rio Preto-SP', ' - São José do Rio Preto',
+        ' - Uberaba-MG', ' - Uberaba - MG', ' - Uberaba',
+        ' - Jaboticabal-SP', ' - Jaboticabal',
+        ' - Bebedouro-SP', ' - Bebedouro',
+        ' - Guariba-SP', ' - Guariba',
+        ' - Monte Alto-SP', ' - Monte Alto',
+        '/SP', '-SP', '- SP',
+    ]
+
+    def limpar_titulo(titulo):
+        for sufixo in SUFIXOS_CIDADE:
+            if titulo.endswith(sufixo):
+                titulo = titulo[:-len(sufixo)].strip()
+        titulo = _re.sub(r'\s*[\|\/]\s*[A-Z][a-zÀ-ú\s]+$', '', titulo).strip()
+        return titulo
+
+    for ev in eventos:
+        ev['titulo'] = limpar_titulo(ev.get('titulo', ''))
+
     banner = ''
     if stale:
         banner = '<div class="stale-banner">⚠ Dados podem estar desatualizados — última atualização há mais de 48h.</div>'
@@ -772,6 +847,7 @@ def render(eventos=None, stale=False):
         <h2>{titulo}</h2>
         <p class="meta">{data} &nbsp;·&nbsp; {local}</p>
         {'<p class="narrativa">' + narr + '</p>' if narr else ''}
+        <span class="card-link-hint">Ver evento →</span>
     </article>'''
 
     html = f'''<!DOCTYPE html>
@@ -780,6 +856,7 @@ def render(eventos=None, stale=False):
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="RADAR — Agregador inteligente de eventos de Ribeirão Preto">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%235B2D8E'/%3E%3Ctext x='50' y='67' font-size='52' text-anchor='middle' fill='white' font-family='serif'%3E●%3C/text%3E%3C/svg%3E">
     <title>RADAR — Ribeirão Preto</title>
     <style>{CSS}</style>
 </head>
@@ -837,6 +914,13 @@ def render(eventos=None, stale=False):
 </main>
 
 <script>{JS}</script>
+<footer>
+    RADAR &nbsp;·&nbsp; Ribeirão Preto e Região &nbsp;·&nbsp; 2026
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    Desenvolvido por <a href="https://linka.com.br" target="_blank">LINKA</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    Dev Principal: Miguel Ribas
+</footer>
 </body>
 </html>'''
 
