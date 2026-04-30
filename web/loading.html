@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RADAR — Carregando</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #080808;
+            overflow: hidden;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #080808;
+        }
+
+        #canvas-container {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+        }
+
+        #ui {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-top: 260px;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        #ui.visivel {
+            opacity: 1;
+        }
+
+        .logo {
+            font-size: clamp(40px, 8vw, 72px);
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -2px;
+            line-height: 1;
+            text-align: center;
+        }
+
+        .logo-bullet {
+            color: #ffffff;
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        .subtitulo {
+            font-size: 11px;
+            font-weight: 400;
+            color: #ffffff;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .carregando {
+            font-size: 12px;
+            color: #ffffff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-align: center;
+            animation: piscar 1.5s ease-in-out infinite;
+        }
+
+        @keyframes piscar {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.3; }
+        }
+
+        #conteudo {
+            display: none;
+            min-height: 100vh;
+            background: #080808;
+            color: #F0EDE8;
+            font-family: 'Space Grotesk', sans-serif;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <div id="canvas-container"></div>
+    <div id="ui">
+        <h1 class="logo"><span class="logo-bullet">●</span> RADAR</h1>
+        <p class="subtitulo">Ribeirão Preto e Região</p>
+        <p class="carregando">Carregando eventos...</p>
+    </div>
+</div>
+
+<div id="conteudo">
+    Conteúdo do RADAR
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ─── CENA ────────────────────────────────────────────────────────────────────
+const scene    = new THREE.Scene();
+const camera   = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+camera.position.z = 4;
+
+// ─── TEXTURAS ─────────────────────────────────────────────────────────────────
+const loader = new THREE.TextureLoader();
+const starsTexture = loader.load('textures/stars.jpg');
+
+// ─── BACKGROUND ESTRELADO ─────────────────────────────────────────────────────
+const bgGeo = new THREE.SphereGeometry(500, 32, 32);
+const bgMat = new THREE.MeshBasicMaterial({ map: starsTexture, side: THREE.BackSide });
+scene.add(new THREE.Mesh(bgGeo, bgMat));
+
+// ─── PLANETA BASE ────────────────────────────────────────────────────────────
+// Usa luz direcional p/ profundidade 3D + emissiveMap p/ países roxos
+const planetGeo = new THREE.SphereGeometry(1.5, 64, 64);
+const planetMat = new THREE.MeshPhongMaterial({
+    color:             new THREE.Color(0x1a1a2e),  // azul-escuro de base (oceano com luz)
+    emissive:          new THREE.Color(0x5500CC),  // roxo nos continentes
+    emissiveIntensity: 0.9,
+    shininess:         0,
+    specular:          new THREE.Color(0x000000),
+});
+const planet = new THREE.Mesh(planetGeo, planetMat);
+planet.rotation.y = Math.PI * 0.15;
+scene.add(planet);
+
+// ─── LUZES DAS CIDADES (nightmap aditivo) ─────────────────────────────────────
+const cityGeo = new THREE.SphereGeometry(1.502, 64, 64);
+const cityMat = new THREE.MeshBasicMaterial({
+    color:       new THREE.Color(0xFFCC88),   // tom dourado/quente para as cidades
+    blending:    THREE.AdditiveBlending,
+    transparent: true,
+    depthWrite:  false,
+});
+const cityMesh = new THREE.Mesh(cityGeo, cityMat);
+planet.add(cityMesh); // filho do planeta — rotaciona junto
+
+// ─── CARREGA TEXTURAS ─────────────────────────────────────────────────────────
+loader.load('textures/specular.png', (specTex) => {
+    const img = specTex.image;
+    const canvas = document.createElement('canvas');
+    canvas.width  = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    // Inversão pixel-a-pixel → terra=branco (ativa emissive), oceano=preto
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const d = imgData.data;
+    for (let i = 0; i < d.length; i += 4) {
+        d[i]     = 255 - d[i];
+        d[i + 1] = 255 - d[i + 1];
+        d[i + 2] = 255 - d[i + 2];
+    }
+    ctx.putImageData(imgData, 0, 0);
+    planetMat.map         = specTex;
+    planetMat.emissiveMap = new THREE.CanvasTexture(canvas);
+    planetMat.needsUpdate = true;
+});
+
+loader.load('textures/nightmap.jpg', (nightTex) => {
+    cityMat.map = nightTex;   // luzes das cidades brilham dourado por cima
+    cityMat.needsUpdate = true;
+});
+
+// ─── ILUMINAÇÃO ───────────────────────────────────────────────────────────────
+scene.add(new THREE.AmbientLight(0x223355, 0.4));    // azul frio no lado escuro
+const sun = new THREE.DirectionalLight(0xffffff, 0.9);
+sun.position.set(5, 2, 4);
+scene.add(sun);
+
+// ─── ESTADO DA ANIMAÇÃO ───────────────────────────────────────────────────────
+let zoomAtivo = false;
+let zoomInicio = 0;
+const ui = document.getElementById('ui');
+
+// Fase 2: mostrar UI após 1s
+setTimeout(() => ui.classList.add('visivel'), 1000);
+
+// Fase 3: iniciar zoom após 3s
+setTimeout(() => {
+    zoomAtivo = true;
+    zoomInicio = Date.now();
+    ui.style.transition = 'opacity 1s ease';
+    ui.style.opacity = '0';
+}, 3000);
+
+// Fase 4: revelar conteúdo após 5.5s
+setTimeout(() => {
+    const loading = document.getElementById('loading-screen');
+    loading.style.transition = 'opacity 0.8s ease';
+    loading.style.opacity = '0';
+    setTimeout(() => {
+        loading.style.display = 'none';
+        const conteudo = document.getElementById('conteudo');
+        conteudo.style.display = 'flex';
+    }, 800);
+}, 5500);
+
+// ─── LOOP DE ANIMAÇÃO ─────────────────────────────────────────────────────────
+function animate() {
+    requestAnimationFrame(animate);
+
+    // Rotação contínua
+    planet.rotation.y -= 0.002;
+
+    // Zoom in
+    if (zoomAtivo) {
+        const elapsed = (Date.now() - zoomInicio) / 1000;
+        const t = Math.min(elapsed / 2.5, 1);
+        const eased = t * t * (3 - 2 * t); // smoothstep
+        camera.position.z = 4 - (3.92 * eased); // 4 → 0.08
+    }
+
+    renderer.render(scene, camera);
+}
+
+animate();
+
+// ─── RESPONSIVO ───────────────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ─── ACESSIBILIDADE ───────────────────────────────────────────────────────────
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('conteudo').style.display = 'flex';
+}
+</script>
+</body>
+</html>

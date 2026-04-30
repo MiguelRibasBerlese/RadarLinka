@@ -564,8 +564,47 @@ footer a:hover {
     transform: translateX(0);
 }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+@keyframes bulletPulseLoad {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.6; transform: scale(1.2); }
+}
+#bullet-loading {
+    display: inline-block;
+    animation: bulletPulseLoad 2s ease-in-out infinite;
+}
+#txt-carregando {
+    animation: piscarLoad 1.5s ease-in-out infinite;
+}
+@keyframes piscarLoad {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+}
+</style>
 </head>
 <body>
+<div id="loading-screen" style="position:fixed;inset:0;z-index:9999;background:#080808;">
+    <div id="canvas-container" style="position:fixed;inset:0;z-index:1;"></div>
+    <div id="loading-ui" style="
+        position:relative;z-index:10;
+        display:flex;flex-direction:column;
+        align-items:center;justify-content:center;
+        height:100vh;gap:12px;
+        opacity:0;transition:opacity 1s ease;
+        font-family:'Space Grotesk',sans-serif;
+    ">
+        <h1 style="font-size:clamp(40px,8vw,72px);font-weight:900;color:#F0EDE8;letter-spacing:-2px;">
+            <span id="bullet-loading" style="color:#7B2FFF;">●</span> RADAR
+        </h1>
+        <p style="font-size:11px;color:#555;letter-spacing:4px;text-transform:uppercase;">
+            Ribeirão Preto e Região
+        </p>
+        <p id="txt-carregando" style="font-size:12px;color:#444;letter-spacing:3px;text-transform:uppercase;">
+            Carregando eventos...
+        </p>
+    </div>
+</div>
 <div id="radar-popup-overlay" class="popup-overlay">
     <div class="popup-box">
         <div class="popup-header">
@@ -2536,5 +2575,98 @@ if (container) {
     &nbsp;&nbsp;|&nbsp;&nbsp;
     Dev Principal: Miguel Ribas
 </footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.getElementById('loading-screen').style.display = 'none';
+        return;
+    }
+
+    const scene    = new THREE.Scene();
+    const camera   = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    document.getElementById('canvas-container').appendChild(renderer.domElement);
+    camera.position.z = 4;
+
+    // Estrelas
+    const starsGeo = new THREE.BufferGeometry();
+    const pos = new Float32Array(300 * 3);
+    for (let i = 0; i < 300 * 3; i++) pos[i] = (Math.random() - 0.5) * 100;
+    starsGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    scene.add(new THREE.Points(starsGeo,
+        new THREE.PointsMaterial({ color: 0xffffff, size: 0.08, transparent: true, opacity: 0.6 })));
+
+    // Texturas
+    const loader   = new THREE.TextureLoader();
+    const nightmap = loader.load('textures/nightmap.jpg');
+    const specular = loader.load('textures/specular.png');
+
+    // Planeta
+    const planet = new THREE.Mesh(
+        new THREE.SphereGeometry(1.5, 64, 64),
+        new THREE.MeshPhongMaterial({
+            map: nightmap,
+            specularMap: specular,
+            specular: new THREE.Color(0x7B2FFF),
+            shininess: 80,
+        })
+    );
+    scene.add(planet);
+
+    // Atmosfera
+    scene.add(new THREE.Mesh(
+        new THREE.SphereGeometry(1.56, 64, 64),
+        new THREE.MeshPhongMaterial({ color: 0x7B2FFF, transparent: true, opacity: 0.08, side: THREE.BackSide })
+    ));
+
+    // Iluminação
+    scene.add(new THREE.AmbientLight(0x111133, 0.8));
+    const sun = new THREE.DirectionalLight(0xffffff, 1.2);
+    sun.position.set(5, 3, 5);
+    scene.add(sun);
+    const purpleLight = new THREE.PointLight(0x7B2FFF, 1.5, 20);
+    purpleLight.position.set(-4, 0, 2);
+    scene.add(purpleLight);
+
+    // UI e zoom
+    const ui = document.getElementById('loading-ui');
+    setTimeout(() => ui.style.opacity = '1', 1000);
+
+    let zoomAtivo = false, zoomInicio = 0;
+    setTimeout(() => {
+        zoomAtivo = true;
+        zoomInicio = Date.now();
+        ui.style.opacity = '0';
+    }, 3000);
+
+    setTimeout(() => {
+        const ls = document.getElementById('loading-screen');
+        ls.style.transition = 'opacity 0.8s ease';
+        ls.style.opacity = '0';
+        setTimeout(() => ls.style.display = 'none', 800);
+    }, 5500);
+
+    // Loop
+    (function animate() {
+        requestAnimationFrame(animate);
+        planet.rotation.y += 0.002;
+        if (zoomAtivo) {
+            const t = Math.min((Date.now() - zoomInicio) / 2500, 1);
+            const e = t * t * (3 - 2 * t);
+            camera.position.z = 4 - (3.92 * e);
+        }
+        renderer.render(scene, camera);
+    })();
+
+    window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+})();
+</script>
 </body>
 </html>
