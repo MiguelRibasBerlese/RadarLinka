@@ -10,14 +10,19 @@ EVENTS_JSON = os.path.join(os.path.dirname(__file__), '..', 'web', 'events.json'
 OUTPUT_HTML = os.path.join(os.path.dirname(__file__), '..', 'web', 'index.html')
 
 BADGE_CORES = {
-    'Show':        '#C0392B',
-    'Festa':       '#6C3483',
-    'Feira':       '#1E8449',
-    'Festival':    '#B7770D',
-    'Teatro':      '#1A5276',
-    'Esporte':     '#0E6655',
-    'Corporativo': '#7F8C8D',
-    'Outro':       '#95A5A6',
+    'Show':        '#C0392B',  # vermelho
+    'Festa':       '#6C3483',  # roxo escuro
+    'Feira':       '#1E8449',  # verde
+    'Festival':    '#B7770D',  # laranja escuro
+    'Teatro':      '#1A5276',  # azul escuro
+    'Esporte':     '#0E6655',  # verde-água
+    'Corporativo': '#7F8C8D',  # cinza
+    'Curso':       '#1A6B8A',  # azul petróleo
+    'Exposição':   '#884EA0',  # roxo médio
+    'Religioso':   '#A04000',  # marrom-terracota
+    'Turismo':     '#1D8348',  # verde floresta
+    'Infantil':    '#CB4335',  # vermelho coral
+    'Outro':       '#95A5A6',  # cinza claro
 }
 
 CSS = """

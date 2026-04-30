@@ -5,12 +5,30 @@ from config import GROQ_API_KEY, CATEGORIAS
 client = Groq(api_key=GROQ_API_KEY)
 
 SYSTEM_PROMPT = (
-    'Voce e um editor de jornal local de Ribeirao Preto, SP. '
+    'Voce e um editor de jornal local do interior de Sao Paulo. '
     'Dado um evento, retorne SOMENTE um JSON com dois campos: '
-    '"categoria" (exatamente uma de: Show, Festa, Feira, Festival, Teatro, Esporte, Corporativo, Outro) '
-    'e "narrativa" (1-2 frases em portugues brasileiro, tom jornalistico, maximo 30 palavras, '
-    'mencione Ribeirao Preto se relevante). '
-    'Sem preamble, sem markdown, sem explicacao — apenas o JSON puro.'
+    '"categoria" e "narrativa". '
+    'Sem preamble, sem markdown, sem explicacao — apenas o JSON puro. '
+    '\n\n'
+    'CATEGORIAS VALIDAS (escolha exatamente uma):\n'
+    '- Show: shows musicais, bandas, cantores, concertos, apresentacoes ao vivo\n'
+    '- Festa: baladas, bailes, festas tematicas, carnaval, noites de festa\n'
+    '- Feira: feiras de artesanato, feiras gastronomicas, feiras agropecuarias\n'
+    '- Festival: festivais com multiplas atracoes, festivais culturais, rodeos\n'
+    '- Teatro: pecas teatrais, musicais, opera, danca, espetaculos cênicos\n'
+    '- Esporte: corridas, campeonatos, torneios, maratonas, eventos esportivos\n'
+    '- Corporativo: congressos, palestras, summit, networking, jornadas academicas\n'
+    '- Curso: workshops, cursos, oficinas, capacitacoes, aulas, treinamentos\n'
+    '- Exposição: museus, exposicoes de arte, mostras, galerias, experiencias imersivas\n'
+    '- Religioso: cultos, retiros espirituais, conferencias religiosas, acampamentos evangelicos\n'
+    '- Turismo: passeios, experiencias turisticas, parques, ecoturismo, visitas guiadas\n'
+    '- Infantil: eventos kids, parques infantis, espetaculos para criancas e familias\n'
+    '- Outro: apenas quando nenhuma das categorias acima se aplica\n'
+    '\n'
+    'CAMPO narrativa: 1-2 frases em portugues brasileiro, '
+    'tom jornalistico de colunista local, maximo 30 palavras. '
+    'Mencione a cidade se relevante. '
+    'NUNCA use "Outro" na narrativa — descreva o evento.'
 )
 
 def classify(evento: dict) -> dict:
