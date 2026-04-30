@@ -40,13 +40,13 @@ CHANGELOG = {
 }
 
 BADGE_CORES = {
-    'Show':        '#C0392B',  # vermelho
+    'Show':        '#D4AC0D',  # amarelo escuro
     'Festa':       '#6C3483',  # roxo escuro
     'Feira':       '#1E8449',  # verde
     'Festival':    '#B7770D',  # laranja escuro
     'Teatro':      '#1A5276',  # azul escuro
     'Esporte':     '#0E6655',  # verde-água
-    'Corporativo': '#7F8C8D',  # cinza
+    'Corporativo': '#C0392B',  # vermelho
     'Curso':       '#1A6B8A',  # azul petróleo
     'Exposição':   '#884EA0',  # roxo médio
     'Religioso':   '#A04000',  # marrom-terracota
