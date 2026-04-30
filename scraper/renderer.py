@@ -40,14 +40,19 @@ CHANGELOG = {
 }
 
 BADGE_CORES = {
-    'Show':        '#C0392B',
-    'Festa':       '#6C3483',
-    'Feira':       '#1E8449',
-    'Festival':    '#B7770D',
-    'Teatro':      '#1A5276',
-    'Esporte':     '#0E6655',
-    'Corporativo': '#7F8C8D',
-    'Outro':       '#95A5A6',
+    'Show':        '#C0392B',  # vermelho
+    'Festa':       '#6C3483',  # roxo escuro
+    'Feira':       '#1E8449',  # verde
+    'Festival':    '#B7770D',  # laranja escuro
+    'Teatro':      '#1A5276',  # azul escuro
+    'Esporte':     '#0E6655',  # verde-água
+    'Corporativo': '#7F8C8D',  # cinza
+    'Curso':       '#1A6B8A',  # azul petróleo
+    'Exposição':   '#884EA0',  # roxo médio
+    'Religioso':   '#A04000',  # marrom-terracota
+    'Turismo':     '#1D8348',  # verde floresta
+    'Infantil':    '#CB4335',  # vermelho coral
+    'Outro':       '#95A5A6',  # cinza claro
 }
 
 CSS = """
@@ -477,6 +482,50 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
     background: #3B1A6E;
     transform: translateY(-1px);
 }
+.popup-checkbox-wrapper {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #E0DAD0;
+}
+.popup-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+.popup-checkbox-label input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #5B2D8E;
+    border-radius: 2px;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    transition: background 0.2s;
+}
+.popup-checkbox-label input[type="checkbox"]:checked {
+    background: #5B2D8E;
+}
+.popup-checkbox-label input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    top: 0px;
+    width: 5px;
+    height: 10px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+}
+.popup-checkbox-text {
+    font-size: 13px;
+    color: #666;
+    font-family: 'Source Sans 3', sans-serif;
+}
 @media (max-width: 480px) {
     .popup-box { padding: 24px 20px; }
 }
@@ -613,19 +662,28 @@ def render(eventos=None, stale=False):
         <ul class="popup-lista">
             {novidades_html}        </ul>
         <div class="popup-rule"></div>
+        <div class="popup-checkbox-wrapper">
+            <label class="popup-checkbox-label">
+                <input type="checkbox" id="popup-nao-mostrar">
+                <span class="popup-checkbox-text">Não mostrar novamente</span>
+            </label>
+        </div>
         <button class="popup-btn" onclick="fecharPopup()">Continuar para o RADAR →</button>
     </div>
 </div>
 <script>
 (function() {{
-    var POPUP_KEY = 'radar_visto_v{RADAR_VERSION}';
+    var POPUP_KEY = 'radar_nao_mostrar_v{RADAR_VERSION}';
     window.fecharPopup = function() {{
+        var checkbox = document.getElementById('popup-nao-mostrar');
+        if (checkbox && checkbox.checked) {{
+            localStorage.setItem(POPUP_KEY, '1');
+        }}
         var overlay = document.getElementById('radar-popup-overlay');
         if (overlay) {{
             overlay.style.animation = 'fadeInOverlay 0.3s ease reverse forwards';
             setTimeout(function() {{ overlay.classList.add('hidden'); }}, 280);
         }}
-        localStorage.setItem(POPUP_KEY, '1');
     }};
     if (localStorage.getItem(POPUP_KEY)) {{
         var overlay = document.getElementById('radar-popup-overlay');

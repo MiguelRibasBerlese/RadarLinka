@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pip install *)"
+      "Bash(pip install *)",
+      "Bash(.venv/Scripts/python.exe scraper/renderer.py)",
+      "Bash(.venv/Scripts/python.exe -c ' *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(vercel --prod)"
     ]
   }
 }
