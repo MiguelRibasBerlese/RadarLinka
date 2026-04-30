@@ -195,11 +195,15 @@ header {
 /* ── Busca ── */
 .busca-wrapper {
     max-width: 1200px;
-    margin: 0 auto 16px;
+    margin: 0 auto 20px;
     padding: 0 24px;
+    display: flex;
+    justify-content: center;
 }
 
 .busca-grupo {
+    width: 100%;
+    max-width: 520px;
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -212,6 +216,7 @@ header {
     text-transform: uppercase;
     color: #aaa;
     font-family: 'Source Sans 3', sans-serif;
+    text-align: center;
 }
 
 .busca-input-wrapper {
@@ -222,15 +227,15 @@ header {
 
 .busca-input {
     width: 100%;
-    border: 1px solid #E0DAD0;
-    border-left: 3px solid #5B2D8E;
-    padding: 12px 40px 12px 16px;
+    border: 1.5px solid #E0DAD0;
+    border-radius: 999px;
+    padding: 10px 40px 10px 20px;
     font-family: 'Source Sans 3', sans-serif;
     font-size: 14px;
     color: #1A1A1A;
     background: #fff;
-    border-radius: 0;
     transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(91,45,142,0.06);
 }
 
 .busca-input::placeholder {
@@ -245,7 +250,7 @@ header {
 
 .busca-clear {
     position: absolute;
-    right: 12px;
+    right: 14px;
     background: none;
     border: none;
     cursor: pointer;
@@ -263,6 +268,12 @@ header {
 
 .busca-clear.visible {
     display: block;
+}
+
+@media (max-width: 600px) {
+    .busca-grupo {
+        max-width: 100%;
+    }
 }
 
 .sem-resultado {
@@ -881,7 +892,7 @@ def render(eventos=None, stale=False):
                 type="text"
                 id="busca-input"
                 class="busca-input"
-                placeholder="Digite o nome do evento, artista ou local..."
+                placeholder="Buscar evento ou artista..."
                 oninput="aplicarFiltros()"
                 autocomplete="off"
             >
