@@ -171,23 +171,25 @@ header {
     appearance: none;
     -webkit-appearance: none;
     background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235B2D8E' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
-    border: 1px solid #E0DAD0;
-    border-left: 3px solid #5B2D8E;
-    padding: 12px 40px 12px 16px;
+    border: 1.5px solid #E0DAD0;
+    border-radius: 999px;
+    padding: 10px 40px 10px 20px;
     font-family: 'Source Sans 3', sans-serif;
     font-size: 14px;
     color: #1A1A1A;
     cursor: pointer;
     transition: border-color 0.2s, box-shadow 0.2s;
     width: 100%;
-    border-radius: 0;
+    box-shadow: 0 2px 8px rgba(91,45,142,0.06);
 }
 .filtro-select:focus {
     outline: none;
     border-color: #5B2D8E;
     box-shadow: 0 0 0 3px rgba(91, 45, 142, 0.12);
 }
-.filtro-select:hover { border-color: #5B2D8E; }
+.filtro-select:hover {
+    border-color: #5B2D8E;
+}
 @media (max-width: 600px) {
     .filtros-wrapper { grid-template-columns: 1fr; }
 }
