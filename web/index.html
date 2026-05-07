@@ -2126,7 +2126,7 @@ if (container) {
 
     // Camada 1 — base do planeta (oceanos): preto-azulado fosco, sem reflexo
     const planetMat = new THREE.MeshPhongMaterial({
-        color:    new THREE.Color(0x0a0a14),
+        color:    new THREE.Color(0x050505),
         specular: new THREE.Color(0x000000),
         shininess: 0,
     });
@@ -2173,11 +2173,6 @@ if (container) {
     });
     planet.add(new THREE.Mesh(new THREE.SphereGeometry(1.502, 64, 64), cityMat));
 
-    // Atmosfera leve
-    scene.add(new THREE.Mesh(
-        new THREE.SphereGeometry(1.56, 64, 64),
-        new THREE.MeshPhongMaterial({ color: 0x8547e4, transparent: true, opacity: 0.06, side: THREE.BackSide, specular: new THREE.Color(0x000000), shininess: 0 })
-    ));
 
     // Iluminação — só ambiente suave, sem luz direcional (elimina reflexo solar)
     scene.add(new THREE.AmbientLight(0xffffff, 0.6));
