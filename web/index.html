@@ -387,7 +387,7 @@ main, header { position: relative; z-index: 1; }
 </style>
 </head>
 <body>
-<div id="loading-screen" style="position:fixed;inset:0;z-index:9999;background:#080808;">
+<div id="loading-screen" style="position:fixed;inset:0;z-index:9999;background:#080808 url('ceuestrelado.svg') center/cover no-repeat;">
     <div id="canvas-container" style="position:fixed;inset:0;z-index:1;"></div>
     <div id="loading-ui" style="
         position:relative;z-index:10;
@@ -2118,11 +2118,6 @@ if (container) {
     const nightmap = loader.load('textures/nightmap.jpg');
     const specular = loader.load('textures/specular.png');
 
-    // Fundo estrelado (skybox esférico com stars.jpg)
-    const starsTexture = loader.load('textures/stars.jpg');
-    const bgGeo = new THREE.SphereGeometry(500, 32, 32);
-    const bgMat = new THREE.MeshBasicMaterial({ map: starsTexture, side: THREE.BackSide });
-    scene.add(new THREE.Mesh(bgGeo, bgMat));
 
     // Camada 1 — base do planeta (oceanos): preto-azulado fosco, sem reflexo
     const planetMat = new THREE.MeshPhongMaterial({
