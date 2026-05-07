@@ -2032,32 +2032,63 @@ if (container) {
     const bgMat = new THREE.MeshBasicMaterial({ map: starsTexture, side: THREE.BackSide });
     scene.add(new THREE.Mesh(bgGeo, bgMat));
 
-    // Planeta
-    const planet = new THREE.Mesh(
-        new THREE.SphereGeometry(1.5, 64, 64),
-        new THREE.MeshPhongMaterial({
-            map: nightmap,
-            specularMap: specular,
-            specular: new THREE.Color(0x7B2FFF),
-            shininess: 80,
-        })
-    );
+    // Camada 1 — base do planeta (oceanos): preto-azulado fosco, sem reflexo
+    const planetMat = new THREE.MeshPhongMaterial({
+        color:    new THREE.Color(0x0a0a14),
+        specular: new THREE.Color(0x000000),
+        shininess: 0,
+    });
+    const planet = new THREE.Mesh(new THREE.SphereGeometry(1.5, 64, 64), planetMat);
     scene.add(planet);
 
-    // Atmosfera
+    // Camada 2 — países em roxo via emissiveMap (specular.png invertido)
+    const countriesMat = new THREE.MeshPhongMaterial({
+        color:             new THREE.Color(0x000000),
+        emissive:          new THREE.Color(0x8547e4),
+        emissiveIntensity: 0.9,
+        specular:          new THREE.Color(0x000000),
+        shininess:         0,
+        transparent:       true,
+        depthWrite:        false,
+    });
+    const countriesMesh = new THREE.Mesh(new THREE.SphereGeometry(1.501, 64, 64), countriesMat);
+    planet.add(countriesMesh);
+
+    // Processa specular.png: inverte pixels → terra=branco, oceano=preto
+    loader.load('textures/specular.png', (specTex) => {
+        const img = specTex.image;
+        const c = document.createElement('canvas');
+        c.width = img.width; c.height = img.height;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        const d = ctx.getImageData(0, 0, c.width, c.height);
+        for (let i = 0; i < d.data.length; i += 4) {
+            d.data[i]   = 255 - d.data[i];
+            d.data[i+1] = 255 - d.data[i+1];
+            d.data[i+2] = 255 - d.data[i+2];
+        }
+        ctx.putImageData(d, 0, 0);
+        countriesMat.emissiveMap = new THREE.CanvasTexture(c);
+        countriesMat.needsUpdate = true;
+    });
+
+    // Camada 3 — luzes das cidades (nightmap aditivo, cores originais)
+    const cityMat = new THREE.MeshBasicMaterial({
+        map:         nightmap,
+        blending:    THREE.AdditiveBlending,
+        transparent: true,
+        depthWrite:  false,
+    });
+    planet.add(new THREE.Mesh(new THREE.SphereGeometry(1.502, 64, 64), cityMat));
+
+    // Atmosfera leve
     scene.add(new THREE.Mesh(
         new THREE.SphereGeometry(1.56, 64, 64),
-        new THREE.MeshPhongMaterial({ color: 0x7B2FFF, transparent: true, opacity: 0.08, side: THREE.BackSide })
+        new THREE.MeshPhongMaterial({ color: 0x8547e4, transparent: true, opacity: 0.06, side: THREE.BackSide, specular: new THREE.Color(0x000000), shininess: 0 })
     ));
 
-    // Iluminação
-    scene.add(new THREE.AmbientLight(0x111133, 0.8));
-    const sun = new THREE.DirectionalLight(0xffffff, 1.2);
-    sun.position.set(5, 3, 5);
-    scene.add(sun);
-    const purpleLight = new THREE.PointLight(0x7B2FFF, 1.5, 20);
-    purpleLight.position.set(-4, 0, 2);
-    scene.add(purpleLight);
+    // Iluminação — só ambiente suave, sem luz direcional (elimina reflexo solar)
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
     // UI e fases
     const ui = document.getElementById('loading-ui');
