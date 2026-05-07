@@ -2021,18 +2021,16 @@ if (container) {
     document.getElementById('canvas-container').appendChild(renderer.domElement);
     camera.position.z = 4;
 
-    // Estrelas procedurais
-    const starsGeo = new THREE.BufferGeometry();
-    const pos = new Float32Array(300 * 3);
-    for (let i = 0; i < 300 * 3; i++) pos[i] = (Math.random() - 0.5) * 100;
-    starsGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    scene.add(new THREE.Points(starsGeo,
-        new THREE.PointsMaterial({ color: 0xffffff, size: 0.08, transparent: true, opacity: 0.6 })));
-
     // Texturas
     const loader   = new THREE.TextureLoader();
     const nightmap = loader.load('textures/nightmap.jpg');
     const specular = loader.load('textures/specular.png');
+
+    // Fundo estrelado (skybox esférico com stars.jpg)
+    const starsTexture = loader.load('textures/stars.jpg');
+    const bgGeo = new THREE.SphereGeometry(500, 32, 32);
+    const bgMat = new THREE.MeshBasicMaterial({ map: starsTexture, side: THREE.BackSide });
+    scene.add(new THREE.Mesh(bgGeo, bgMat));
 
     // Planeta
     const planet = new THREE.Mesh(
