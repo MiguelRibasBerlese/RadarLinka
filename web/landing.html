@@ -324,8 +324,10 @@ for (let i = 0; i < 18; i++) {
     ];
     const hoje = new Date();
     const el   = document.getElementById('data-edicao');
-    if (el) el.textContent = hoje.getDate() + ' de ' + meses[hoje.getMonth()] + ' de ' + hoje.getFullYear();
+    if (el) el.textContent = hoje.getDate() + ' de ' +
+        meses[hoje.getMonth()] + ' de ' + hoje.getFullYear();
 })();
 </script>
+
 </body>
 </html>
