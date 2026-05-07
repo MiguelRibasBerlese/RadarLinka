@@ -59,7 +59,7 @@ def classify(evento: dict) -> dict:
         if categoria not in CATEGORIAS:
             categoria = 'Outro'
         narrativa = str(data.get('narrativa', '')).strip()[:200]
-        time.sleep(2)
+        time.sleep(5)
         return {'categoria': categoria, 'narrativa_ia': narrativa}
     except json.JSONDecodeError:
         print(f'[WARN classify] JSON malformado para: {evento.get("titulo","?")}')

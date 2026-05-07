@@ -3,37 +3,51 @@ from datetime import date
 import re
 
 CIDADES_REGIAO = [
+    # Ribeirão Preto
     'ribeirão preto', 'ribeirao preto', 'ribeirão-preto',
-    'brodowski',
-    'batatais',
-    'serrana',
+    # Região metropolitana
+    'brodowski', 'batatais', 'serrana',
     'jardinópolis', 'jardinopolis',
-    'cravinhos',
-    'sertãozinho', 'sertaozinho',
-    'guatapará', 'guatapara',
-    'dumont',
-    'serra azul',
-    'pradópolis', 'pradopolis',
-    'pontal',
-    'luís antônio', 'luis antonio',
+    'cravinhos', 'sertãozinho', 'sertaozinho',
+    'guatapará', 'guatapara', 'dumont',
+    'serra azul', 'pradópolis', 'pradopolis',
+    'pontal', 'luís antônio', 'luis antonio',
     'santa rosa de viterbo',
+    # Até 100km
+    'franca', 'araraquara', 'barretos',
+    'jaboticabal', 'bebedouro', 'guariba',
+    'monte alto', 'pitangueiras', 'orlândia', 'orlandia',
+    'morro agudo', 'altinópolis', 'altinopolis',
+    'cajuru', 'santa rita do passa quatro',
+    # 100km a 200km
+    'são josé do rio preto', 'sao jose do rio preto',
+    'campinas', 'uberaba',
+    'são carlos', 'sao carlos',
+    'bauru', 'marília', 'marilia',
 ]
 
 _NOMES_CORRETOS = [
+    # Ribeirão Preto
     'Ribeirão Preto', 'Ribeirão Preto', 'Ribeirão Preto',
-    'Brodowski',
-    'Batatais',
-    'Serrana',
+    # Região metropolitana
+    'Brodowski', 'Batatais', 'Serrana',
     'Jardinópolis', 'Jardinópolis',
-    'Cravinhos',
-    'Sertãozinho', 'Sertãozinho',
-    'Guatapará', 'Guatapará',
-    'Dumont',
-    'Serra Azul',
-    'Pradópolis', 'Pradópolis',
-    'Pontal',
-    'Luís Antônio', 'Luís Antônio',
+    'Cravinhos', 'Sertãozinho', 'Sertãozinho',
+    'Guatapará', 'Guatapará', 'Dumont',
+    'Serra Azul', 'Pradópolis', 'Pradópolis',
+    'Pontal', 'Luís Antônio', 'Luís Antônio',
     'Santa Rosa de Viterbo',
+    # Até 100km
+    'Franca', 'Araraquara', 'Barretos',
+    'Jaboticabal', 'Bebedouro', 'Guariba',
+    'Monte Alto', 'Pitangueiras', 'Orlândia', 'Orlândia',
+    'Morro Agudo', 'Altinópolis', 'Altinópolis',
+    'Cajuru', 'Santa Rita do Passa Quatro',
+    # 100km a 200km
+    'São José do Rio Preto', 'São José do Rio Preto',
+    'Campinas', 'Uberaba',
+    'São Carlos', 'São Carlos',
+    'Bauru', 'Marília', 'Marília',
 ]
 
 _MESES_PT = {
