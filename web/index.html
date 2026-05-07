@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="RADAR — Agregador inteligente de eventos de Ribeirão Preto">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%235B2D8E'/%3E%3Ctext x='50' y='67' font-size='52' text-anchor='middle' fill='white' font-family='serif'%3E●%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%238547e4'/%3E%3Ctext x='50' y='67' font-size='52' text-anchor='middle' fill='white' font-family='serif'%3E●%3C/text%3E%3C/svg%3E">
     <title>RADAR — Ribeirão Preto</title>
     <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@400;600&display=swap');
@@ -51,7 +51,7 @@ header {
     font-family: 'Playfair Display', serif;
     font-size: clamp(42px, 8vw, 80px);
     font-weight: 900;
-    color: #5B2D8E;
+    color: #8547e4;
     letter-spacing: -2px;
     line-height: 1;
     opacity: 0;
@@ -65,7 +65,7 @@ header {
 .logo-bullet {
     display: inline-block;
     animation: bulletPulse 2s ease-in-out 0.9s infinite;
-    color: #5B2D8E;
+    color: #8547e4;
 }
 @keyframes bulletPulse {
     0%, 100% { transform: scale(1);   opacity: 1;   }
@@ -80,7 +80,7 @@ header {
 }
 .rule {
     height: 3px;
-    background: #5B2D8E;
+    background: #8547e4;
     margin: 16px 0 24px;
     transform-origin: left;
     animation: drawRule 0.6s ease forwards;
@@ -116,7 +116,7 @@ header {
 .filtro-select {
     appearance: none;
     -webkit-appearance: none;
-    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235B2D8E' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238547e4' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
     border: 1.5px solid #E0DAD0;
     border-radius: 999px;
     padding: 10px 40px 10px 20px;
@@ -131,12 +131,12 @@ header {
 
 .filtro-select:focus {
     outline: none;
-    border-color: #5B2D8E;
+    border-color: #8547e4;
     box-shadow: 0 0 0 3px rgba(91, 45, 142, 0.12);
 }
 
 .filtro-select:hover {
-    border-color: #5B2D8E;
+    border-color: #8547e4;
 }
 
 @media (max-width: 600px) {
@@ -168,14 +168,24 @@ header {
 .card {
     background: #fff;
     border: 1px solid #E0DAD0;
+    border-radius: 16px;
     padding: 20px;
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
     perspective: 600px;
+    opacity: 0;
+    transform: translateY(24px);
+}
+.card.visivel {
+    animation: cardEntrada 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes cardEntrada {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 .card:hover {
     transform: rotateY(3deg) translateY(-4px);
-    box-shadow: -6px 8px 24px rgba(91,45,142,0.12);
+    box-shadow: -6px 8px 24px rgba(133,71,228,0.14);
 }
 .badge {
     display: inline-block;
@@ -234,7 +244,7 @@ header {
 .particle {
     position: absolute;
     font-family: 'Playfair Display', serif;
-    color: #5B2D8E;
+    color: #8547e4;
     opacity: 0.04;
     animation: fall linear infinite;
     user-select: none;
@@ -290,7 +300,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
 .busca-input::placeholder { color: #bbb; }
 .busca-input:focus {
     outline: none;
-    border-color: #5B2D8E;
+    border-color: #8547e4;
     box-shadow: 0 0 0 3px rgba(91, 45, 142, 0.12);
 }
 .busca-clear {
@@ -306,7 +316,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
     padding: 4px;
     transition: color 0.2s;
 }
-.busca-clear:hover { color: #5B2D8E; }
+.busca-clear:hover { color: #8547e4; }
 .busca-clear.visible { display: block; }
 @media (max-width: 600px) { .busca-grupo { max-width: 100%; } }
 </style>
@@ -336,7 +346,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         font-family:'Space Grotesk',sans-serif;
     ">
         <h1 style="font-size:clamp(40px,8vw,72px);font-weight:900;color:#F0EDE8;letter-spacing:-2px;">
-            <span id="bullet-loading" style="color:#7B2FFF;">●</span> RADAR
+            <span id="bullet-loading" style="color:#8547e4;">●</span> RADAR
         </h1>
         <p style="font-size:11px;color:#555;letter-spacing:4px;text-transform:uppercase;">
             Ribeirão Preto e Região
@@ -422,19 +432,19 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
 <main class="grid">
     
     <article class="card" data-cat="Show" data-cidade="Ribeirão Preto" onclick="window.open('https://bileto.sympla.com.br/event/117591','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Fora do Quintal - Agilmar Ferreira - Ribeirão Preto-SP</h2>
         <p class="meta">23/05/2026 &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Fora do Quintal em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Ribeirão Preto" onclick="window.open('https://bileto.sympla.com.br/event/117607','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Gio Lisboa em Ribeirão Preto/SP  Gio da Família Brasileira</h2>
         <p class="meta">12/05/2026 &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Gio Lisboa em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Ribeirão Preto" onclick="window.open('https://bileto.sympla.com.br/event/119596','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Choro da Casa toca Pixinguinha</h2>
         <p class="meta">30/04/2026 &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Choro da Casa em Ribeirao Preto</p>
@@ -452,7 +462,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Festa em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/clara-lima-akira-presidente-goa/3395739','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>CLARA LIMA + AKIRA PRESIDENTE - GOA</h2>
         <p class="meta">17/05/2026 &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Show em Ribeirao Preto</p>
@@ -470,19 +480,19 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Baile em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/aquiles-priester-rebirth-na-integra-brasil-tour-2026-ribeirao-preto-sp/3349350','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Aquiles Priester Rebirth na Íntegra | Brasil Tour 2026 Ribeirão Preto/SP</h2>
         <p class="meta">12/05/2026 &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Aquiles Priester em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/recomendo-agora-tambem-em-ribeirao-preto-o-melhor-cafe-de-negocios-da-cidade/3396236','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Recomendo agora também em Ribeirão Preto - O melhor café de negócios da cidade.</h2>
         <p class="meta">06/05/2026 &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Encontro em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/school-of-rock-ao-vivo-no-vila-dionisio-show-de-temporada/3381889','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>School of Rock ao Vivo no Vila Dionísio: Show de Temporada</h2>
         <p class="meta">14/06/2026 &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">School of Rock em Ribeirao Preto</p>
@@ -494,49 +504,49 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Ribeirão Preto recebe evento de vinho.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/pamv-2026-clinica-medica-e-cirurgica-de-grandes-animais/3185703','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>PAMV 2026 - Clínica Médica e Cirúrgica de Grandes Animais</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">PAMV em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/pamv-2026-clinica-cirurgica-e-anestesiologia-em-pequenos-animais/3185712','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>PAMV 2026 - Clínica Cirúrgica e Anestesiologia em Pequenos Animais</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Evento em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/pamv-2026-clinica-medica-de-pequenos-animais/3185724','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>PAMV 2026 - Clínica Médica de Pequenos Animais</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">PAMV 2026 em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/vision-tech-summit-industria-do-amanha-2026/3361003','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Vision Tech Summit - Indústria do Amanhã 2026</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Ribeirao Preto recebe o Vision Tech Summit</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/nunca-foi-sorte-sempre-foi-exu-luis-titoin/3363943','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>NUNCA FOI SORTE, SEMPRE FOI EXU. Luis Titoin</h2>
         <p class="meta">17/05/2026 &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Luis Titoin em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/noite-de-metal-no-vat-rock-bar/3399641','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Noite de Metal no Vat Rock Bar</h2>
         <p class="meta">01/05/2026 &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Noite de Metal em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/sanny-machado-no-ribeirao-comedy/3347242','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>SANNY MACHADO no Ribeirão Comedy</h2>
         <p class="meta">17/05/2026 &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Sanny Machado em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/ld-no-ribeirao-comedy/3356329','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>LD no Ribeirão Comedy</h2>
         <p class="meta">31/05/2026 &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Comedia em Ribeirao Preto</p>
@@ -548,31 +558,31 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Evento no Country Club em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/som-de-faculdade/3400805','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>SOM DE FACULDADE</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">SOM DE FACULDADE em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/xiv-jescobam-jornada-academica-de-estetica-e-cosmetica-do-cbm/3353556','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>XIV JESCOBAM - Jornada Acadêmica de Estética e Cosmética do CBM</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Jornada acadêmica em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Ribeirão Preto" onclick="window.open('https://www.sympla.com.br/evento/mes-da-enfermagem-focar-talk-pratica-rcp-ribeirao-preto/3389617','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>MÊS DA ENFERMAGEM FOCAR | TALK + PRATICA RCP| RIBEIRÃO PRETO</h2>
         <p class="meta">16/05/2026 &nbsp;·&nbsp; Ribeirão Preto - SP</p>
         <p class="narrativa">Ribeirao Preto promove evento de enfermagem</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Batatais" onclick="window.open('https://www.sympla.com.br/evento/circo-mundial-batatais-ultima-semana/3404651','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>CIRCO MUNDIAL - BATATAIS - ÚLTIMA SEMANA</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Batatais - SP</p>
         <p class="narrativa">Circo em Batatais, proximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Batatais" onclick="window.open('https://bileto.sympla.com.br/event/117667','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Fora do Quintal - Agilmar Ferreira - Franca-SP</h2>
         <p class="meta">22/05/2026 &nbsp;·&nbsp; Batatais - SP</p>
         <p class="narrativa">Agilmar Ferreira em Batatais, perto de Ribeirao Preto.</p>
@@ -584,7 +594,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Ribeirao Preto: Hamburgada do Bem</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Batatais" onclick="window.open('https://www.sympla.com.br/evento/low-groove-3a-edicao/3290956','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>LOW GROOVE 3ª EDIÇÃO</h2>
         <p class="meta">04/07/2026 &nbsp;·&nbsp; Batatais - SP</p>
         <p class="narrativa">LOW GROOVE em Batatais, perto de Ribeirao Preto.</p>
@@ -614,13 +624,13 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Evento em Batatais, proximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Batatais" onclick="window.open('https://www.sympla.com.br/evento/multiplicar-kids-2026-treinamento-para-lideres-professores-e-voluntarios-do-departamento-infantil/3300010','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>MULTIPLICAR KIDS 2026 - Treinamento para líderes, professores e voluntários do Departamento Infantil</h2>
         <p class="meta">20/06/2026 &nbsp;·&nbsp; Batatais - SP</p>
         <p class="narrativa">Treinamento em Batatais, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Batatais" onclick="window.open('https://www.sympla.com.br/evento/hardwired-especial-40-anos-master-of-puppets-iron-ladies-freaks-korn-cover/3381226','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Hardwired - Especial 40 anos Master of Puppets + Iron Ladies + Freaks - Korn Cover</h2>
         <p class="meta">06/06/2026 &nbsp;·&nbsp; Batatais - SP</p>
         <p class="narrativa">Show em Batatais, SP</p>
@@ -638,7 +648,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Teatro em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Sertãozinho" onclick="window.open('https://www.sympla.com.br/evento/rheiddy-ebrahim-fe-em-modo-aviao/3397154','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Rheiddy Ebrahim - Fé em Modo Avião</h2>
         <p class="meta">11/07/2026 &nbsp;·&nbsp; Sertãozinho - SP</p>
         <p class="narrativa">Rheiddy Ebrahim em Sertãozinho.</p>
@@ -650,19 +660,19 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Aniversario em Sertaozinho</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Sertãozinho" onclick="window.open('https://www.sympla.com.br/evento/cultura-organizacional-que-constroi-resultados-de-excelencia/3394519','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Cultura Organizacional que Constrói Resultados de Excelência</h2>
         <p class="meta">08/05/2026 &nbsp;·&nbsp; Sertãozinho - SP</p>
         <p class="narrativa">Evento em Sertãozinho, proximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Sertãozinho" onclick="window.open('https://www.sympla.com.br/evento/komvos-hp-mind-10x-summit/3305830','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>KOMVOS | HP Mind 10x Summit</h2>
         <p class="meta">12/05/2026 &nbsp;·&nbsp; Sertãozinho - SP</p>
         <p class="narrativa">Summit em Sertãozinho</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Sertãozinho" onclick="window.open('https://www.sympla.com.br/evento/comecomm-academy-canais-de-vendas-marketplaces-ribeirao/3367766','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>ComEcomm Academy | Canais de Vendas Marketplaces - Ribeirão</h2>
         <p class="meta">07/05/2026 &nbsp;·&nbsp; Sertãozinho - SP</p>
         <p class="narrativa">Evento em Sertãozinho, perto de Ribeirao Preto.</p>
@@ -674,7 +684,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Passeio em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Serrana" onclick="window.open('https://www.sympla.com.br/evento/financiamento-sus-do-recebimento-aos-pagamentos/3396088','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Financiamento SUS: do recebimento aos pagamentos.</h2>
         <p class="meta">13/05/2026 &nbsp;·&nbsp; Serrana - SP</p>
         <p class="narrativa">Serrana discute financiamento SUS</p>
@@ -692,49 +702,49 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Tour em Serrana, proximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Serrana" onclick="window.open('https://www.sympla.com.br/evento/nil-guimaraes/3361917','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>NIL GUIMARÃES</h2>
         <p class="meta">30/04/2026 &nbsp;·&nbsp; Serrana - SP</p>
         <p class="narrativa">NIL em Serrana, SP</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Serrana" onclick="window.open('https://www.sympla.com.br/evento/banda-5-minutos/3362002','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Banda 5 Minutos</h2>
         <p class="meta">29/04/2026 &nbsp;·&nbsp; Serrana - SP</p>
         <p class="narrativa">Banda 5 Minutos em Serrana, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Serrana" onclick="window.open('https://www.sympla.com.br/evento/royal-enfield-apresenta-caveiras-rock-rock-nacional-anos-80-no-hard-rock-cafe-ribeirao-preto/3393137','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Royal Enfield Apresenta: Caveiras Rock – Rock Nacional Anos 80 no Hard Rock Cafe Ribeirão Preto</h2>
         <p class="meta">14/05/2026 &nbsp;·&nbsp; Serrana - SP</p>
         <p class="narrativa">Rock em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Serrana" onclick="window.open('https://www.sympla.com.br/evento/mama-punch-knockout-hits-no-hard-rock-cafe-ribeirao-preto/3368218','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Mama Punch – Knockout Hits no Hard Rock Cafe Ribeirão Preto</h2>
         <p class="meta">02/05/2026 &nbsp;·&nbsp; Serrana - SP</p>
         <p class="narrativa">Mama Punch no Hard Rock Cafe Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Serrana" onclick="window.open('https://www.sympla.com.br/evento/spine-shiver-southern-rock-experience-no-hard-rock-cafe-ribeirao-preto/3386369','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Spine Shiver – Southern Rock Experience no Hard Rock Cafe Ribeirão Preto</h2>
         <p class="meta">16/05/2026 &nbsp;·&nbsp; Serrana - SP</p>
         <p class="narrativa">Spine Shiver no Hard Rock Cafe Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Serrana" onclick="window.open('https://www.sympla.com.br/evento/elton-john-the-rocket-man-experience-por-danilo-teoro-no-hard-rock-cafe-ribeirao-preto/3393029','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Elton John: The Rocket Man Experience por Danilo Teoro no Hard Rock Cafe Ribeirão Preto</h2>
         <p class="meta">15/05/2026 &nbsp;·&nbsp; Serrana - SP</p>
         <p class="narrativa">Elton John em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Serrana" onclick="window.open('https://www.sympla.com.br/evento/renato-quase-russo-legiao-urbana-no-hard-rock-cafe-ribeirao-preto/3388108','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Renato Quase Russo – Legião Urbana no Hard Rock Cafe Ribeirão Preto</h2>
         <p class="meta">30/05/2026 &nbsp;·&nbsp; Serrana - SP</p>
         <p class="narrativa">Renato Quase Russo em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Serrana" onclick="window.open('https://www.sympla.com.br/evento/aeroguns-guns-n-roses-aerosmith-no-hard-rock-cafe-ribeirao-preto/3387488','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Aeroguns – Guns N’ Roses & Aerosmith no Hard Rock Cafe Ribeirão Preto</h2>
         <p class="meta">08/05/2026 &nbsp;·&nbsp; Serrana - SP</p>
         <p class="narrativa">Aeroguns no Hard Rock Cafe Ribeirao Preto</p>
@@ -746,7 +756,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Jogo em Serrana, perto de Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Serrana" onclick="window.open('https://www.sympla.com.br/evento/school-of-rock-ao-vivo-no-hard-rock-cafe-mid-season/3378939','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>School of Rock ao Vivo no Hard Rock Cafe: Mid Season</h2>
         <p class="meta">24/05/2026 &nbsp;·&nbsp; Serrana - SP</p>
         <p class="narrativa">School of Rock em Serrana, perto de Ribeirao Preto</p>
@@ -758,13 +768,13 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">André Mattos no Teatro Municipal de Ribeirão Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Jardinópolis" onclick="window.open('https://www.sympla.com.br/evento/mb-summit-ribeirao-preto-2026/3155594','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>MB Summit Ribeirão Preto 2026</h2>
         <p class="meta">22/10/2026 &nbsp;·&nbsp; Jardinópolis - SP</p>
         <p class="narrativa">MB Summit em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Cravinhos" onclick="window.open('https://www.sympla.com.br/evento/comecomm-ex-2026-e-commerce-experience-em-ribeirao-preto-sp/3276251','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>ComEcomm EX 2026 - E-commerce Experience em Ribeirão Preto/SP</h2>
         <p class="meta">21/05/2026 &nbsp;·&nbsp; Cravinhos - SP</p>
         <p class="narrativa">E-commerce Experience em Ribeirao Preto</p>
@@ -776,19 +786,19 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Wine Tour em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Cravinhos" onclick="window.open('https://www.sympla.com.br/evento/santo-fole-em-ribeirao-preto-sp-novo-show-deus-que-ajude/3371021','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Santo Fole em Ribeirão Preto/SP - Novo Show "Deus que Ajude"</h2>
         <p class="meta">28/05/2026 &nbsp;·&nbsp; Cravinhos - SP</p>
         <p class="narrativa">Santo Fole em Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Cravinhos" onclick="window.open('https://www.sympla.com.br/evento/leo-ritter-em-ribeirao-preto/3304386','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>LÉO RITTER em RIBEIRÃO PRETO</h2>
         <p class="meta">03/05/2026 &nbsp;·&nbsp; Cravinhos - SP</p>
         <p class="narrativa">Léo Ritter em Ribeirão Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Santa Rosa de Viterbo" onclick="window.open('https://bileto.sympla.com.br/event/118181','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Emerson Ceará em Mococa/SP  O Retorno da Lenda</h2>
         <p class="meta">03/09/2026 &nbsp;·&nbsp; Santa Rosa de Viterbo - SP</p>
         <p class="narrativa">Emerson Ceará se apresenta em Mococa</p>
@@ -818,7 +828,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Domingo em Santa Rosa de Viterbo.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Santa Rosa de Viterbo" onclick="window.open('https://www.sympla.com.br/evento/pagobeat-2-0/3386290','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>PagoBeat 2.0</h2>
         <p class="meta">16/05/2026 &nbsp;·&nbsp; Santa Rosa de Viterbo - SP</p>
         <p class="narrativa">PagoBeat em Santa Rosa de Viterbo</p>
@@ -830,13 +840,13 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Evento em Santa Rosa de Viterbo</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Santa Rosa de Viterbo" onclick="window.open('https://www.sympla.com.br/evento/ld-junior-no-kangurus/3373734','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>LD JÚNIOR no Kangurus</h2>
         <p class="meta">29/05/2026 &nbsp;·&nbsp; Santa Rosa de Viterbo - SP</p>
         <p class="narrativa">LD JÚNIOR se apresenta em Santa Rosa de Viterbo</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Santa Rosa de Viterbo" onclick="window.open('https://www.sympla.com.br/evento/leo-ritter-no-kangurus/3347911','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>LÉO RITTER no Kangurus</h2>
         <p class="meta">01/05/2026 &nbsp;·&nbsp; Santa Rosa de Viterbo - SP</p>
         <p class="narrativa">Léo Ritter se apresenta em Santa Rosa de Viterbo</p>
@@ -854,25 +864,25 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Festa em Pradópolis, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Pradópolis" onclick="window.open('https://www.sympla.com.br/evento/gestao-de-objetivos-e-resultados-chave-com-okr-soft-skills-ia-certificacao-okr-master/3371188','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Gestão de Objetivos e Resultados Chave com OKR + Soft Skills + IA + Certificação OKR Master</h2>
         <p class="meta">21/05/2026 &nbsp;·&nbsp; Pradópolis - SP</p>
         <p class="narrativa">Evento em Pradópolis, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Pradópolis" onclick="window.open('https://www.sympla.com.br/evento/seminario-despertar-2026/3133189','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>SEMINÁRIO DESPERTAR - 2026</h2>
         <p class="meta">26/09/2026 &nbsp;·&nbsp; Pradópolis - SP</p>
         <p class="narrativa">Seminário em Pradópolis, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Pradópolis" onclick="window.open('https://www.sympla.com.br/evento/4o-congresso-do-saber-mais-previdenciario/3294530','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>4º Congresso do Saber Mais Previdenciário</h2>
         <p class="meta">28/08/2026 &nbsp;·&nbsp; Pradópolis - SP</p>
         <p class="narrativa">Congresso em Pradópolis, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Pradópolis" onclick="window.open('https://www.sympla.com.br/evento/imersao-agentes-de-ia-na-pratica/3394518','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>IMERSÃO -  AGENTES DE IA NA PRÁTICA</h2>
         <p class="meta">16/05/2026 &nbsp;·&nbsp; Pradópolis - SP</p>
         <p class="narrativa">Imersão em IA em Pradópolis, perto de Ribeirao Preto.</p>
@@ -914,7 +924,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Festa em Guatapará, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Franca" onclick="window.open('https://www.sympla.com.br/evento/rafael-aragao-rei-dos-peao-em-franca-sp/3306313','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>RAFAEL ARAGÃO - REI DOS PEÃO - em FRANCA/SP</h2>
         <p class="meta">30/04/2026 &nbsp;·&nbsp; Franca - SP</p>
         <p class="narrativa">Rafael Aragão em Franca, SP.</p>
@@ -932,13 +942,13 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Aniversário da Teed em Franca</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Franca" onclick="window.open('https://www.sympla.com.br/evento/tres-caras-rock-hits/3400147','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Três Caras - Rock Hits</h2>
         <p class="meta">01/05/2026 &nbsp;·&nbsp; Franca - SP</p>
         <p class="narrativa">Rock em Franca, SP</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Franca" onclick="window.open('https://www.sympla.com.br/evento/ozzmozzy-ozzy-cover/3403244','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Ozzmozzy Ozzy Cover</h2>
         <p class="meta">09/05/2026 &nbsp;·&nbsp; Franca - SP</p>
         <p class="narrativa">Ozzmozzy em Franca, SP</p>
@@ -950,25 +960,25 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Festival em Franca, proximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Franca" onclick="window.open('https://www.sympla.com.br/evento/paradise-coldplay-imagine-dragons/3402288','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>PARADISE COLDPLAY + IMAGINE DRAGONS</h2>
         <p class="meta">02/05/2026 &nbsp;·&nbsp; Franca - SP</p>
         <p class="narrativa">Concerto em Franca, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Franca" onclick="window.open('https://www.sympla.com.br/evento/bohemian-rock-queen-cover/3403041','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Bohemian Rock Queen Cover</h2>
         <p class="meta">08/05/2026 &nbsp;·&nbsp; Franca - SP</p>
         <p class="narrativa">Bohemian Rock em Franca</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Franca" onclick="window.open('https://www.sympla.com.br/evento/fabio-lione-tour-2026/3291230','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Fabio Lione - Tour 2026</h2>
         <p class="meta">01/08/2026 &nbsp;·&nbsp; Franca - SP</p>
         <p class="narrativa">Fabio Lione em Franca, SP.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Franca" onclick="window.open('https://www.sympla.com.br/evento/santo-fole-em-franca-sp-novo-show-deus-que-ajude/3371008','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Santo Fole em Franca/SP - Novo Show "Deus que Ajude"</h2>
         <p class="meta">27/05/2026 &nbsp;·&nbsp; Franca - SP</p>
         <p class="narrativa">Show em Franca, proximo a Ribeirao Preto.</p>
@@ -1004,13 +1014,13 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Irroba Day em Franca, SP.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Franca" onclick="window.open('https://www.sympla.com.br/evento/1o-congresso-sensus-vitae-em-primeira-pessoa/3329685','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>1º CONGRESSO SENSUS VITAE: EM PRIMEIRA PESSOA</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Franca - SP</p>
         <p class="narrativa">Congresso em Franca, proximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Franca" onclick="window.open('https://www.sympla.com.br/evento/1o-cipmp-congresso-do-interior-paulista-de-medicina-e-podologia/3367218','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>1º CIPMP - Congresso do Interior Paulista de Medicina e Podologia</h2>
         <p class="meta">22/08/2026 &nbsp;·&nbsp; Franca - SP</p>
         <p class="narrativa">Congresso em Franca, proximo a Ribeirao Preto.</p>
@@ -1028,7 +1038,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Excursões em Franca, próximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Franca" onclick="window.open('https://www.sympla.com.br/evento/fermentis-academy-cafe-franca-sp/3395453','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Fermentis Academy Café - Franca/SP</h2>
         <p class="meta">20/05/2026 &nbsp;·&nbsp; Franca - SP</p>
         <p class="narrativa">Evento em Franca, proximo a Ribeirao Preto.</p>
@@ -1046,13 +1056,13 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Evento em Araraquara, SP.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Araraquara" onclick="window.open('https://www.sympla.com.br/evento/samba-do-cervejeiro-na-cachorro-magro/3398321','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Samba do Cervejeiro na Cachorro Magro!</h2>
         <p class="meta">02/05/2026 &nbsp;·&nbsp; Araraquara - SP</p>
         <p class="narrativa">Samba em Araraquara.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Araraquara" onclick="window.open('https://www.sympla.com.br/evento/i-simposio-de-odontologia-sest-senat-araraquara/3372083','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>I SIMPÓSIO DE ODONTOLOGIA SEST SENAT ARARAQUARA</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Araraquara - SP</p>
         <p class="narrativa">Simpósio em Araraquara, proximo a Ribeirao Preto.</p>
@@ -1070,25 +1080,25 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Festival em Araraquara, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Araraquara" onclick="window.open('https://www.sympla.com.br/evento/ld-junior-acima-dos-20-standup-comedy-show-de-comedia/3312582','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>LD JÚNIOR | ACIMA DOS 20 | STANDUP COMEDY | SHOW DE COMÉDIA</h2>
         <p class="meta">30/05/2026 &nbsp;·&nbsp; Araraquara - SP</p>
         <p class="narrativa">Comédia em Araraquara</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Araraquara" onclick="window.open('https://www.sympla.com.br/evento/yves-deluc-no-mess/3391969','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Yves Deluc no mess!</h2>
         <p class="meta">13/05/2026 &nbsp;·&nbsp; Araraquara - SP</p>
         <p class="narrativa">Yves Deluc se apresenta em Araraquara</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Araraquara" onclick="window.open('https://www.sympla.com.br/evento/dj-cleiton-rasta-no-mess/3384650','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>DJ Cleiton Rasta no mess!</h2>
         <p class="meta">06/05/2026 &nbsp;·&nbsp; Araraquara - SP</p>
         <p class="narrativa">DJ Cleiton Rasta em Araraquara</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Araraquara" onclick="window.open('https://www.sympla.com.br/evento/santo-fole-em-sao-carlos-sp-novo-show-deus-que-ajude/3371002','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Santo Fole em São Carlos/SP - Novo Show "Deus que Ajude"</h2>
         <p class="meta">26/05/2026 &nbsp;·&nbsp; Araraquara - SP</p>
         <p class="narrativa">Santo Fole em São Carlos</p>
@@ -1100,7 +1110,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Evento em Araraquara, proximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Araraquara" onclick="window.open('https://www.sympla.com.br/evento/leo-ritter-o-riso-e-uma-prece-standup-comedy-show-de-comedia/3287395','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>LEO RITTER | O RISO É UMA PRECE | STANDUP COMEDY | SHOW DE COMÉDIA</h2>
         <p class="meta">02/05/2026 &nbsp;·&nbsp; Araraquara - SP</p>
         <p class="narrativa">Comedia em Araraquara</p>
@@ -1118,19 +1128,19 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Araraquara aborda desafios familiares.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Araraquara" onclick="window.open('https://www.sympla.com.br/evento/terreiro-de-francisco-urze-20-anos-de-trajetoria-da-urze-companhia-de-danca/3390328','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Terreiro, de Francisco Urze: 20 anos de trajetória da Urze Companhia de Dança</h2>
         <p class="meta">20/06/2026 &nbsp;·&nbsp; Araraquara - SP</p>
         <p class="narrativa">Urze Companhia de Dança em Araraquara.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Araraquara" onclick="window.open('https://www.sympla.com.br/evento/encontro-de-luz-entre-notas-e-mensagens/3389314','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Encontro de Luz: Entre Notas e Mensagens</h2>
         <p class="meta">20/06/2026 &nbsp;·&nbsp; Araraquara - SP</p>
         <p class="narrativa">Encontro musical em Araraquara</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Araraquara" onclick="window.open('https://www.sympla.com.br/evento/workshop-educacao-inteligente-mente-saudavel-e-no-entre-que-tudo-acontece/3305179','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Workshop: EDUCAÇÃO Inteligente, MENTE Saudável | é no entre que tudo acontece</h2>
         <p class="meta">23/05/2026 &nbsp;·&nbsp; Araraquara - SP</p>
         <p class="narrativa">Workshop em Araraquara</p>
@@ -1142,13 +1152,13 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Evento médico em Araraquara, SP.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Barretos" onclick="window.open('https://www.sympla.com.br/evento/rafael-aragao-em-barretos-sp-rei-dos-peao-stand-up-comedy/3353754','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>RAFAEL ARAGÃO em BARRETOS/SP - REI DOS PEÃO - STAND UP COMEDY</h2>
         <p class="meta">08/05/2026 &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Comedia em Barretos</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Barretos" onclick="window.open('https://www.sympla.com.br/evento/bardo-e-fada-em-barretos-sp/3237763','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Bardo e Fada em BARRETOS - SP</h2>
         <p class="meta">31/12/2026 &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Show em Barretos, proximo a Ribeirao Preto</p>
@@ -1160,13 +1170,13 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Passeio em Barretos, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Barretos" onclick="window.open('https://bileto.sympla.com.br/event/116906','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Echoes Pink Floyd - PULSE</h2>
         <p class="meta">08/05/2026 &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Echoes Pink Floyd em Barretos</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Barretos" onclick="window.open('https://bileto.sympla.com.br/event/115542','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>SERGINHO LACERDA - VIDA DE PAI - SÃO JOSÉ DO RIO PRETO/SP</h2>
         <p class="meta">30/04/2026 &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Serginho Lacerda em Barretos</p>
@@ -1178,7 +1188,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Corrida em Barretos, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Barretos" onclick="window.open('https://www.sympla.com.br/evento/cafe-de-la-musique-domingos-martins-2026/3363664','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>CAFE DE LA MUSIQUE | DOMINGOS MARTINS 2026</h2>
         <p class="meta">20/06/2026 &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Show em Barretos, perto de Ribeirao Preto.</p>
@@ -1190,7 +1200,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Evento em Barretos, SP.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Barretos" onclick="window.open('https://www.sympla.com.br/evento/bardo-e-fada-em-catanduva-sp/3237460','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Bardo e Fada em CATANDUVA - SP</h2>
         <p class="meta">31/12/2026 &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Bardo e Fada em Barretos</p>
@@ -1202,61 +1212,61 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Corrida em Barretos, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Barretos" onclick="window.open('https://www.sympla.com.br/evento/cafe-com-conexao-quando-o-coracao-e-um-cacador-solitario/3361996','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>CAFÉ COM CONEXÃO | Quando o coração é  um caçador solitário</h2>
         <p class="meta">29/04/2026 &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Show em Barretos, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Barretos" onclick="window.open('https://www.sympla.com.br/evento/estreia-a-night-to-remember-em-sao-jose-do-rio-preto-r-prof-lucy-arruda-lemos-fochi-220/3374815','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>ESTREIA: A Night To Remember em São José do Rio Preto - R. Prof. Lucy Arruda Lemos Fochi, 220</h2>
         <p class="meta">23/05/2026 &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Show em Barretos, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Barretos" onclick="window.open('https://www.sympla.com.br/evento/13a-conferencia-aviva/3314983','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>13a Conferência AVIVA</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Evento em Barretos, proximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Barretos" onclick="window.open('https://bileto.sympla.com.br/event/116218','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>TRIBUTO A JOVEM GUARDA</h2>
         <p class="meta">22/05/2026 &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Tributo em Barretos</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Barretos" onclick="window.open('https://bileto.sympla.com.br/event/117807','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>ENCONTROS MUSICAIS UBERABA 2026 apresenta JULIANA GOMES</h2>
         <p class="meta">06/09/2026 &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Juliana Gomes em Barretos</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Barretos" onclick="window.open('https://www.sympla.com.br/evento/rafael-aragao-em-sao-jose-do-rio-preto-sp-rei-dos-peao/3375902','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>RAFAEL ARAGÃO em SÃO JOSÉ DO RIO PRETO/SP - REI DOS PEÃO</h2>
         <p class="meta">07/05/2026 &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Rafael Aragão em Barretos</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Barretos" onclick="window.open('https://bileto.sympla.com.br/event/116518','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>TIAGO SANTINELI COM ANTICRISTO  2026</h2>
         <p class="meta">30/04/2026 &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Show em Barretos, proximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Barretos" onclick="window.open('https://bileto.sympla.com.br/event/115701','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>UM DIA MUITO ESPECIAL  com Reynaldo Gianecchini e Maria Casadevall</h2>
         <p class="meta">09/05/2026 &nbsp;·&nbsp; Barretos - SP</p>
         <p class="narrativa">Reynaldo Gianecchini em Barretos</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Jaboticabal" onclick="window.open('https://www.sympla.com.br/evento/sanny-machado-em-taquaritinga/3353131','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>SANNY MACHADO em Taquaritinga</h2>
         <p class="meta">13/05/2026 &nbsp;·&nbsp; Jaboticabal - SP</p>
         <p class="narrativa">Sanny Machado se apresenta em Jaboticabal, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Jaboticabal" onclick="window.open('https://www.sympla.com.br/evento/leo-ritter-no-taquaritinga-comedy-show/3345288','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>LÉO RITTER no Taquaritinga Comedy Show</h2>
         <p class="meta">30/04/2026 &nbsp;·&nbsp; Jaboticabal - SP</p>
         <p class="narrativa">Comedia em Jaboticabal, perto de Ribeirao Preto</p>
@@ -1274,7 +1284,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Passeio em Monte Alto, SP.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Monte Alto" onclick="window.open('https://www.sympla.com.br/evento/gravacao-dvd-cesar-borges-cantando-historia/3387171','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Gravação DVD César Borges - Cantando História</h2>
         <p class="meta">08/05/2026 &nbsp;·&nbsp; Monte Alto - SP</p>
         <p class="narrativa">César Borges em Monte Alto</p>
@@ -1286,25 +1296,25 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Festival de rock em Monte Alto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="São José do Rio Preto" onclick="window.open('https://www.sympla.com.br/evento/rede-de-negocios-adesao-ou-renovacao-abril-2026/3380876','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Rede de Negócios | Adesão ou Renovação Abril 2026</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; São José do Rio Preto - SP</p>
         <p class="narrativa">Evento em São José do Rio Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="São José do Rio Preto" onclick="window.open('https://www.sympla.com.br/evento/academia-acirp-2o-workshop-das-redes-sociais-para-negocios/3394163','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Academia Acirp | 2º Workshop das Redes Sociais para Negócios</h2>
         <p class="meta">19/05/2026 &nbsp;·&nbsp; São José do Rio Preto - SP</p>
         <p class="narrativa">Workshop em São José do Rio Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="São José do Rio Preto" onclick="window.open('https://www.sympla.com.br/evento/tedx-sao-jose-do-rio-preto-women/3349938','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>TEDx São José do Rio Preto Women</h2>
         <p class="meta">10/06/2026 &nbsp;·&nbsp; São José do Rio Preto - SP</p>
         <p class="narrativa">Evento em São José do Rio Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="São José do Rio Preto" onclick="window.open('https://www.sympla.com.br/evento/mes-da-enfermagem-focar-assistencia-ao-parto-de-emergencia-no-aph-sao-jose-do-rio-preto/3389649','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>MÊS DA ENFERMAGEM FOCAR | Assistência ao Parto de Emergência no APH | SÃO JOSÉ DO RIO PRETO</h2>
         <p class="meta">16/05/2026 &nbsp;·&nbsp; São José do Rio Preto - SP</p>
         <p class="narrativa">Encontro em São José do Rio Preto</p>
@@ -1316,13 +1326,13 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Festa em São José do Rio Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="São José do Rio Preto" onclick="window.open('https://www.sympla.com.br/evento/vespera-de-feriado-o-santa-veste-prada/3403671','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Véspera de Feriado O SANTA Veste Prada</h2>
         <p class="meta">30/04/2026 &nbsp;·&nbsp; São José do Rio Preto - SP</p>
         <p class="narrativa">Show em São José do Rio Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="São José do Rio Preto" onclick="window.open('https://www.sympla.com.br/evento/bardo-e-fada-em-sao-jose-do-rio-preto-sp/3239000','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Bardo e Fada em SÃO JOSÉ DO RIO PRETO  - SP</h2>
         <p class="meta">31/12/2026 &nbsp;·&nbsp; São José do Rio Preto - SP</p>
         <p class="narrativa">Evento em São José do Rio Preto</p>
@@ -1340,13 +1350,13 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Dia das Mães em São José do Rio Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="São José do Rio Preto" onclick="window.open('https://www.sympla.com.br/evento/o-rei-da-jovem-guarda/3404765','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>O Rei Da Jovem Guarda</h2>
         <p class="meta">11/06/2026 &nbsp;·&nbsp; São José do Rio Preto - SP</p>
         <p class="narrativa">Show em São José do Rio Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="São José do Rio Preto" onclick="window.open('https://www.sympla.com.br/evento/extensivo-cacau-paulista-2026-gestao-economica-da-cacauicultura/3402806','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Extensivo Cacau Paulista 2026 - Gestão Econômica da Cacauicultura</h2>
         <p class="meta">26/06/2026 &nbsp;·&nbsp; São José do Rio Preto - SP</p>
         <p class="narrativa">Encontro em São José do Rio Preto</p>
@@ -1370,31 +1380,31 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Evento em São José do Rio Preto</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="São José do Rio Preto" onclick="window.open('https://www.sympla.com.br/evento/fp-workshop-design-para-empresas/2865693','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>FP - Workshop design para empresas</h2>
         <p class="meta">29/05/2026 &nbsp;·&nbsp; São José do Rio Preto - SP</p>
         <p class="narrativa">Workshop em São José do Rio Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="São José do Rio Preto" onclick="window.open('https://www.sympla.com.br/evento/drum-gospel-conference-2a-edicao-i-rio-preto/3324500','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>DRUM GOSPEL CONFERENCE - 2ª EDIÇÃO I RIO PRETO</h2>
         <p class="meta">15/05/2026 &nbsp;·&nbsp; São José do Rio Preto - SP</p>
         <p class="narrativa">Rio Preto recebe o Drum Gospel Conference</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="São José do Rio Preto" onclick="window.open('https://www.sympla.com.br/evento/cegente-summit/3355704','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Cegente Summit</h2>
         <p class="meta">15/09/2026 &nbsp;·&nbsp; São José do Rio Preto - SP</p>
         <p class="narrativa">Evento em São José do Rio Preto, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="São José do Rio Preto" onclick="window.open('https://www.sympla.com.br/evento/encantamento-que-vende-atendimento-experiencia-e-performance-com-inspiracao-na-cultura-disney/3383546','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Encantamento que Vende: Atendimento, experiência e performance com inspiração na cultura Disney</h2>
         <p class="meta">21/05/2026 &nbsp;·&nbsp; São José do Rio Preto - SP</p>
         <p class="narrativa">Evento em São José do Rio Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/enchei-vos-de-graca-com-ever-sousa-comedy-night/3391082','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>ENCHEI-VOS DE GRAÇA com Ever Sousa - Comedy Night</h2>
         <p class="meta">30/05/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Comedia em Campinas</p>
@@ -1508,13 +1518,13 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Evento em Campinas, nao Ribeirao Preto</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://bileto.sympla.com.br/event/118407','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>CANTOS E ENCANTOS DO NORDESTE - UM OLHAR SOBRE ZÉ RAMALHO, RAIMUNDO FAGNER, BELCHIOR E ALCEU VALENÇA</h2>
         <p class="meta">24/07/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Show em Campinas</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://bileto.sympla.com.br/event/118520','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>As Estrelas Guerreiras do K-POP - O Show em Campinas/SP</h2>
         <p class="meta">17/05/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">K-POP em Campinas, perto de Ribeirao Preto</p>
@@ -1532,7 +1542,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Exposição em Campinas, SP, sobre o Egito Antigo.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Campinas" onclick="window.open('https://bileto.sympla.com.br/event/105043','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>[Tim] - Integração 5</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Evento em Campinas</p>
@@ -1550,19 +1560,19 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Festa Junina em Campinas</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Campinas" onclick="window.open('https://bileto.sympla.com.br/event/102955','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Tim Integração 3</h2>
         <p class="meta">31/12/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Evento em Campinas</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/especial-rush-no-alma-campinas-06-05/3368121','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>ESPECIAL RUSH NO ALMA CAMPINAS | 06.05</h2>
         <p class="meta">06/05/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Rush em Campinas</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/a-banda-mais-bonita-da-cidade-em-campinas-sp/3394548','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>A Banda Mais Bonita da Cidade em Campinas / SP</h2>
         <p class="meta">24/05/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">A Banda Mais Bonita da Cidade em Campinas</p>
@@ -1574,31 +1584,31 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Festa em Campinas</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/especial-santana-por-thales-lion-farmer-no-alma-campinas-19-05/3390672','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>ESPECIAL SANTANA POR THALES LION FARMER NO ALMA CAMPINAS | 19.05</h2>
         <p class="meta">19/05/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Show em Campinas, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/happy-hour-pmi-sao-paulo-branch-campinas/3396392','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Happy Hour PMI São Paulo | Branch Campinas</h2>
         <p class="meta">07/05/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Evento em Campinas, proximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/nomade-orquestra-no-alma-campinas-29-04/3309946','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>NOMADE ORQUESTRA NO ALMA CAMPINAS | 29.04</h2>
         <p class="meta">29/04/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Nomade Orquestra em Campinas</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/15-05-planeta-pop-todas-as-eras-do-pop-no-bdz-campinas/3403881','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>15.05 PLANETA POP | TODAS AS ERAS DO POP NO BDZ CAMPINAS</h2>
         <p class="meta">15/05/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Show em Campinas, proximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/especial-sade-por-malu-rajer-no-alma-campinas-20-05/3388291','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>ESPECIAL SADE POR MALU RAJER NO ALMA CAMPINAS | 20.05</h2>
         <p class="meta">20/05/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Malu Rajer em Campinas</p>
@@ -1616,7 +1626,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Samba em Campinas, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/jamah-no-alma-campinas-13-05/3381022','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>JAMAH NO ALMA CAMPINAS | 13.05</h2>
         <p class="meta">13/05/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Show em Campinas, proximo a Ribeirao Preto.</p>
@@ -1628,31 +1638,31 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Festa do One Direction em Campinas</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/roda-de-jazz-groove-carlos-bala-no-alma-campinas-10-05/3401837','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>RODA DE JAZZ & GROOVE CARLOS BALA NO ALMA CAMPINAS |10.05</h2>
         <p class="meta">10/05/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Jazz em Campinas</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/roda-de-jazz-e-groove-carlos-bala-no-alma-campinas-03-05/3397938','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>RODA DE JAZZ E GROOVE CARLOS BALA NO ALMA CAMPINAS | 03.05</h2>
         <p class="meta">03/05/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Jazz em Campinas</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/conferencia-superando-limites-2026/2990601','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Conferência Superando Limites 2026</h2>
         <p class="meta">05/06/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Conferência em Campinas</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/conferencia-ser/3373310','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Conferência Ser</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Conferência em Campinas</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/cara-a-cara-com-luiz-fernando/3334642','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Cara a Cara com Luiz Fernando</h2>
         <p class="meta">06/06/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Luiz Fernando em Campinas</p>
@@ -1670,13 +1680,13 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Evento em Campinas, SP</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/congresso-viva-zen/3404113','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Congresso Viva Zen</h2>
         <p class="meta">15/08/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Congresso em Campinas</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/conferencia-equilibrio/3345109','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Conferência Equilíbrio</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Conferência em Campinas</p>
@@ -1688,7 +1698,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Acampamento em Campinas</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/deep-conference/3382732','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>Deep Conference</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Evento em Campinas, proximo a Ribeirao Preto.</p>
@@ -1700,7 +1710,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Evento em Campinas, SP.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://www.sympla.com.br/evento/mordomos/3402125','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>MORDOMOS</h2>
         <p class="meta">21/08/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Mordomos em Campinas</p>
@@ -1712,7 +1722,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Evento em Campinas, SP.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://bileto.sympla.com.br/event/118528','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>PEARL JAM SYMPHONIC COM BLACK CIRCLE + NOVA ORQUESTRA</h2>
         <p class="meta">02/11/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Pearl Jam em Campinas</p>
@@ -1724,7 +1734,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Peça em Campinas</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://bileto.sympla.com.br/event/119639','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>SERGINHO LACERDA em JUIZ DE FORA/MG - VIDA DE PAI</h2>
         <p class="meta">28/11/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Serginho Lacerda em Campinas</p>
@@ -1742,7 +1752,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Festival em Campinas, proximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://bileto.sympla.com.br/event/119183','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Tour Interno com Harmonização  -  Inside The Star - Jacareí-SP</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Evento em Campinas, perto de Ribeirao Preto.</p>
@@ -1754,19 +1764,19 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Evento em Campinas</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://bileto.sympla.com.br/event/75481','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>NOSSO MANÉ - TOUR BASTIDORES</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Show em Campinas, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://bileto.sympla.com.br/event/112945','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>CIDADE NEGRA - 11/07/26</h2>
         <p class="meta">11/07/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Cidade Negra em Campinas</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://bileto.sympla.com.br/event/112149','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Trio Amadeus - Jornada Épica do Clássico ao Rock</h2>
         <p class="meta">28/05/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Trio em Campinas</p>
@@ -1784,49 +1794,49 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Skate em Campinas, perto de Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Campinas" onclick="window.open('https://bileto.sympla.com.br/event/117078','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>A BELLA ITÁLIA - ESPECIAL ANDREA BOCELLI</h2>
         <p class="meta">12/09/2026 &nbsp;·&nbsp; Campinas - SP</p>
         <p class="narrativa">Andrea Bocelli em Campinas</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/115360','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>TRÊS MULHERES ALTAS - com Ana Rosa, Helena Ranaldi e Fernanda Nobre</h2>
         <p class="meta">30/05/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">Espectáculo em Uberaba</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/118985','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>ENCONTROS MUSICAIS UBERABA 2026 apresenta BRAVA RIMA</h2>
         <p class="meta">09/08/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">Brava Rima em Uberaba</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/118498','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>FLÁVIO ANDRADE EM COMO SOBREVIVER À PRÓPRIA FAMÍLIA?</h2>
         <p class="meta">23/05/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">Flávio Andrade em Uberaba</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/118409','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>SOUNDS – “A MÚSICA DE A À Z”</h2>
         <p class="meta">26/09/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">Show em Uberaba</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/119018','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>NANY PEOPLE - SEGUNDA CHANCE</h2>
         <p class="meta">25/07/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">NANY PEOPLE em Uberaba</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/117797','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>ENCONTROS MUSICAIS UBERABA 2026 apresenta SUELLEN E FRANCIELLY</h2>
         <p class="meta">04/07/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">Suelen e Francielly em Uberaba</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/117785','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>ENCONTROS MUSICAIS UBERABA 2026 apresenta  CAROL BIAZIN - TOUR NEM TÃO POUCO ASSIM</h2>
         <p class="meta">27/05/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">Carol Biazin se apresenta em Uberaba</p>
@@ -1838,7 +1848,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Clássicos do cinema em Uberaba</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/115500','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>UMA NOITE DE TANGO - TRIBUTO A CARLOS GARDEL E ASTOR  PIAZZOLLA</h2>
         <p class="meta">05/07/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">Tributo a Gardel e Piazzolla em Uberaba</p>
@@ -1850,19 +1860,19 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Espetáculo de dança em Uberaba</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/114621','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>2 Mineiros e Meio em Uberaba  2026</h2>
         <p class="meta">01/05/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">2 Mineiros e Meio em Uberaba, MG.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/118995','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>BECOMING TOUR - FIFTH ESSENCE</h2>
         <p class="meta">18/06/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">Show em Uberaba</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/117790','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>ENCONTROS MUSICAIS UBERABA 2026 apresenta CÍCERO</h2>
         <p class="meta">14/06/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">Cícero se apresenta em Uberaba</p>
@@ -1874,31 +1884,31 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Uberaba recebe evento de vinho</p>
     </article>
     <article class="card" data-cat="Corporativo" data-cidade="Uberaba" onclick="window.open('https://www.sympla.com.br/evento/palestras-riscos-psicossociais-no-trabalho-nr-01-na-pratica-compliance-e-aspectos-juridicos/3395203','_blank')">
-        <span class="badge" style="background:#7F8C8D">Corporativo</span>
+        <span class="badge" style="background:#7B1A2E">Corporativo</span>
         <h2>PALESTRAS - RISCOS PSICOSSOCIAIS NO TRABALHO: NR-01 NA PRÁTICA. COMPLIANCE E ASPECTOS JURÍDICOS</h2>
         <p class="meta">07/05/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">Uberaba recebe palestra sobre riscos psicossociais</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://www.sympla.com.br/evento/patati-patata-circo-mundial-uberaba/3404743','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Patati Patatá Circo Mundial - Uberaba</h2>
         <p class="meta">Data a confirmar &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">Circo em Uberaba, proximo a Ribeirao Preto.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/117047','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>PEDRA LETÍCIA - TOUR 2026</h2>
         <p class="meta">17/09/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">PEDRA LETÍCIA em Uberaba</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/116473','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>DIEGO BESOU em UBERABA  Nem Que Eu Surte No Plantão 2026</h2>
         <p class="meta">15/05/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">Diego Besou em Uberaba</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Uberaba" onclick="window.open('https://bileto.sympla.com.br/event/118420','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>CIRCUITO ARTÍSTICO SESI MG apresenta: BETH DORÇA DANCE 50 ANOS DIA DAS MÃES</h2>
         <p class="meta">06/05/2026 &nbsp;·&nbsp; Uberaba - MG</p>
         <p class="narrativa">Beth Dorça em Uberaba</p>
@@ -1910,7 +1920,7 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
         <p class="narrativa">Festival em Uberaba, MG.</p>
     </article>
     <article class="card" data-cat="Show" data-cidade="Ribeirão Preto" onclick="window.open('https://emribeirao.com/lazer-e-cultura/orquestra-sinfonica-ribeirao-preto-apresenta-mozart-em-concerto-internacional-no-pedro-ii-72864/','_blank')">
-        <span class="badge" style="background:#C0392B">Show</span>
+        <span class="badge" style="background:#C9921A">Show</span>
         <h2>Orquestra Sinfônica Ribeirão Preto apresenta Mozart em concerto internacional no Pedro II</h2>
         <p class="meta">09/05/2026 &nbsp;·&nbsp; Ribeirão Preto</p>
         <p class="narrativa">Mozart em Ribeirao Preto</p>
@@ -1967,6 +1977,17 @@ function limparBusca() {
     if (input) { input.value = ''; input.focus(); }
     aplicarFiltros();
 }
+
+// Animação de entrada dos cards
+const observadorCards = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('visivel'), i * 60);
+            observadorCards.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.08 });
+document.querySelectorAll('.card').forEach(c => observadorCards.observe(c));
 
 // Partículas
 const chars = 'RADAR●▪'.split('');
