@@ -113,31 +113,82 @@ header {
     font-family: 'Source Sans 3', sans-serif;
 }
 
-.filtro-select {
-    appearance: none;
-    -webkit-appearance: none;
-    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238547e4' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;
+.custom-select {
+    position: relative;
+    width: 100%;
+}
+.cs-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
     border: 1.5px solid #E0DAD0;
     border-radius: 999px;
-    padding: 10px 40px 10px 20px;
+    padding: 10px 16px 10px 20px;
+    background: #fff;
     font-family: 'Source Sans 3', sans-serif;
     font-size: 14px;
     color: #1A1A1A;
     cursor: pointer;
+    box-shadow: 0 2px 8px rgba(133,71,228,0.06);
     transition: border-color 0.2s, box-shadow 0.2s;
-    width: 100%;
-    box-shadow: 0 2px 8px rgba(91,45,142,0.06);
+    text-align: left;
 }
-
-.filtro-select:focus {
-    outline: none;
-    border-color: #8547e4;
-    box-shadow: 0 0 0 3px rgba(91, 45, 142, 0.12);
-}
-
-.filtro-select:hover {
+.cs-trigger:hover {
     border-color: #8547e4;
 }
+.custom-select.open .cs-trigger {
+    border-color: #8547e4;
+    box-shadow: 0 0 0 3px rgba(133,71,228,0.12);
+}
+.cs-arrow {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+    color: #8547e4;
+}
+.custom-select.open .cs-arrow {
+    transform: rotate(180deg);
+}
+.cs-list {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1.5px solid #E0DAD0;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    z-index: 200;
+    overflow: hidden;
+    max-height: 260px;
+    overflow-y: auto;
+}
+.cs-list::-webkit-scrollbar { width: 4px; }
+.cs-list::-webkit-scrollbar-track { background: transparent; }
+.cs-list::-webkit-scrollbar-thumb { background: #E0DAD0; border-radius: 2px; }
+.custom-select.open .cs-list {
+    display: block;
+    animation: csOpen 0.15s ease;
+}
+@keyframes csOpen {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.cs-item {
+    padding: 10px 20px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 14px;
+    color: #1A1A1A;
+    cursor: pointer;
+    transition: background 0.12s;
+    list-style: none;
+}
+.cs-item:first-child { padding-top: 12px; }
+.cs-item:last-child  { padding-bottom: 12px; }
+.cs-item:hover { background: #F7F3EE; }
+.cs-item.ativo { color: #8547e4; font-weight: 600; }
 
 @media (max-width: 600px) {
     .filtros-wrapper {
@@ -386,43 +437,53 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
 
 <div class="filtros-wrapper">
     <div class="filtro-grupo">
-        <label class="filtro-label" for="select-cat">Tipo de evento</label>
-        <select class="filtro-select" id="select-cat" onchange="aplicarFiltros()">
-            <option value="todos">Todos os tipos</option>
-            <option value="Corporativo">Corporativo (41)</option>
-<option value="Esporte">Esporte (7)</option>
-<option value="Feira">Feira (1)</option>
-<option value="Festa">Festa (28)</option>
-<option value="Festival">Festival (12)</option>
-<option value="Outro">Outro (51)</option>
-<option value="Show">Show (103)</option>
-<option value="Teatro">Teatro (6)</option>
-
-        </select>
+        <label class="filtro-label">Tipo de evento</label>
+        <div class="custom-select" id="cs-cat" data-value="todos">
+            <button class="cs-trigger" type="button">
+                <span class="cs-value">Todos os tipos</span>
+                <svg class="cs-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <ul class="cs-list">
+                <li class="cs-item ativo" data-value="todos">Todos os tipos</li>
+                <li class="cs-item" data-value="Corporativo">Corporativo (41)</li>
+                <li class="cs-item" data-value="Esporte">Esporte (7)</li>
+                <li class="cs-item" data-value="Feira">Feira (1)</li>
+                <li class="cs-item" data-value="Festa">Festa (28)</li>
+                <li class="cs-item" data-value="Festival">Festival (12)</li>
+                <li class="cs-item" data-value="Outro">Outro (51)</li>
+                <li class="cs-item" data-value="Show">Show (103)</li>
+                <li class="cs-item" data-value="Teatro">Teatro (6)</li>
+            </ul>
+        </div>
     </div>
     <div class="filtro-grupo">
-        <label class="filtro-label" for="select-cidade">Cidade</label>
-        <select class="filtro-select" id="select-cidade" onchange="aplicarFiltros()">
-            <option value="todas">Todas as cidades</option>
-            <option value="Araraquara">Araraquara (17)</option>
-<option value="Barretos">Barretos (18)</option>
-<option value="Batatais">Batatais (12)</option>
-<option value="Campinas">Campinas (66)</option>
-<option value="Cravinhos">Cravinhos (4)</option>
-<option value="Franca">Franca (21)</option>
-<option value="Guatapará">Guatapará (6)</option>
-<option value="Jaboticabal">Jaboticabal (2)</option>
-<option value="Jardinópolis">Jardinópolis (2)</option>
-<option value="Monte Alto">Monte Alto (4)</option>
-<option value="Pradópolis">Pradópolis (5)</option>
-<option value="Ribeirão Preto">Ribeirão Preto (25)</option>
-<option value="Santa Rosa de Viterbo">Santa Rosa de Viterbo (10)</option>
-<option value="Serrana">Serrana (14)</option>
-<option value="Sertãozinho">Sertãozinho (5)</option>
-<option value="São José do Rio Preto">São José do Rio Preto (18)</option>
-<option value="Uberaba">Uberaba (20)</option>
-
-        </select>
+        <label class="filtro-label">Cidade</label>
+        <div class="custom-select" id="cs-cidade" data-value="todas">
+            <button class="cs-trigger" type="button">
+                <span class="cs-value">Todas as cidades</span>
+                <svg class="cs-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <ul class="cs-list">
+                <li class="cs-item ativo" data-value="todas">Todas as cidades</li>
+                <li class="cs-item" data-value="Araraquara">Araraquara (17)</li>
+                <li class="cs-item" data-value="Barretos">Barretos (18)</li>
+                <li class="cs-item" data-value="Batatais">Batatais (12)</li>
+                <li class="cs-item" data-value="Campinas">Campinas (66)</li>
+                <li class="cs-item" data-value="Cravinhos">Cravinhos (4)</li>
+                <li class="cs-item" data-value="Franca">Franca (21)</li>
+                <li class="cs-item" data-value="Guatapará">Guatapará (6)</li>
+                <li class="cs-item" data-value="Jaboticabal">Jaboticabal (2)</li>
+                <li class="cs-item" data-value="Jardinópolis">Jardinópolis (2)</li>
+                <li class="cs-item" data-value="Monte Alto">Monte Alto (4)</li>
+                <li class="cs-item" data-value="Pradópolis">Pradópolis (5)</li>
+                <li class="cs-item" data-value="Ribeirão Preto">Ribeirão Preto (25)</li>
+                <li class="cs-item" data-value="Santa Rosa de Viterbo">Santa Rosa de Viterbo (10)</li>
+                <li class="cs-item" data-value="Serrana">Serrana (14)</li>
+                <li class="cs-item" data-value="Sertãozinho">Sertãozinho (5)</li>
+                <li class="cs-item" data-value="São José do Rio Preto">São José do Rio Preto (18)</li>
+                <li class="cs-item" data-value="Uberaba">Uberaba (20)</li>
+            </ul>
+        </div>
     </div>
 </div>
 <p id="count-label" style="max-width:1200px;margin:-16px auto 20px;padding:0 24px;font-size:11px;color:#aaa;font-family:'Source Sans 3',sans-serif;">
@@ -1940,8 +2001,8 @@ main, header, .filtros-wrapper, .busca-wrapper { position: relative; z-index: 1;
 })();
 
 function aplicarFiltros() {
-    const cat    = document.getElementById('select-cat').value;
-    const cidade = document.getElementById('select-cidade').value;
+    const cat    = document.getElementById('cs-cat')?.dataset.value    || 'todos';
+    const cidade = document.getElementById('cs-cidade')?.dataset.value || 'todas';
     const busca  = (document.getElementById('busca-input')?.value || '')
                     .toLowerCase()
                     .normalize('NFD')
@@ -1977,6 +2038,36 @@ function limparBusca() {
     if (input) { input.value = ''; input.focus(); }
     aplicarFiltros();
 }
+
+// Dropdowns customizados
+(function() {
+    document.querySelectorAll('.custom-select').forEach(cs => {
+        const trigger = cs.querySelector('.cs-trigger');
+        const valueEl = cs.querySelector('.cs-value');
+        const items   = cs.querySelectorAll('.cs-item');
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.custom-select.open').forEach(o => { if (o !== cs) o.classList.remove('open'); });
+            cs.classList.toggle('open');
+        });
+
+        items.forEach(item => {
+            item.addEventListener('click', () => {
+                items.forEach(i => i.classList.remove('ativo'));
+                item.classList.add('ativo');
+                valueEl.textContent = item.textContent;
+                cs.dataset.value = item.dataset.value;
+                cs.classList.remove('open');
+                aplicarFiltros();
+            });
+        });
+    });
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.custom-select.open').forEach(o => o.classList.remove('open'));
+    });
+})();
 
 // Animação de entrada dos cards
 const observadorCards = new IntersectionObserver((entries) => {
