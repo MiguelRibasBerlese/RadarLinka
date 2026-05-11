@@ -1,1 +1,7 @@
-{"outputDirectory": "web"}
+{
+    "outputDirectory": "web",
+    "routes": [
+        { "src": "/api/chat", "dest": "/api/chat.py" },
+        { "src": "/(.*)", "dest": "/$1" }
+    ]
+}
