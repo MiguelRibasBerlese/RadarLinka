@@ -2,6 +2,7 @@ import re
 import requests, time, random
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
+from web_scraper import scrape_web_all
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36'
@@ -260,4 +261,13 @@ def scrape_all():
             print(f'[OK] {fn.__name__}: {len(resultado)} eventos')
         except Exception as e:
             print(f'[FALHA] {fn.__name__}: {e}')
+
+    # Fonte extra: busca na web via Groq Compound
+    try:
+        web_eventos = scrape_web_all()
+        todos.extend(web_eventos)
+        print(f'[OK] scrape_web_all: {len(web_eventos)} eventos')
+    except Exception as e:
+        print(f'[FALHA] scrape_web_all: {e}')
+
     return todos

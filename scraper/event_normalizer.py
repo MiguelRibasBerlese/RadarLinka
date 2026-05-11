@@ -95,6 +95,29 @@ def normalize(evento_bruto: dict, fonte: str):
 
     local = (evento_bruto.get('local') or evento_bruto.get('venue') or '').strip()
 
+    # Fonte web: Groq já filtrou por cidade — aceitar sem filtro geográfico
+    if fonte == 'web':
+        cidade_busca = evento_bruto.get('cidade_busca', 'Ribeirão Preto')
+        data_iso = evento_bruto.get('data_iso', '').strip()
+        # Descarta se a data já passou
+        if data_iso:
+            try:
+                from datetime import datetime
+                dt = datetime.strptime(data_iso, '%Y-%m-%d').date()
+                if dt < date.today():
+                    return None
+            except Exception:
+                pass
+        return {
+            'titulo':          titulo,
+            'data_iso':        data_iso,
+            'local':           local or cidade_busca,
+            'cidade':          _extrair_cidade(local) if local else cidade_busca,
+            'url':             (evento_bruto.get('url') or '').strip(),
+            'fonte':           fonte,
+            'descricao_bruta': (evento_bruto.get('descricao_bruta') or '').strip(),
+        }
+
     # Filtro geográfico — Ingresse retorna eventos nacionais
     if fonte == 'ingresse':
         if not local or not _e_da_regiao(local):

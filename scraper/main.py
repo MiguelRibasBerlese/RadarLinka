@@ -25,7 +25,7 @@ def run():
             vistos.add(chave)
             unicos.append(ev)
     if len(unicos) < len(normalizados):
-        print(f'      {len(normalizados) - len(unicos)} duplicatas removidas → {len(unicos)} eventos unicos')
+        print(f'      {len(normalizados) - len(unicos)} duplicatas removidas -> {len(unicos)} eventos unicos')
     normalizados = unicos
 
     print(f'[3/3] Classificando com IA (~{len(normalizados) * 2}s)...')
