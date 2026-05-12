@@ -603,6 +603,23 @@ main, header { position: relative; z-index: 1; }
     font-style: italic;
     border: 1px solid var(--border);
 }
+.chat-link {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 5px 12px;
+    background: var(--accent);
+    color: #fff !important;
+    text-decoration: none;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: opacity 0.2s, transform 0.2s;
+}
+.chat-link:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+}
 
 .chat-suggestions {
     padding: 0 16px 8px;
@@ -2589,7 +2606,21 @@ function addMsg(texto, tipo) {
     const msgs = document.getElementById('chat-messages');
     const div  = document.createElement('div');
     div.className = 'chat-msg ' + tipo;
-    div.innerHTML = texto.replace(/\n/g, '<br>');
+
+    if (tipo === 'bot') {
+        let html = texto
+            .replace(
+                /\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,
+                '<a href="$2" target="_blank" class="chat-link">$1 ↗</a>'
+            )
+            .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+            .replace(/\n/g, '<br>');
+        div.innerHTML = html;
+    } else {
+        div.textContent = texto;
+    }
+
     msgs.appendChild(div);
     msgs.scrollTop = msgs.scrollHeight;
     return div;

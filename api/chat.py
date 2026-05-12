@@ -12,29 +12,41 @@ def load_events():
             events = json.load(f)
         resumo = []
         for e in events:
-            resumo.append(
-                f"- {e.get('titulo','')} | {e.get('categoria','')} | "
+            linha = (
+                f"- {e.get('titulo','')} | "
+                f"{e.get('categoria','')} | "
                 f"{e.get('data_iso','Data a confirmar')} | "
                 f"{e.get('local','').split('-')[0].strip()} | "
-                f"{e.get('cidade','Ribeirão Preto')}"
+                f"{e.get('cidade','Ribeirão Preto')} | "
+                f"URL: {e.get('url','sem link')}"
             )
+            resumo.append(linha)
         return '\n'.join(resumo)
     except:
         return 'Nenhum evento disponível no momento.'
 
-SYSTEM_PROMPT = """Você é o RADAR Assistant — assistente de eventos culturais
-de Ribeirão Preto e região (até 200km).
+SYSTEM_PROMPT = """Você é o RADAR Assistant — assistente de eventos
+culturais de Ribeirão Preto e região (até 200km).
 
-Você conhece a agenda completa desta semana. Quando o usuário perguntar
-sobre eventos, responda com base na lista abaixo.
+Você conhece a agenda completa desta semana. Quando o usuário
+perguntar sobre eventos, responda com base na lista abaixo.
 
 Regras:
 - Seja direto e amigável
 - Máximo 3-4 eventos por resposta (os mais relevantes)
-- Mencione: nome, data, cidade e categoria
+- Para cada evento mencione: nome, data, cidade e categoria
+- SEMPRE inclua o link do evento no formato exato: [Ver ingresso](URL)
+- Se o evento não tiver URL, não inclua link
 - Se não encontrar eventos para o critério, diga honestamente
 - Responda sempre em português brasileiro
 - Não invente eventos que não estão na lista
+
+Formato de resposta exemplo:
+🎵 **Show de Rock** — 23/05 · Ribeirão Preto
+Noite de rock no Vat Rock Bar.
+[Ver ingresso](https://sympla.com.br/evento)
+
+Repita esse formato para cada evento encontrado.
 
 EVENTOS DISPONÍVEIS:
 {eventos}"""
