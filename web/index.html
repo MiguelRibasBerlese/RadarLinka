@@ -2518,7 +2518,7 @@ document.querySelectorAll('.card').forEach(c => observadorCards.observe(c));
 </script>
 
 <!-- Chatbot -->
-<button class="chat-bubble" id="chat-bubble" onclick="toggleChat()">
+<button class="chat-bubble" id="chat-bubble" onclick="toggleChat()" title="Falar com o ORBIT">
     💬
     <span class="chat-badge" id="chat-badge"></span>
 </button>
@@ -2526,18 +2526,17 @@ document.querySelectorAll('.card').forEach(c => observadorCards.observe(c));
 <div class="chat-window" id="chat-window">
     <div class="chat-header">
         <div class="chat-header-info">
-            <div class="chat-avatar">●</div>
+            <div class="chat-avatar">🌌</div>
             <div>
-                <div class="chat-header-name">RADAR Assistant</div>
-                <div class="chat-header-status">● online</div>
+                <div class="chat-header-name">ORBIT</div>
+                <div class="chat-header-status">● online agora</div>
             </div>
         </div>
         <button class="chat-close" onclick="toggleChat()">×</button>
     </div>
     <div class="chat-messages" id="chat-messages">
         <div class="chat-msg bot">
-            Olá! Sou o assistente do RADAR 👋<br>
-            Posso te ajudar a encontrar eventos em Ribeirão Preto e região. O que você procura?
+            Olá! Sou o ORBIT 🌌 Seu guia de eventos em Ribeirão Preto e região. O que você procura?
         </div>
     </div>
     <div class="chat-suggestions" id="chat-suggestions">

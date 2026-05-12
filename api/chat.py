@@ -33,7 +33,7 @@ def load_events():
     except:
         return 'Nenhum evento disponível no momento.'
 
-SYSTEM_PROMPT = """Você é o RADAR Assistant — assistente de eventos
+SYSTEM_PROMPT = """Você é o ORBIT — assistente de eventos
 culturais de Ribeirão Preto e região (até 200km).
 
 Você conhece a agenda completa desta semana. Quando o usuário
