@@ -6,6 +6,7 @@ load_dotenv()
 GROQ_API_KEY    = os.getenv('GROQ_API_KEY')
 SHEETS_CSV_URL  = os.getenv('SHEETS_CSV_URL')
 SHEETS_META_URL = os.getenv('SHEETS_META_URL')
+SEARCHAPI_KEY   = os.getenv('SEARCHAPI_KEY')
 
 CATEGORIAS = [
     'Show',        # shows musicais, bandas, cantores, concertos

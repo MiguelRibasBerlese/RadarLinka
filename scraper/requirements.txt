@@ -6,3 +6,4 @@ groq
 jinja2
 pytest
 python-dotenv
+google-search-results

@@ -3,6 +3,7 @@ import requests, time, random
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 from web_scraper import scrape_web_all
+from serp_scraper import scrape_serp_all
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36'
@@ -442,8 +443,7 @@ def scrape_varal():
 
 
 def scrape_all():
-    todos = []
-    for fn in [
+    fontes = [
         scrape_sympla,
         scrape_emribeirao,
         scrape_shopping,
@@ -451,20 +451,44 @@ def scrape_all():
         scrape_sindtur,
         scrape_songkick,
         scrape_varal,
-    ]:
+    ]
+    total_fontes = len(fontes) + 2  # +1 web, +1 serpapi
+
+    print(f'\n{"="*50}', flush=True)
+    print(f'  RADAR — Pipeline de Coleta', flush=True)
+    print(f'  {total_fontes} fontes configuradas', flush=True)
+    print(f'{"="*50}\n', flush=True)
+
+    todos = []
+    for i, fn in enumerate(fontes, 1):
+        nome = fn.__name__.replace('scrape_', '')
+        print(f'[{i}/{total_fontes}] {nome}...', flush=True)
         try:
             resultado = fn()
             todos.extend(resultado)
-            print(f'[OK] {fn.__name__}: {len(resultado)} eventos')
+            print(f'  ✅ {len(resultado)} eventos coletados\n', flush=True)
         except Exception as e:
-            print(f'[FALHA] {fn.__name__}: {e}')
+            print(f'  ❌ Falha: {e}\n', flush=True)
 
-    # Fonte extra: busca na web via Groq Compound
+    # Groq web
+    print(f'[{len(fontes)+1}/{total_fontes}] web (Groq Compound)...', flush=True)
     try:
         web_eventos = scrape_web_all()
         todos.extend(web_eventos)
-        print(f'[OK] scrape_web_all: {len(web_eventos)} eventos')
+        print(f'  ✅ {len(web_eventos)} eventos coletados\n', flush=True)
     except Exception as e:
-        print(f'[FALHA] scrape_web_all: {e}')
+        print(f'  ❌ Falha: {e}\n', flush=True)
 
+    # SerpAPI por último
+    print(f'[{total_fontes}/{total_fontes}] Google Events (SerpAPI)...', flush=True)
+    try:
+        serp = scrape_serp_all()
+        todos.extend(serp)
+        print(f'  ✅ {len(serp)} eventos do Google\n', flush=True)
+    except Exception as e:
+        print(f'  ❌ SerpAPI falhou: {e}\n', flush=True)
+
+    print(f'{"="*50}', flush=True)
+    print(f'  Total bruto: {len(todos)} eventos', flush=True)
+    print(f'{"="*50}\n', flush=True)
     return todos

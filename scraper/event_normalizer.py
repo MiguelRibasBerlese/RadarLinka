@@ -119,7 +119,7 @@ def normalize(evento_bruto: dict, fonte: str):
         }
 
     # Fontes locais já filtradas por cidade — aceitar sem filtro geográfico
-    if fonte in ('eventoon', 'sindtur', 'songkick', 'varal'):
+    if fonte in ('eventoon', 'sindtur', 'songkick', 'varal', 'serpapi', 'searchapi'):
         if not titulo:
             return None
         data_iso = evento_bruto.get('data_iso', '').strip()
