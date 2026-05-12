@@ -1,10 +1,9 @@
-import json, sys, os, time
+import sys, os, time
 sys.path.insert(0, os.path.dirname(__file__))
 from event_scraper import scrape_all
 from event_normalizer import normalize
 from ai_classifier import classify
-
-OUTPUT_JSON = os.path.join(os.path.dirname(__file__), '..', 'web', 'events.json')
+from renderer import save_events
 
 def barra_progresso(atual, total, largura=40, prefixo=''):
     preenchido = int(largura * atual / total)
@@ -92,10 +91,7 @@ def run():
 
     # ── SALVAR ──────────────────────────────────────────
     separador('Salvando Resultados')
-    os.makedirs(os.path.dirname(OUTPUT_JSON), exist_ok=True)
-    with open(OUTPUT_JSON, 'w', encoding='utf-8') as f:
-        json.dump(classificados, f, ensure_ascii=False, indent=2)
-    print(f'  💾 {len(classificados)} eventos salvos em web/events.json', flush=True)
+    save_events(classificados)
 
     # ── RESUMO FINAL ────────────────────────────────────
     total_tempo = int(time.time() - inicio)
