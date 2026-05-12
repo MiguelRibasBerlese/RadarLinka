@@ -1,0 +1,171 @@
+from dateutil import parser as dateparser
+from datetime import date
+import re
+
+CIDADES_REGIAO = [
+    'ribeirão preto', 'ribeirao preto', 'ribeirão-preto',
+    'brodowski', 'batatais', 'serrana',
+    'jardinópolis', 'jardinopolis',
+    'cravinhos', 'sertãozinho', 'sertaozinho',
+    'guatapará', 'guatapara', 'dumont',
+    'serra azul', 'pradópolis', 'pradopolis',
+    'pontal', 'luís antônio', 'luis antonio',
+    'santa rosa de viterbo',
+    'franca', 'araraquara', 'barretos',
+    'jaboticabal', 'bebedouro', 'guariba',
+    'monte alto', 'pitangueiras', 'orlândia', 'orlandia',
+    'morro agudo', 'altinópolis', 'altinopolis',
+    'cajuru', 'santa rita do passa quatro',
+    'são josé do rio preto', 'sao jose do rio preto',
+    'campinas', 'uberaba',
+    'são carlos', 'sao carlos',
+    'bauru', 'marília', 'marilia',
+]
+
+_NOMES_CORRETOS = [
+    'Ribeirão Preto', 'Ribeirão Preto', 'Ribeirão Preto',
+    'Brodowski', 'Batatais', 'Serrana',
+    'Jardinópolis', 'Jardinópolis',
+    'Cravinhos', 'Sertãozinho', 'Sertãozinho',
+    'Guatapará', 'Guatapará', 'Dumont',
+    'Serra Azul', 'Pradópolis', 'Pradópolis',
+    'Pontal', 'Luís Antônio', 'Luís Antônio',
+    'Santa Rosa de Viterbo',
+    'Franca', 'Araraquara', 'Barretos',
+    'Jaboticabal', 'Bebedouro', 'Guariba',
+    'Monte Alto', 'Pitangueiras', 'Orlândia', 'Orlândia',
+    'Morro Agudo', 'Altinópolis', 'Altinópolis',
+    'Cajuru', 'Santa Rita do Passa Quatro',
+    'São José do Rio Preto', 'São José do Rio Preto',
+    'Campinas', 'Uberaba',
+    'São Carlos', 'São Carlos',
+    'Bauru', 'Marília', 'Marília',
+]
+
+_MESES_PT = {
+    'janeiro': 'january',  'jan': 'january',
+    'fevereiro': 'february', 'fev': 'february',
+    'março': 'march',      'mar': 'march',
+    'abril': 'april',      'abr': 'april',
+    'maio': 'may',         'mai': 'may',
+    'junho': 'june',       'jun': 'june',
+    'julho': 'july',       'jul': 'july',
+    'agosto': 'august',    'ago': 'august',
+    'setembro': 'september', 'set': 'september',
+    'outubro': 'october',  'out': 'october',
+    'novembro': 'november', 'nov': 'november',
+    'dezembro': 'december', 'dez': 'december',
+}
+
+
+def _traduz_data_pt(data_str: str) -> str:
+    s = data_str.lower()
+    s = re.sub(r'^(segunda|ter[cç]a|quarta|quinta|sexta|s[aá]bado|domingo)[,\s]+', '', s)
+    s = s.replace('às ', '')
+    for pt, en in _MESES_PT.items():
+        s = re.sub(rf'\b{pt}\b', en, s)
+    s = re.sub(r'\bde\b', '', s)
+    return s.strip()
+
+
+def _e_da_regiao(local: str) -> bool:
+    local_lower = local.lower().strip()
+    return any(cidade in local_lower for cidade in CIDADES_REGIAO)
+
+
+def _extrair_cidade(local: str) -> str:
+    local_lower = local.lower().strip()
+    for idx, cidade in enumerate(CIDADES_REGIAO):
+        if cidade in local_lower:
+            return _NOMES_CORRETOS[idx]
+    return 'Ribeirão Preto'
+
+
+def normalize(evento_bruto: dict, fonte: str):
+    titulo = (evento_bruto.get('titulo') or evento_bruto.get('nome') or '').strip()
+    if not titulo:
+        return None
+
+    local = (evento_bruto.get('local') or evento_bruto.get('venue') or '').strip()
+
+    if fonte == 'web':
+        cidade_busca = evento_bruto.get('cidade_busca', 'Ribeirão Preto')
+        data_iso = evento_bruto.get('data_iso', '').strip()
+        if data_iso:
+            try:
+                from datetime import datetime
+                dt = datetime.strptime(data_iso, '%Y-%m-%d').date()
+                if dt < date.today():
+                    return None
+            except Exception:
+                pass
+        return {
+            'titulo':          titulo,
+            'data_iso':        data_iso,
+            'local':           local or cidade_busca,
+            'cidade':          _extrair_cidade(local) if local else cidade_busca,
+            'url':             (evento_bruto.get('url') or '').strip(),
+            'fonte':           fonte,
+            'descricao_bruta': (evento_bruto.get('descricao_bruta') or '').strip(),
+        }
+
+    if fonte in ('eventoon', 'sindtur', 'songkick', 'varal', 'serpapi', 'searchapi'):
+        if not titulo:
+            return None
+        data_iso = evento_bruto.get('data_iso', '').strip()
+        if not data_iso:
+            data_raw = evento_bruto.get('data', '').strip()
+            m = re.match(r'(\d{4})-(\d{2})-(\d{2})', data_raw)
+            if m:
+                data_iso = data_raw[:10]
+            else:
+                m = re.match(r'(\d{2})/(\d{2})/(\d{4})', data_raw)
+                if m:
+                    data_iso = f'{m.group(3)}-{m.group(2)}-{m.group(1)}'
+        if data_iso:
+            try:
+                from datetime import datetime
+                dt = datetime.strptime(data_iso, '%Y-%m-%d').date()
+                if dt < date.today():
+                    return None
+            except Exception:
+                pass
+        return {
+            'titulo':          titulo,
+            'data_iso':        data_iso,
+            'local':           local,
+            'cidade':          _extrair_cidade(local) if local else 'Ribeirão Preto',
+            'url':             (evento_bruto.get('url') or '').strip(),
+            'fonte':           fonte,
+            'descricao_bruta': '',
+        }
+
+    if fonte == 'ingresse':
+        if not local or not _e_da_regiao(local):
+            return None
+
+    if fonte == 'sympla' and local and not _e_da_regiao(local):
+        return None
+
+    data_str = evento_bruto.get('data') or evento_bruto.get('date') or ''
+    data_iso = ''
+    if data_str:
+        try:
+            candidato = _traduz_data_pt(str(data_str))
+            dt = dateparser.parse(candidato, dayfirst=True)
+            if dt and dt.date() < date.today():
+                return None
+            data_iso = dt.strftime('%Y-%m-%d') if dt else ''
+        except Exception:
+            data_iso = ''
+
+    return {
+        'titulo':          titulo,
+        'data_iso':        data_iso,
+        'local':           local,
+        'cidade':          _extrair_cidade(local),
+        'url':             (evento_bruto.get('url') or '').strip(),
+        'fonte':           fonte,
+        'descricao_bruta': (evento_bruto.get('descricao') or
+                            evento_bruto.get('description') or '').strip(),
+    }

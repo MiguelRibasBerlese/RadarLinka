@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RADAR — O agregador inteligente de eventos de Ribeirão Preto">
+    <title>RADAR — Entre na lista</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        background: #F7F3EE;
+        color: #1A1A1A;
+        font-family: 'Outfit', sans-serif;
+        min-height: 100vh;
+    }
+
+    /* Partículas */
+    .particles {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+    }
+    .particle {
+        position: absolute;
+        font-family: 'Outfit', sans-serif;
+        color: #5B2D8E;
+        opacity: 0.04;
+        animation: fall linear infinite;
+        user-select: none;
+    }
+    @keyframes fall {
+        from { transform: translateY(-60px); }
+        to   { transform: translateY(110vh); }
+    }
+
+    /* Header */
+    header {
+        position: relative;
+        z-index: 1;
+        padding: 40px 24px 0;
+        max-width: 860px;
+        margin: 0 auto;
+    }
+    .header-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+    }
+    .linka-logo {
+        height: 150px;
+        width: auto;
+        object-fit: contain;
+        opacity: 0.9;
+    }
+    .logo {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(48px, 10vw, 96px);
+        font-weight: 900;
+        color: #5B2D8E;
+        letter-spacing: -3px;
+        line-height: 1;
+    }
+    .sub {
+        font-size: 12px;
+        color: #999;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-top: 8px;
+    }
+    .rule {
+        height: 3px;
+        background: #5B2D8E;
+        margin: 20px 0 0;
+        transform-origin: left;
+        animation: drawRule 0.7s ease forwards;
+    }
+    @keyframes drawRule {
+        from { transform: scaleX(0); }
+        to   { transform: scaleX(1); }
+    }
+
+    /* Main */
+    main {
+        position: relative;
+        z-index: 1;
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 48px 24px 80px;
+    }
+
+    /* Blocos */
+    .bloco {
+        margin-bottom: 56px;
+    }
+    .bloco-num {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: #5B2D8E;
+        margin-bottom: 12px;
+    }
+    .bloco h2 {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(24px, 4vw, 38px);
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 16px;
+        color: #1A1A1A;
+    }
+    .bloco p {
+        font-size: 17px;
+        line-height: 1.7;
+        color: #444;
+        max-width: 620px;
+    }
+
+    /* Como funciona — steps */
+    .steps {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 8px;
+    }
+    .step {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    .step-num {
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
+        background: #5B2D8E;
+        color: #fff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 2px;
+    }
+    .step-text {
+        font-size: 16px;
+        color: #444;
+        line-height: 1.5;
+        padding-top: 4px;
+    }
+    .step-text strong {
+        color: #1A1A1A;
+    }
+
+    /* CTA */
+    .cta-bloco {
+        background: #fff;
+        border: 1px solid #E0DAD0;
+        border-top: 4px solid #5B2D8E;
+        padding: 40px 32px;
+        max-width: 540px;
+    }
+    .cta-bloco h2 {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(22px, 3vw, 30px);
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+    .cta-bloco p {
+        font-size: 15px;
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 28px;
+    }
+    .cta-btn {
+        display: inline-block;
+        background: #5B2D8E;
+        color: #fff;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 14px 32px;
+        border-radius: 2px;
+        transition: background 0.2s, transform 0.2s;
+    }
+    .cta-btn:hover {
+        background: #3B1A6E;
+        transform: translateY(-2px);
+    }
+    .cta-hint {
+        font-size: 12px;
+        color: #aaa;
+        margin-top: 12px;
+    }
+
+    /* Preview link */
+    .preview-link {
+        display: inline-block;
+        margin-top: 48px;
+        font-size: 13px;
+        color: #5B2D8E;
+        text-decoration: none;
+        letter-spacing: 1px;
+        border-bottom: 1px solid #5B2D8E;
+        padding-bottom: 2px;
+    }
+    .preview-link:hover { opacity: 0.7; }
+
+    /* Footer */
+    footer {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        padding: 32px 24px;
+        font-size: 12px;
+        color: #bbb;
+        border-top: 1px solid #E0DAD0;
+    }
+    </style>
+</head>
+<body>
+
+<div class="particles"></div>
+
+<header>
+    <div class="header-top">
+        <h1 class="logo">● RADAR</h1>
+        <img src="linka.png" alt="LINKA" class="linka-logo">
+    </div>
+    <p class="sub">Ribeirão Preto &nbsp;·&nbsp; <span id="data-edicao"></span></p>
+    <div class="rule"></div>
+</header>
+
+<main>
+
+    <!-- Bloco 1 — O que é -->
+    <div class="bloco">
+        <p class="bloco-num">01 &mdash; O que é</p>
+        <h2>Tudo que vai acontecer em<br>Ribeirão Preto, num só lugar.</h2>
+        <p>
+            O RADAR é um agregador inteligente de eventos locais.
+            Toda semana, coletamos shows, feiras, teatro, festivais e eventos corporativos
+            de múltiplas fontes — e uma IA organiza tudo numa interface estilo jornal,
+            clara e sem ruído.
+        </p>
+    </div>
+
+    <!-- Bloco 2 — Como funciona -->
+    <div class="bloco">
+        <p class="bloco-num">02 &mdash; Como funciona</p>
+        <h2>Simples por design.</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <p class="step-text">
+                    <strong>Coletamos automaticamente</strong> — toda semana o RADAR
+                    rastreia as principais plataformas e sites de eventos de Ribeirão Preto.
+                </p>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <p class="step-text">
+                    <strong>IA categoriza e narra</strong> — cada evento recebe uma
+                    categoria (Show, Feira, Teatro...) e uma descrição em tom jornalístico.
+                </p>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <p class="step-text">
+                    <strong>Você acessa tudo organizado</strong> — filtre por tipo de evento,
+                    clique no que interessar e vá direto para a página do ingresso.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bloco 3 — Em breve -->
+    <div class="bloco">
+        <p class="bloco-num">03 &mdash; Em breve</p>
+        <h2>Chegando em Ribeirão Preto.</h2>
+        <p>O RADAR está sendo construído e atualizado semanalmente.<br>
+        Em breve estará disponível para todos.</p>
+        <a href="index.html" class="preview-link" style="margin-top:28px">
+            Ver prévia da interface →
+        </a>
+    </div>
+
+</main>
+
+<footer>
+    RADAR &nbsp;·&nbsp; Ribeirão Preto, SP &nbsp;·&nbsp; 2026
+</footer>
+
+<script>
+// Partículas de letras
+const chars = 'RADAR●▪'.split('');
+const container = document.querySelector('.particles');
+for (let i = 0; i < 18; i++) {
+    const el = document.createElement('span');
+    el.className = 'particle';
+    el.textContent = chars[i % chars.length];
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.fontSize = (14 + Math.random() * 28) + 'px';
+    el.style.animationDuration = (18 + Math.random() * 24) + 's';
+    el.style.animationDelay = -(Math.random() * 30) + 's';
+    container.appendChild(el);
+}
+</script>
+
+<script>
+(function() {
+    const meses = [
+        'janeiro','fevereiro','março','abril','maio','junho',
+        'julho','agosto','setembro','outubro','novembro','dezembro'
+    ];
+    const hoje = new Date();
+    const el   = document.getElementById('data-edicao');
+    if (el) el.textContent = hoje.getDate() + ' de ' +
+        meses[hoje.getMonth()] + ' de ' + hoje.getFullYear();
+})();
+</script>
+
+</body>
+</html>

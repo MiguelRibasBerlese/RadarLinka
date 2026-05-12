@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RADAR — Agregador inteligente de eventos de Ribeirão Preto">
+    <link rel="icon" type="image/png" href="assets/images/LogoLinka.png">
+    <link rel="apple-touch-icon" href="assets/images/LogoLinka.png">
+    <title>RADAR — Ribeirão Preto</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="loading-screen" style="position:fixed;inset:0;z-index:9999;background:#080808;">
+    <div id="canvas-container" style="position:fixed;inset:0;z-index:1;"></div>
+    <div id="loading-ui" style="
+        position:relative;z-index:10;
+        display:flex;flex-direction:column;
+        align-items:center;justify-content:center;
+        height:100vh;gap:12px;
+        opacity:0;transition:opacity 1s ease;
+        font-family:'Outfit',sans-serif;
+    ">
+        <h1 style="font-size:clamp(40px,8vw,72px);font-weight:900;color:#F0EDE8;letter-spacing:-2px;">
+            <span id="bullet-loading" style="color:#8547e4;">●</span> RADAR
+        </h1>
+        <p style="font-size:11px;color:#e0d8f0;letter-spacing:4px;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,0.8);">
+            Ribeirão Preto e Região
+        </p>
+        <p id="txt-carregando" style="font-size:12px;color:#c8b8f0;letter-spacing:3px;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,0.8);">
+            Carregando eventos...
+        </p>
+    </div>
+</div>
+
+<header>
+    <div class="header-top">
+        <h1 class="logo"><span class="logo-bullet">●</span> RADAR</h1>
+        <img src="assets/images/linka.png" alt="LINKA" class="linka-logo">
+    </div>
+    <p class="sub">Ribeirão Preto &nbsp;·&nbsp; Edição <span id="data-edicao"></span></p>
+    <div class="rule"></div>
+</header>
+
+<div class="busca-wrapper">
+    <div class="busca-grupo">
+        <label class="busca-label" for="busca-input">Buscar evento</label>
+        <div class="busca-input-wrapper">
+            <input
+                type="text"
+                id="busca-input"
+                class="busca-input"
+                placeholder="Buscar evento ou artista..."
+                oninput="aplicarFiltros()"
+                autocomplete="off"
+            >
+            <button class="busca-clear" id="busca-clear" onclick="limparBusca()" title="Limpar">×</button>
+        </div>
+    </div>
+</div>
+
+<div class="filtros-wrapper">
+    <div class="filtro-grupo">
+        <label class="filtro-label">Tipo de evento</label>
+        <div class="custom-select" id="cs-cat" data-value="todos">
+            <button class="cs-trigger" type="button">
+                <span class="cs-value">Todos os tipos</span>
+                <svg class="cs-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <ul class="cs-list">
+                <li class="cs-item ativo" data-value="todos">Todos os tipos</li>
+            </ul>
+        </div>
+    </div>
+    <div class="filtro-grupo">
+        <label class="filtro-label">Cidade</label>
+        <div class="custom-select" id="cs-cidade" data-value="todas">
+            <button class="cs-trigger" type="button">
+                <span class="cs-value">Todas as cidades</span>
+                <svg class="cs-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            </button>
+            <ul class="cs-list">
+                <li class="cs-item ativo" data-value="todas">Todas as cidades</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<p id="count-label" style="max-width:1200px;margin:-16px auto 20px;padding:0 24px;font-size:11px;color:#aaa;font-family:'Outfit',sans-serif;">
+    carregando...
+</p>
+
+<main class="grid" id="grid-eventos"></main>
+
+<!-- Chatbot -->
+<button class="chat-bubble" id="chat-bubble" onclick="toggleChat()" title="Falar com o ORBIT">
+    💬
+    <span class="chat-badge" id="chat-badge"></span>
+</button>
+
+<div class="chat-window" id="chat-window">
+    <div class="chat-header">
+        <div class="chat-header-info">
+            <div class="chat-avatar">🌌</div>
+            <div>
+                <div class="chat-header-name">ORBIT</div>
+                <div class="chat-header-status">● online agora</div>
+            </div>
+        </div>
+        <button class="chat-close" onclick="toggleChat()">×</button>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+        <div class="chat-msg bot">
+            Olá! Sou o ORBIT 🌌 Seu guia de eventos em Ribeirão Preto e região. O que você procura?
+        </div>
+    </div>
+    <div class="chat-suggestions" id="chat-suggestions">
+        <button class="chat-suggestion" onclick="enviarSugestao(this)">Shows esse fim de semana</button>
+        <button class="chat-suggestion" onclick="enviarSugestao(this)">Eventos em Campinas</button>
+        <button class="chat-suggestion" onclick="enviarSugestao(this)">Eventos para crianças</button>
+        <button class="chat-suggestion" onclick="enviarSugestao(this)">O que tem hoje?</button>
+    </div>
+    <div class="chat-input-wrapper">
+        <input class="chat-input" id="chat-input" type="text"
+            placeholder="Pergunte sobre eventos..."
+            onkeydown="if(event.key==='Enter') enviarMensagem()">
+        <button class="chat-send" id="chat-send" onclick="enviarMensagem()">➤</button>
+    </div>
+</div>
+
+<div id="theme-toggle-wrap" title="Alternar tema">
+    <span id="theme-toggle-icon">☀️</span>
+    <div id="theme-toggle-track">
+        <div id="theme-toggle-thumb"></div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/loading.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/app.js"></script>
+<script src="js/chat.js"></script>
+</body>
+</html>

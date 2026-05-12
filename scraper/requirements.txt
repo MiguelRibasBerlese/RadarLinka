@@ -1,9 +1,0 @@
-requests
-beautifulsoup4
-playwright
-python-dateutil
-groq
-jinja2
-pytest
-python-dotenv
-google-search-results

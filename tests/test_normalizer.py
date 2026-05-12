@@ -1,6 +1,6 @@
 import sys, os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'scraper'))
-from event_normalizer import normalize
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from pipeline.processors import normalize
 
 def test_normalize_retorna_schema_completo():
     ev = {'titulo': 'Show de Rock', 'data': '2026-05-10',
