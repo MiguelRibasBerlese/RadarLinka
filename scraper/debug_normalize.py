@@ -21,7 +21,7 @@ for e in normalizados:
     else:
         sem_data[e['fonte']].append(e)
 
-fontes = ['sympla', 'emribeirao', 'shopping']
+fontes = ['sympla', 'emribeirao', 'shopping', 'eventoon', 'sindtur', 'songkick', 'varal']
 total_com = sum(len(v) for v in com_data.values())
 total_sem = sum(len(v) for v in sem_data.values())
 

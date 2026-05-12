@@ -118,6 +118,38 @@ def normalize(evento_bruto: dict, fonte: str):
             'descricao_bruta': (evento_bruto.get('descricao_bruta') or '').strip(),
         }
 
+    # Fontes locais já filtradas por cidade — aceitar sem filtro geográfico
+    if fonte in ('eventoon', 'sindtur', 'songkick', 'varal'):
+        if not titulo:
+            return None
+        data_iso = evento_bruto.get('data_iso', '').strip()
+        if not data_iso:
+            data_raw = evento_bruto.get('data', '').strip()
+            m = re.match(r'(\d{4})-(\d{2})-(\d{2})', data_raw)
+            if m:
+                data_iso = data_raw[:10]
+            else:
+                m = re.match(r'(\d{2})/(\d{2})/(\d{4})', data_raw)
+                if m:
+                    data_iso = f'{m.group(3)}-{m.group(2)}-{m.group(1)}'
+        if data_iso:
+            try:
+                from datetime import datetime
+                dt = datetime.strptime(data_iso, '%Y-%m-%d').date()
+                if dt < date.today():
+                    return None
+            except Exception:
+                pass
+        return {
+            'titulo':          titulo,
+            'data_iso':        data_iso,
+            'local':           local,
+            'cidade':          _extrair_cidade(local) if local else 'Ribeirão Preto',
+            'url':             (evento_bruto.get('url') or '').strip(),
+            'fonte':           fonte,
+            'descricao_bruta': '',
+        }
+
     # Filtro geográfico — Ingresse retorna eventos nacionais
     if fonte == 'ingresse':
         if not local or not _e_da_regiao(local):

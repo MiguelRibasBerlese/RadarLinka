@@ -252,9 +252,206 @@ def fetch_date_emribeirao(url: str) -> str:
         return ''
 
 
+# ── EVENTOON ──────────────────────────────────────────────────
+def scrape_eventoon():
+    url = 'https://www.eventoon.com.br/cidade/ribeirao-preto-sp'
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page()
+            page.set_extra_http_headers({'User-Agent': HEADERS['User-Agent']})
+            page.goto(url, wait_until='domcontentloaded', timeout=45000)
+            page.wait_for_timeout(5000)
+            html = page.content()
+            browser.close()
+
+        soup = BeautifulSoup(html, 'html.parser')
+        eventos = []
+
+        for bloco in soup.select('.col-md-2.col-sm-3.form-group'):
+            try:
+                pai = bloco.parent
+                textos = [t.strip() for t in pai.get_text('\n').split('\n') if t.strip()]
+                if len(textos) < 4:
+                    continue
+
+                titulo = textos[3]
+                local  = textos[4] if len(textos) > 4 else ''
+                data   = next((t for t in textos if re.match(r'\d{2}/\d{2}/\d{4}', t)), '')
+
+                href = next((a['href'] for a in pai.find_all('a', href=True)
+                             if 'evento' in a['href']), '')
+                if href and not href.startswith('http'):
+                    href = 'https://www.eventoon.com.br' + href
+
+                if titulo and len(titulo) > 3:
+                    eventos.append({'titulo': titulo, 'data': data,
+                                    'local': local, 'url': href, 'fonte': 'eventoon'})
+            except Exception:
+                continue
+
+        print(f'[scrape_eventoon] {len(eventos)} eventos encontrados')
+        return eventos
+    except Exception as e:
+        print(f'[ERRO scrape_eventoon] {e}')
+        return []
+
+
+# ── SINDTUR ───────────────────────────────────────────────────
+def scrape_sindtur():
+    url = 'https://observatorio.sindtur.org.br/pesquisa/eventos/calendario-de-eventos/'
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page()
+            page.set_extra_http_headers({'User-Agent': HEADERS['User-Agent']})
+            page.goto(url, wait_until='networkidle', timeout=30000)
+            page.wait_for_timeout(2000)
+            html = page.content()
+            browser.close()
+
+        soup = BeautifulSoup(html, 'html.parser')
+        eventos = []
+
+        for artigo in soup.select('article[class*=tribe_events], article[class*=type-tribe]'):
+            try:
+                titulo_el = artigo.select_one('[class*=event-title], h2, h3')
+                titulo    = titulo_el.get_text(strip=True) if titulo_el else ''
+
+                time_el  = artigo.select_one('time[datetime]')
+                data_iso = time_el['datetime'][:10] if time_el else ''
+
+                local_el = artigo.select_one('[class*=venue], [class*=local]')
+                local    = local_el.get_text(strip=True) if local_el else 'Ribeirão Preto'
+
+                href   = artigo.select_one('a[href]')
+                url_ev = href['href'] if href else ''
+
+                if titulo:
+                    eventos.append({'titulo': titulo, 'data': data_iso,
+                                    'data_iso': data_iso, 'local': local,
+                                    'url': url_ev, 'fonte': 'sindtur'})
+            except Exception:
+                continue
+
+        print(f'[scrape_sindtur] {len(eventos)} eventos encontrados')
+        return eventos
+    except Exception as e:
+        print(f'[ERRO scrape_sindtur] {e}')
+        return []
+
+
+# ── SONGKICK ──────────────────────────────────────────────────
+def scrape_songkick():
+    url = 'https://www.songkick.com/metro-areas/97701-brazil-ribeirao-preto'
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page()
+            page.set_extra_http_headers({'User-Agent': HEADERS['User-Agent']})
+            page.goto(url, wait_until='domcontentloaded', timeout=45000)
+            page.wait_for_timeout(5000)
+            html = page.content()
+            browser.close()
+
+        soup = BeautifulSoup(html, 'html.parser')
+        eventos = []
+
+        for item in soup.select('.event-listings-element'):
+            try:
+                time_el  = item.select_one('time[datetime]')
+                data_iso = time_el['datetime'][:10] if time_el else ''
+
+                partes  = [p.strip() for p in item.get_text('|').split('|') if p.strip()]
+                titulo  = partes[0] if partes else ''
+                local   = partes[1] if len(partes) > 1 else 'Ribeirão Preto'
+
+                href = item.select_one('a[href]')
+                if href:
+                    h = href['href']
+                    url_ev = h if h.startswith('http') else 'https://www.songkick.com' + h
+                else:
+                    url_ev = ''
+
+                if titulo and len(titulo) > 2:
+                    eventos.append({'titulo': titulo, 'data': data_iso,
+                                    'data_iso': data_iso,
+                                    'local': local + ' - Ribeirão Preto',
+                                    'url': url_ev, 'fonte': 'songkick'})
+            except Exception:
+                continue
+
+        print(f'[scrape_songkick] {len(eventos)} eventos encontrados')
+        return eventos
+    except Exception as e:
+        print(f'[ERRO scrape_songkick] {e}')
+        return []
+
+
+# ── VARAL DIVERSO ─────────────────────────────────────────────
+def scrape_varal():
+    url = 'https://varaldiverso.com.br/editorias/shows/agenda-de-shows-de-2025-em-ribeirao-preto/'
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch(headless=True)
+            page = browser.new_page()
+            page.set_extra_http_headers({'User-Agent': HEADERS['User-Agent']})
+            page.goto(url, wait_until='networkidle', timeout=30000)
+            page.wait_for_timeout(2000)
+            html = page.content()
+            browser.close()
+
+        soup = BeautifulSoup(html, 'html.parser')
+        eventos = []
+
+        for bq in soup.select('blockquote'):
+            try:
+                texto  = bq.get_text('\n', strip=True)
+                linhas = [l.strip() for l in texto.split('\n') if l.strip()]
+                if not linhas:
+                    continue
+
+                titulo = linhas[0]
+
+                data_match = re.search(r'(\d{1,2})[\/\.](\d{1,2})', texto)
+                if data_match:
+                    dia = data_match.group(1).zfill(2)
+                    mes = data_match.group(2).zfill(2)
+                    data_iso = f'2026-{mes}-{dia}'
+                else:
+                    data_iso = ''
+
+                local_match = re.search(r'\bno\s+([A-ZÀ-Ú][^,\n]+)', texto)
+                local = local_match.group(1).strip() if local_match else 'Ribeirão Preto'
+
+                href = bq.select_one('a[href]')
+                url_ev = href['href'] if href else ''
+
+                if titulo and len(titulo) > 3:
+                    eventos.append({'titulo': titulo, 'data': data_iso,
+                                    'local': local + ' - Ribeirão Preto',
+                                    'url': url_ev, 'fonte': 'varal'})
+            except Exception:
+                continue
+
+        print(f'[scrape_varal] {len(eventos)} eventos encontrados')
+        return eventos
+    except Exception as e:
+        print(f'[ERRO scrape_varal] {e}')
+        return []
+
+
 def scrape_all():
     todos = []
-    for fn in [scrape_sympla, scrape_emribeirao, scrape_shopping]:
+    for fn in [
+        scrape_sympla,
+        scrape_emribeirao,
+        scrape_shopping,
+        scrape_eventoon,
+        scrape_sindtur,
+        scrape_songkick,
+        scrape_varal,
+    ]:
         try:
             resultado = fn()
             todos.extend(resultado)
