@@ -1,4 +1,4 @@
-import json, time
+import json, time, unicodedata
 from groq import Groq
 from config import GROQ_API_KEY, CATEGORIAS
 
@@ -31,12 +31,111 @@ SYSTEM_PROMPT = (
     'NUNCA use "Outro" na narrativa — descreva o evento.'
 )
 
+# ── Classificação por regras (zero tokens) ──────────────────
+REGRAS = {
+    'Show': [
+        'show', 'banda', 'cantor', 'cantora', 'concerto', 'ao vivo',
+        'turne', 'apresentacao', 'musical',
+        'sinfonica', 'orquestra', 'jazz', 'rock', 'samba',
+        'pagode', 'forro', 'sertanejo', 'funk', 'rap', 'hip hop',
+        'metal', 'pop', 'mpb', 'blues', 'reggae', 'stand-up', 'standup',
+        'comedy', 'comedia', 'humorista', 'pianista', 'violonista',
+        'cantor', 'tribute', 'cover', 'acustico', '- goa',
+        'numanice', 'ribeirao comedy', 'ribeira comedy',
+    ],
+    'Festa': [
+        'balada', 'festa', 'baile', 'noite', 'party', 'dj', 'club',
+        'boate', 'carnaval', 'bloco', 'open bar', 'rave', 'trap',
+        'house', 'eletronico', 'flashback', 'carnadoze', 'kiki ball',
+        'ball da', 'arraial', 'arraia', 'arraia',
+    ],
+    'Feira': [
+        'feira', 'mercado', 'artesanato', 'gastronomia', 'gastronomico',
+        'agricola', 'agropecuaria', 'feirinha',
+    ],
+    'Festival': [
+        'festival', 'rodeio', 'rodeo', 'joao rock', 'tardezinha',
+        'lollapalooza', 'tomorrowland', 'bacon day', 'open air',
+    ],
+    'Teatro': [
+        'teatro', 'theatro', 'peca', 'espetaculo', 'opera', 'danca', 'ballet',
+        'bale', 'monologo', 'dramaturgia', 'sessao de freud',
+        'montagem escolar', 'fabrica de chocolate',
+    ],
+    'Esporte': [
+        'corrida', 'maratona', 'triathlon', 'ciclismo', 'futebol',
+        'campeonato', 'torneio', 'esporte', 'esportivo', 'corrida de rua',
+        '5k', '10k', 'natacao', 'atletismo', 'crossfit',
+    ],
+    'Corporativo': [
+        'congresso', 'summit', 'conferencia', 'palestra',
+        'seminario', 'jornada academica', 'simposio', 'forum',
+        'networking', 'hackathon', 'inovacao', 'jornada de',
+        'enfermagem', 'veterinaria', 'odontologia', 'clinica medica',
+        'clinica cirurgica', 'e-commerce', 'ecommerce', 'experience',
+        'intervencao', 'psicoses', 'pamv',
+    ],
+    'Curso': [
+        'curso', 'capacitacao', 'treinamento', 'oficina',
+        'formacao', 'certificacao', 'imersao', 'mentoria',
+        'masterclass', 'bootcamp',
+    ],
+    'Exposicao': [
+        'exposicao', 'museu', 'galeria', 'mostra',
+        'instalacao', 'fotografia', 'imersiva', 'imersivo',
+        'interativa', 'interativo',
+    ],
+    'Religioso': [
+        'culto', 'retiro', 'acampamento', 'evangelico', 'catolico',
+        'missa', 'louvor', 'adoracao', 'pregacao', 'adore', 'aviva',
+        'pastor', 'igreja', 'reino de deus', 'monja', 'zen',
+    ],
+    'Turismo': [
+        'passeio', 'tour', 'turismo', 'ecoturismo',
+        'trilha', 'excursao', 'parque', 'natureza', 'helicoptero',
+        'city tour',
+    ],
+    'Infantil': [
+        'kids', 'infantil', 'crianca', 'familia', 'circo', 'magico',
+        'mundo encantado', 'princesa', 'super heroi', 'patrulha',
+        'peppa', 'frozen', 'disney', 'fantastica fabrica',
+    ],
+}
+
+# Mapeamento de nomes normalizados de volta para nomes corretos
+_NOME_CORRETO = {
+    'Exposicao': 'Exposição',
+}
+
+def _normalizar(texto: str) -> str:
+    t = unicodedata.normalize('NFKD', texto.lower())
+    return ''.join(c for c in t if not unicodedata.combining(c))
+
+def classificar_por_regras(titulo: str, descricao: str = '') -> str:
+    """Tenta classificar por palavras-chave. Retorna categoria ou None."""
+    texto = _normalizar(titulo + ' ' + descricao)
+    for categoria, palavras in REGRAS.items():
+        for palavra in palavras:
+            if _normalizar(palavra) in texto:
+                return _NOME_CORRETO.get(categoria, categoria)
+    return None
+
 def classify(evento: dict) -> dict:
+    titulo    = evento.get('titulo', '')
+    descricao = evento.get('descricao_bruta', '')
+
+    # ── Tenta classificar por regras primeiro (zero tokens) ──
+    categoria_regra = classificar_por_regras(titulo, descricao)
+    if categoria_regra:
+        narrativa = f'{titulo} em {evento.get("local", "Ribeirão Preto").split("-")[0].strip()}.'
+        return {'categoria': categoria_regra, 'narrativa_ia': narrativa}
+
+    # ── Só chama Groq se regras não conseguiram classificar ──
     prompt = (
-        f'Titulo: {evento.get("titulo", "")} | '
+        f'Titulo: {titulo} | '
         f'Data: {evento.get("data_iso", "") or "nao informada"} | '
         f'Local: {evento.get("local", "") or "Ribeirao Preto"} | '
-        f'Descricao: {evento.get("descricao_bruta", "") or "sem descricao"}'
+        f'Descricao: {descricao or "sem descricao"}'
     )
     try:
         resp = client.chat.completions.create(
@@ -49,20 +148,19 @@ def classify(evento: dict) -> dict:
             max_tokens=120,
         )
         raw = resp.choices[0].message.content.strip()
-        # Remove markdown se a IA ignorar a instrução
         if raw.startswith('```'):
             raw = raw.split('```')[1]
             if raw.startswith('json'):
                 raw = raw[4:]
-        data = json.loads(raw)
+        data      = json.loads(raw)
         categoria = data.get('categoria', 'Outro')
         if categoria not in CATEGORIAS:
             categoria = 'Outro'
         narrativa = str(data.get('narrativa', '')).strip()[:200]
-        time.sleep(5)
+        time.sleep(2)
         return {'categoria': categoria, 'narrativa_ia': narrativa}
     except json.JSONDecodeError:
-        print(f'[WARN classify] JSON malformado para: {evento.get("titulo","?")}')
+        print(f'[WARN classify] JSON malformado para: {titulo!r}')
         return {'categoria': 'Outro', 'narrativa_ia': ''}
     except Exception as e:
         print(f'[ERRO classify] {e}')
