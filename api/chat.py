@@ -1,27 +1,35 @@
 import json, os
+from datetime import date
 from http.server import BaseHTTPRequestHandler
 from groq import Groq
 
 client = Groq(api_key=os.environ.get('GROQ_API_KEY'))
 
 EVENTS_PATH = os.path.join(os.path.dirname(__file__), '..', 'web', 'events.json')
+MAX_EVENTS  = 80
 
 def load_events():
     try:
         with open(EVENTS_PATH, encoding='utf-8') as f:
             events = json.load(f)
+
+        hoje = date.today().isoformat()
+        futuros = [e for e in events if e.get('data_iso', '') >= hoje]
+        futuros.sort(key=lambda e: e.get('data_iso', ''))
+
         resumo = []
-        for e in events:
+        for e in futuros[:MAX_EVENTS]:
+            url = e.get('url', '')
             linha = (
                 f"- {e.get('titulo','')} | "
                 f"{e.get('categoria','')} | "
-                f"{e.get('data_iso','Data a confirmar')} | "
+                f"{e.get('data_iso','')} | "
                 f"{e.get('local','').split('-')[0].strip()} | "
-                f"{e.get('cidade','Ribeirão Preto')} | "
-                f"URL: {e.get('url','sem link')}"
+                f"{e.get('cidade','Ribeirão Preto')}"
+                + (f" | URL: {url}" if url else "")
             )
             resumo.append(linha)
-        return '\n'.join(resumo)
+        return '\n'.join(resumo) or 'Nenhum evento futuro encontrado.'
     except:
         return 'Nenhum evento disponível no momento.'
 
