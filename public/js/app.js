@@ -72,7 +72,13 @@ function gerarCard(ev) {
     art.className = 'card';
     art.dataset.cat    = cat;
     art.dataset.cidade = cidade;
+    art.setAttribute('tabindex', '0');
+    art.setAttribute('role', 'button');
+    art.setAttribute('aria-label', (ev.titulo || '') + (ev.data_iso ? ' — ' + formatarData(ev.data_iso) : ''));
     art.onclick = () => window.open(url, '_blank');
+    art.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); window.open(url, '_blank'); }
+    });
     art.innerHTML =
         '<span class="badge" style="background:' + cor + '">' + cat + '</span>' +
         '<h2>' + titulo + '</h2>' +
@@ -244,7 +250,11 @@ function _removerFiltro(btn) {
         cs.querySelector('.cs-value').textContent = 'Todas as regiões';
         cs.querySelectorAll('.cs-item').forEach(i => i.classList.toggle('ativo', i.dataset.value === 'todas'));
     } else if (tipo === 'data') {
-        document.querySelectorAll('#chips-data .pf-chip').forEach(c => c.classList.toggle('ativo', c.dataset.value === 'todos'));
+        document.querySelectorAll('#chips-data .pf-chip').forEach(c => {
+            const ativo = c.dataset.value === 'todos';
+            c.classList.toggle('ativo', ativo);
+            c.setAttribute('aria-pressed', String(ativo));
+        });
     } else if (tipo === 'busca') {
         const input = document.getElementById('busca-input');
         if (input) input.value = '';
@@ -264,7 +274,11 @@ function limparTodosFiltros() {
     csCidade.querySelector('.cs-value').textContent = 'Todas as regiões';
     csCidade.querySelectorAll('.cs-item').forEach(i => i.classList.toggle('ativo', i.dataset.value === 'todas'));
 
-    document.querySelectorAll('#chips-data .pf-chip').forEach(c => c.classList.toggle('ativo', c.dataset.value === 'todos'));
+    document.querySelectorAll('#chips-data .pf-chip').forEach(c => {
+        const ativo = c.dataset.value === 'todos';
+        c.classList.toggle('ativo', ativo);
+        c.setAttribute('aria-pressed', String(ativo));
+    });
 
     const input = document.getElementById('busca-input');
     if (input) input.value = '';
@@ -335,8 +349,12 @@ async function carregarEventos() {
 // ── Chips de data ────────────────────────────────────────────────────────────
 document.querySelectorAll('#chips-data .pf-chip').forEach(chip => {
     chip.addEventListener('click', () => {
-        document.querySelectorAll('#chips-data .pf-chip').forEach(c => c.classList.remove('ativo'));
+        document.querySelectorAll('#chips-data .pf-chip').forEach(c => {
+            c.classList.remove('ativo');
+            c.setAttribute('aria-pressed', 'false');
+        });
         chip.classList.add('ativo');
+        chip.setAttribute('aria-pressed', 'true');
         aplicarFiltros();
     });
 });

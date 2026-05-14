@@ -19,7 +19,7 @@
         </h1>
         <p class="loading-sub">Ribeirão Preto e Região</p>
         <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
-        <p id="txt-carregando">Carregando eventos...</p>
+        <p id="txt-carregando" aria-live="polite">Carregando eventos...</p>
     </div>
 </div>
 
@@ -57,11 +57,11 @@
     <div class="pf-chips-row">
         <span class="pf-section-label">Quando</span>
         <div class="pf-chips" id="chips-data">
-            <button class="pf-chip ativo" data-value="todos">Todos</button>
-            <button class="pf-chip" data-value="hoje">Hoje</button>
-            <button class="pf-chip" data-value="fds">Fim de semana</button>
-            <button class="pf-chip" data-value="semana">Esta semana</button>
-            <button class="pf-chip" data-value="mes">Este mês</button>
+            <button class="pf-chip ativo" data-value="todos" aria-pressed="true">Todos</button>
+            <button class="pf-chip" data-value="hoje" aria-pressed="false">Hoje</button>
+            <button class="pf-chip" data-value="fds" aria-pressed="false">Fim de semana</button>
+            <button class="pf-chip" data-value="semana" aria-pressed="false">Esta semana</button>
+            <button class="pf-chip" data-value="mes" aria-pressed="false">Este mês</button>
         </div>
     </div>
 
@@ -100,7 +100,7 @@
 <main class="grid" id="grid-eventos"></main>
 
 <!-- Chatbot -->
-<button class="chat-bubble" id="chat-bubble" onclick="toggleChat()" title="Falar com o ORBIT">
+<button class="chat-bubble" id="chat-bubble" onclick="toggleChat()" title="Falar com o ORBIT" aria-label="Abrir chat com ORBIT">
     💬
     <span class="chat-badge" id="chat-badge"></span>
 </button>
