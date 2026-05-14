@@ -128,7 +128,8 @@ function renderizarGrid(eventos) {
 
     if (!eventos.length) {
         grid.innerHTML = '<p class="vazio">Nenhum evento encontrado.</p>';
-        document.getElementById('count-label')?.textContent = '0 eventos';
+        const labelVazio = document.getElementById('count-label');
+        if (labelVazio) labelVazio.textContent = '0 eventos';
         return;
     }
 
