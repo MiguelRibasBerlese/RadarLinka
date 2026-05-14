@@ -672,13 +672,122 @@ main, header { position: relative; z-index: 1; }
     .chat-window { left: 12px; right: 12px; width: auto; bottom: 88px; }
 }
 
-@keyframes bulletPulseLoad {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: 0.6; transform: scale(1.2); }
+/* ── LOADING SCREEN ──────────────────────────────────────────────────────── */
+#loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #06060e;
 }
-#bullet-loading { display: inline-block; animation: bulletPulseLoad 2s ease-in-out infinite; }
-#txt-carregando { animation: piscarLoad 1.5s ease-in-out infinite; }
-@keyframes piscarLoad {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.3; }
+#canvas-container {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+}
+#loading-ui {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 14px;
+    font-family: 'Outfit', sans-serif;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+}
+#loading-ui.loading-visible { opacity: 1; }
+
+/* título — slide up */
+.loading-title {
+    font-size: clamp(42px, 9vw, 80px);
+    font-weight: 900;
+    color: #F0EDE8;
+    letter-spacing: -2px;
+    line-height: 1;
+    opacity: 0;
+    transform: translateY(24px);
+    animation: loadSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+    text-shadow: 0 0 40px rgba(133, 71, 228, 0.4);
+}
+
+/* bullet ● — glow pulsante */
+#bullet-loading {
+    display: inline-block;
+    color: #8547e4;
+    animation: bulletGlow 2.2s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px #8547e4);
+}
+
+/* subtítulo — slide up com delay + letter-spacing expand */
+.loading-sub {
+    font-size: 11px;
+    color: #c8b8f0;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(16px);
+    animation: loadSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards,
+               letterExpand 2s ease-out 0.35s forwards;
+    text-shadow: 0 0 20px rgba(133, 71, 228, 0.5);
+}
+
+/* barra de progresso */
+.loading-bar-wrap {
+    width: 160px;
+    height: 2px;
+    background: rgba(133, 71, 228, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    opacity: 0;
+    animation: loadFadeIn 0.6s ease 0.6s forwards;
+}
+.loading-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #5020cc, #8547e4, #c090ff);
+    border-radius: 2px;
+    animation: barSweep 3s cubic-bezier(0.4, 0, 0.2, 1) 0.7s forwards;
+    box-shadow: 0 0 8px #8547e4;
+}
+
+/* texto carregando — shimmer */
+#txt-carregando {
+    font-size: 11px;
+    color: transparent;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0;
+    background: linear-gradient(90deg, #9060e0 0%, #f0e0ff 40%, #9060e0 60%, #c8b8f0 100%);
+    background-size: 250% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: loadFadeIn 0.6s ease 0.8s forwards,
+               shimmer 2.5s linear 1s infinite;
+}
+
+@keyframes loadSlideUp {
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes loadFadeIn {
+    to { opacity: 1; }
+}
+@keyframes bulletGlow {
+    0%, 100% { opacity: 1; transform: scale(1);    filter: drop-shadow(0 0 6px #8547e4); }
+    50%       { opacity: 0.7; transform: scale(1.18); filter: drop-shadow(0 0 18px #b080ff); }
+}
+@keyframes letterExpand {
+    from { letter-spacing: 2px; }
+    to   { letter-spacing: 7px; }
+}
+@keyframes barSweep {
+    0%   { width: 0%; }
+    60%  { width: 75%; }
+    85%  { width: 88%; }
+    100% { width: 96%; }
+}
+@keyframes shimmer {
+    0%   { background-position: 200% center; }
+    100% { background-position: -200% center; }
 }

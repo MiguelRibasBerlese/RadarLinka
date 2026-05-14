@@ -11,25 +11,15 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<div id="loading-screen" style="position:fixed;inset:0;z-index:9999;background:#080808;">
-    <div id="canvas-container" style="position:fixed;inset:0;z-index:1;"></div>
-    <div id="loading-ui" style="
-        position:relative;z-index:10;
-        display:flex;flex-direction:column;
-        align-items:center;justify-content:center;
-        height:100vh;gap:12px;
-        opacity:0;transition:opacity 1s ease;
-        font-family:'Outfit',sans-serif;
-    ">
-        <h1 style="font-size:clamp(40px,8vw,72px);font-weight:900;color:#F0EDE8;letter-spacing:-2px;">
-            <span id="bullet-loading" style="color:#8547e4;">●</span> RADAR
+<div id="loading-screen">
+    <div id="canvas-container"></div>
+    <div id="loading-ui">
+        <h1 class="loading-title">
+            <span id="bullet-loading">●</span> RADAR
         </h1>
-        <p style="font-size:11px;color:#e0d8f0;letter-spacing:4px;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,0.8);">
-            Ribeirão Preto e Região
-        </p>
-        <p id="txt-carregando" style="font-size:12px;color:#c8b8f0;letter-spacing:3px;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,0.8);">
-            Carregando eventos...
-        </p>
+        <p class="loading-sub">Ribeirão Preto e Região</p>
+        <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+        <p id="txt-carregando">Carregando eventos...</p>
     </div>
 </div>
 
