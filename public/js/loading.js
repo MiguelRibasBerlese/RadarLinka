@@ -1,7 +1,36 @@
 (function() {
+    // Fallback: garante que a loading screen some mesmo se Three.js falhar
+    const _fallback = setTimeout(() => {
+        const ls = document.getElementById('loading-screen');
+        if (ls) ls.style.display = 'none';
+        document.getElementById('theme-toggle-wrap').style.opacity = '1';
+        document.getElementById('theme-toggle-wrap').style.pointerEvents = 'auto';
+        document.getElementById('chat-bubble')?.classList.add('visivel');
+    }, 9000);
+
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        clearTimeout(_fallback);
         document.getElementById('loading-screen').style.display = 'none';
         return;
+    }
+
+    // Starfield em canvas (substitui ceuestrelado.svg de 8.9MB)
+    const starCanvas = document.createElement('canvas');
+    starCanvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:0';
+    starCanvas.width  = window.innerWidth;
+    starCanvas.height = window.innerHeight;
+    document.getElementById('loading-screen').prepend(starCanvas);
+    const sCtx = starCanvas.getContext('2d');
+    sCtx.fillStyle = '#080808';
+    sCtx.fillRect(0, 0, starCanvas.width, starCanvas.height);
+    for (let i = 0; i < 900; i++) {
+        const x = Math.random() * starCanvas.width;
+        const y = Math.random() * starCanvas.height;
+        const r = Math.random() * 1.3;
+        sCtx.beginPath();
+        sCtx.arc(x, y, r, 0, Math.PI * 2);
+        sCtx.fillStyle = `rgba(255,255,255,${0.3 + Math.random() * 0.7})`;
+        sCtx.fill();
     }
 
     const scene    = new THREE.Scene();
@@ -101,6 +130,7 @@
     }, 3200);
 
     setTimeout(() => {
+        clearTimeout(_fallback);
         const ls = document.getElementById('loading-screen');
         ls.style.transition = 'opacity 0.9s ease';
         ls.style.opacity    = '0';

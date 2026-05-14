@@ -22,7 +22,10 @@ const BADGE_CORES = {
     'Outro':       '#95A5A6',
 };
 
-let _todosEventos = [];
+let _todosEventos  = [];
+let _renderEventos = [];
+let _renderOffset  = 0;
+const BATCH = 40;
 
 function formatarData(iso) {
     if (!iso) return 'Data a confirmar';
@@ -87,23 +90,45 @@ const observadorCards = new IntersectionObserver((entries) => {
     });
 }, { threshold: 0.08 });
 
+const observadorMaisCards = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        observadorMaisCards.unobserve(entry.target);
+        _carregarMaisCards();
+    });
+}, { threshold: 0.1 });
+
+function _carregarMaisCards() {
+    const grid = document.getElementById('grid-eventos');
+    if (!grid) return;
+    const fim = Math.min(_renderOffset + BATCH, _renderEventos.length);
+    for (let i = _renderOffset; i < fim; i++) {
+        const card = gerarCard(_renderEventos[i]);
+        grid.appendChild(card);
+        observadorCards.observe(card);
+    }
+    _renderOffset = fim;
+    if (_renderOffset < _renderEventos.length) {
+        observadorMaisCards.observe(grid.lastElementChild);
+    }
+}
+
 function renderizarGrid(eventos) {
     const grid = document.getElementById('grid-eventos');
     if (!grid) return;
     grid.innerHTML = '';
+    _renderEventos = eventos;
+    _renderOffset  = 0;
+
     if (!eventos.length) {
         grid.innerHTML = '<p class="vazio">Nenhum evento encontrado.</p>';
-        const label = document.getElementById('count-label');
-        if (label) label.textContent = '0 eventos';
+        document.getElementById('count-label')?.textContent = '0 eventos';
         return;
     }
-    eventos.forEach(ev => {
-        const card = gerarCard(ev);
-        grid.appendChild(card);
-        observadorCards.observe(card);
-    });
+
     const label = document.getElementById('count-label');
     if (label) label.textContent = eventos.length + ' evento' + (eventos.length !== 1 ? 's' : '');
+    _carregarMaisCards();
 }
 
 function popularDropdowns(eventos) {
@@ -291,7 +316,12 @@ async function carregarEventos() {
     try {
         const resp = await fetch('data/events.json?v=' + Date.now());
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
-        _todosEventos = await resp.json();
+        _todosEventos = (await resp.json()).sort((a, b) => {
+            if (!a.data_iso && !b.data_iso) return 0;
+            if (!a.data_iso) return 1;
+            if (!b.data_iso) return -1;
+            return a.data_iso.localeCompare(b.data_iso);
+        });
         popularDropdowns(_todosEventos);
         aplicarFiltros();
     } catch(e) {
@@ -328,8 +358,9 @@ document.querySelectorAll('.custom-select').forEach(cs => {
         if (!item) return;
         list.querySelectorAll('.cs-item').forEach(i => i.classList.remove('ativo'));
         item.classList.add('ativo');
-        valueEl.textContent = item.textContent;
-        cs.dataset.value = item.dataset.value;
+        const v = item.dataset.value;
+        valueEl.textContent = (v === 'todos' || v === 'todas') ? item.textContent : v;
+        cs.dataset.value = v;
         cs.classList.remove('open');
         aplicarFiltros();
     });
