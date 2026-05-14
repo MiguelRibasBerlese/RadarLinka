@@ -130,11 +130,12 @@ def normalize(evento_bruto: dict, fonte: str):
                     return None
             except Exception:
                 pass
+        cidade_hint = (evento_bruto.get('cidade') or '').strip()
         return {
             'titulo':          titulo,
             'data_iso':        data_iso,
             'local':           local,
-            'cidade':          _extrair_cidade(local) if local else 'Ribeirão Preto',
+            'cidade':          cidade_hint or (_extrair_cidade(local) if local else 'Ribeirão Preto'),
             'url':             (evento_bruto.get('url') or '').strip(),
             'fonte':           fonte,
             'descricao_bruta': '',
@@ -159,11 +160,12 @@ def normalize(evento_bruto: dict, fonte: str):
         except Exception:
             data_iso = ''
 
+    cidade_hint = (evento_bruto.get('cidade') or '').strip()
     return {
         'titulo':          titulo,
         'data_iso':        data_iso,
         'local':           local,
-        'cidade':          _extrair_cidade(local),
+        'cidade':          cidade_hint or _extrair_cidade(local),
         'url':             (evento_bruto.get('url') or '').strip(),
         'fonte':           fonte,
         'descricao_bruta': (evento_bruto.get('descricao') or

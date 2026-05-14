@@ -110,9 +110,10 @@ def scrape_sympla():
                     data_raw = data_match.group(0).strip() if data_match else ''
 
                     if titulo and len(titulo) > 5 and url_evento:
+                        cidade_nome = local_fallback.split(' - ')[0].strip()
                         eventos.append({'titulo': titulo, 'url': url_evento,
                                         'local': local, 'data': data_raw,
-                                        'fonte': 'sympla'})
+                                        'cidade': cidade_nome, 'fonte': 'sympla'})
                         n_adicionados += 1
 
                 print(f'[sympla:{cidade_slug}] {n_adicionados} eventos')
