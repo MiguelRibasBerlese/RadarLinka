@@ -75,6 +75,28 @@ def run():
         barra_progresso(i+1, len(brutos), prefixo='Normalizando')
     print(f'\n  ✅ {len(normalizados)} eventos válidos', flush=True)
 
+    # ── DEDUPLICAÇÃO ────────────────────────────────────
+    separador('Deduplicacao')
+    vistos_url    = set()
+    vistos_titulo = set()
+    unicos = []
+    for ev in normalizados:
+        url    = (ev.get('url') or '').strip().lower()
+        titulo = ''.join(c for c in ev.get('titulo', '').lower() if c.isalnum())[:60]
+        chave  = url if url else titulo
+        if not chave:
+            continue
+        if chave in vistos_url:
+            continue
+        vistos_url.add(chave)
+        if titulo in vistos_titulo:
+            continue
+        vistos_titulo.add(titulo)
+        unicos.append(ev)
+    removidos = len(normalizados) - len(unicos)
+    print(f'  {len(unicos)} unicos · {removidos} duplicatas removidas', flush=True)
+    normalizados = unicos
+
     # ── CLASSIFICAÇÃO ────────────────────────────────────
     separador('ETAPA 3/3 — Classificação por IA')
     total = len(normalizados)
