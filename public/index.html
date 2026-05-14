@@ -32,9 +32,20 @@
     <div class="rule"></div>
 </header>
 
-<div id="painel-filtros">
-    <!-- Busca -->
-    <div class="pf-busca-wrap">
+<div id="filtros-container">
+    <div id="filtros-barra">
+        <span id="count-label" class="pf-count">carregando...</span>
+        <div id="pf-ativos-inline" class="pf-ativos-inline"></div>
+        <button id="btn-filtros" onclick="togglePainelFiltros()" aria-expanded="false">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M6 12h12M9 18h6"/></svg>
+            Filtros
+            <span id="filtros-badge" class="filtros-badge" style="display:none">0</span>
+        </button>
+    </div>
+
+    <div id="painel-filtros">
+        <!-- Busca -->
+        <div class="pf-busca-wrap">
         <svg class="pf-busca-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input type="text" id="busca-input" class="pf-busca-input" placeholder="Buscar evento, artista ou local..." oninput="aplicarFiltros()" autocomplete="off">
         <button class="pf-busca-clear" id="busca-clear" onclick="limparBusca()" title="Limpar">×</button>
@@ -76,13 +87,13 @@
                 <ul class="cs-list"><li class="cs-item ativo" data-value="todas">Todas as regiões</li></ul>
             </div>
         </div>
-        <span id="count-label" class="pf-count">carregando...</span>
     </div>
 
-    <!-- Filtros ativos -->
-    <div class="pf-ativos" id="pf-ativos" style="display:none">
-        <div class="pf-ativos-chips" id="pf-ativos-chips"></div>
-        <button class="pf-limpar-tudo" onclick="limparTodosFiltros()">Limpar tudo</button>
+        <!-- Filtros ativos -->
+        <div class="pf-ativos" id="pf-ativos" style="display:none">
+            <div class="pf-ativos-chips" id="pf-ativos-chips"></div>
+            <button class="pf-limpar-tudo" onclick="limparTodosFiltros()">Limpar tudo</button>
+        </div>
     </div>
 </div>
 

@@ -165,29 +165,45 @@ function _atualizarAtivos() {
     const cidade = document.getElementById('cs-cidade')?.dataset.value || 'todas';
     const data   = document.querySelector('#chips-data .pf-chip.ativo')?.dataset.value || 'todos';
     const busca  = document.getElementById('busca-input')?.value?.trim() || '';
+    const LABELS_DATA = { hoje: 'Hoje', fds: 'Fim de semana', semana: 'Esta semana', mes: 'Este mês' };
 
     const ativos = [];
-    if (cat    !== 'todos')  ativos.push({ label: cat,    tipo: 'cat' });
-    if (cidade !== 'todas')  ativos.push({ label: cidade, tipo: 'cidade' });
-    if (data   !== 'todos') {
-        const LABELS = { hoje: 'Hoje', fds: 'Fim de semana', semana: 'Esta semana', mes: 'Este mês' };
-        ativos.push({ label: LABELS[data] || data, tipo: 'data' });
+    if (cat    !== 'todos')  ativos.push({ label: cat,                       tipo: 'cat' });
+    if (cidade !== 'todas')  ativos.push({ label: cidade,                    tipo: 'cidade' });
+    if (data   !== 'todos')  ativos.push({ label: LABELS_DATA[data] || data, tipo: 'data' });
+    if (busca)               ativos.push({ label: '"' + busca + '"',         tipo: 'busca' });
+
+    // Painel interno
+    const pAtivos  = document.getElementById('pf-ativos');
+    const chipsEl  = document.getElementById('pf-ativos-chips');
+    if (pAtivos && chipsEl) {
+        if (!ativos.length) { pAtivos.style.display = 'none'; }
+        else {
+            pAtivos.style.display = 'flex';
+            chipsEl.innerHTML = ativos.map(a =>
+                '<button class="pf-ativo-chip" data-tipo="' + a.tipo + '" onclick="_removerFiltro(this)">' +
+                a.label +
+                '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l6 6M8 2l-6 6"/></svg>' +
+                '</button>'
+            ).join('');
+        }
     }
-    if (busca) ativos.push({ label: '"' + busca + '"', tipo: 'busca' });
 
-    const painel  = document.getElementById('pf-ativos');
-    const chipsEl = document.getElementById('pf-ativos-chips');
-    if (!painel || !chipsEl) return;
-
-    if (!ativos.length) { painel.style.display = 'none'; return; }
-
-    painel.style.display = 'flex';
-    chipsEl.innerHTML = ativos.map(a =>
-        '<button class="pf-ativo-chip" data-tipo="' + a.tipo + '" onclick="_removerFiltro(this)">' +
-        a.label +
-        '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l6 6M8 2l-6 6"/></svg>' +
-        '</button>'
-    ).join('');
+    // Badge e chips inline na barra superior
+    const badge       = document.getElementById('filtros-badge');
+    const inlineEl    = document.getElementById('pf-ativos-inline');
+    if (badge) {
+        if (ativos.length) { badge.textContent = ativos.length; badge.style.display = 'inline-flex'; }
+        else               { badge.style.display = 'none'; }
+    }
+    if (inlineEl) {
+        inlineEl.innerHTML = ativos.map(a =>
+            '<button class="pf-ativo-chip" data-tipo="' + a.tipo + '" onclick="_removerFiltro(this)">' +
+            a.label +
+            '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l6 6M8 2l-6 6"/></svg>' +
+            '</button>'
+        ).join('');
+    }
 }
 
 function _removerFiltro(btn) {
@@ -256,6 +272,13 @@ function aplicarFiltros() {
 
     renderizarGrid(filtrados);
     _atualizarAtivos();
+}
+
+function togglePainelFiltros() {
+    const painel = document.getElementById('painel-filtros');
+    const btn    = document.getElementById('btn-filtros');
+    const aberto = painel.classList.toggle('aberto');
+    btn.setAttribute('aria-expanded', aberto);
 }
 
 function limparBusca() {
