@@ -1,52 +1,39 @@
-# 📡 RADAR — Agregador Inteligente de Eventos de Ribeirão Preto
+# RADAR — Agregador Inteligente de Eventos
 
 [![Deploy](https://img.shields.io/badge/deploy-live-brightgreen?style=flat-square&logo=vercel)](https://radar-olive-five.vercel.app)
 [![Python](https://img.shields.io/badge/python-3.12-blue?style=flat-square&logo=python)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)](LICENSE)
 
-> Agrega, normaliza e classifica automaticamente os eventos de Ribeirão Preto — e entrega tudo numa interface limpa de jornal impresso.
+Agrega, normaliza e classifica automaticamente eventos de Ribeirão Preto e região — entregando tudo numa interface estática sem banco de dados.
 
----
-
-## O que é
-
-RADAR é um pipeline de scraping + IA que coleta eventos de múltiplas fontes da cidade, filtra só o que acontece em Ribeirão Preto, classifica cada evento em uma das 8 categorias com o modelo `llama-3.3-70b-versatile` da Groq, e gera uma página estática pronta pra consumir.
-
-Sem banco de dados. Sem servidor. Apenas um JSON e um HTML.
-
-**Acesse em produção:** [radar-olive-five.vercel.app](https://radar-olive-five.vercel.app)
-
----
-
-## Interface
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  R A D A R              Ribeirão Preto · Semana atual        │
-│  ─────────────────────────────────────────────────────────  │
-│  🎵 Shows & Música   🎭 Teatro   🍷 Gastronomia   🎨 Arte   │
-│                                                             │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │ Nome evento  │  │ Nome evento  │  │ Nome evento  │      │
-│  │ Local · Data │  │ Local · Data │  │ Local · Data │      │
-│  │ [Sympla]     │  │ [EmRibeirão] │  │ [Shopping]   │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-└─────────────────────────────────────────────────────────────┘
-Fundo #F7F3EE · Acento roxo #5B2D8E · Tipografia Playfair Display
-```
+**Produção:** [radar-olive-five.vercel.app](https://radar-olive-five.vercel.app)
 
 ---
 
 ## Como funciona
 
-**1. Coleta**
-Playwright abre Sympla, EmRibeirão e RibeirãoShopping. BeautifulSoup extrai os eventos. Tudo roda headless.
+```
+Scraping (8 fontes)
+    │
+    ▼
+Normalização + Filtro geográfico
+    │
+    ▼
+Deduplicação (URL + título)
+    │
+    ▼
+Classificação híbrida
+    ├─ Regras (palavras-chave) → maioria dos eventos
+    └─ Groq llama-3.3-70b → apenas ambíguos
+    │
+    ▼
+public/data/events.json
+    │
+    ▼
+Frontend estático (Vercel)
+```
 
-**2. Normaliza e classifica**
-O normalizador filtra geograficamente para Ribeirão Preto e converte datas para ISO 8601. A Groq API então classifica cada evento em uma das 8 categorias usando `llama-3.3-70b-versatile` — zero regra manual.
-
-**3. Gera e publica**
-O renderer lê `events.json` e gera `index.html` com o layout jornal. O deploy no Vercel serve o arquivo estático. Pipeline roda semanalmente.
+O pipeline roda manualmente (`python -m pipeline.run`). O frontend lê `events.json` via fetch e renderiza os cards no browser — sem servidor, sem banco.
 
 ---
 
@@ -54,11 +41,80 @@ O renderer lê `events.json` e gera `index.html` com o layout jornal. O deploy n
 
 | Camada | Tecnologia |
 |--------|-----------|
-| Scraping | Python 3.12 · Playwright · BeautifulSoup4 |
+| Scraping | Python 3.12 · Playwright · BeautifulSoup4 · Requests |
 | IA | Groq API (`llama-3.3-70b-versatile`) |
-| Frontend | HTML/CSS/JS estático · Playfair Display |
-| Deploy | Vercel (static) |
-| Testes | pytest |
+| Frontend | HTML/CSS/JS vanilla · Three.js · Outfit (Google Fonts) |
+| Chatbot | ORBIT — serverless Python (`/api/chat.py`) + Groq |
+| Deploy | Vercel (static + Python serverless) |
+
+---
+
+## Fontes de dados
+
+| Fonte | Cobertura |
+|-------|-----------|
+| Sympla | 24 cidades (Ribeirão Preto + região até 200km) |
+| EmRibeirão | Agenda local |
+| RibeirãoShopping | Shopping centers |
+| Eventoon | Plataforma regional |
+| Sindtur | Turismo regional |
+| Songkick | Shows nacionais com data em RP |
+| Varal | Eventos culturais |
+| SearchAPI (Google Events) | Cobertura complementar |
+
+---
+
+## Categorias
+
+`Show` `Festa` `Feira` `Festival` `Teatro` `Esporte` `Corporativo` `Curso` `Exposição` `Religioso` `Turismo` `Infantil` `Outro`
+
+A classificação usa regras de palavras-chave primeiro; só eventos ambíguos chegam à Groq API.
+
+---
+
+## Estrutura do projeto
+
+```
+radar/
+├── pipeline/                   # Pipeline de dados
+│   ├── run.py                  # Orquestrador principal
+│   ├── settings.py             # Configurações e constantes
+│   ├── sources/                # Scrapers por fonte
+│   │   ├── sympla.py           # Playwright — 24 slugs de cidades
+│   │   ├── emribeirao.py
+│   │   ├── shopping.py
+│   │   ├── eventoon.py
+│   │   ├── sindtur.py
+│   │   ├── songkick.py
+│   │   ├── varal.py
+│   │   └── searchapi.py        # Google Events via SearchAPI
+│   ├── processors/
+│   │   ├── normalizer.py       # Filtro geográfico + data ISO 8601
+│   │   └── classifier.py       # Regras + Groq (com backoff e detecção TPD)
+│   └── storage/
+│       └── data_store.py       # Salva events.json ordenado por data
+│
+├── public/                     # Frontend (outputDirectory do Vercel)
+│   ├── index.html
+│   ├── css/styles.css
+│   ├── js/
+│   │   ├── app.js              # Filtros, render progressivo, busca
+│   │   ├── loading.js          # Globo Three.js + starfield canvas
+│   │   ├── chat.js             # ORBIT chatbot
+│   │   ├── theme.js            # Dark/light mode
+│   │   └── three.min.js        # Three.js r128 (local)
+│   ├── data/events.json        # Gerado pelo pipeline
+│   └── assets/
+│       ├── images/
+│       └── textures/           # nightmap.jpg, specular.png
+│
+├── api/
+│   └── chat.py                 # Serverless — ORBIT (Groq)
+│
+├── vercel.json                 # outputDirectory: public, rota /api/chat
+├── requirements.txt
+└── .env                        # GROQ_API_KEY, SEARCHAPI_KEY
+```
 
 ---
 
@@ -67,145 +123,94 @@ O renderer lê `events.json` e gera `index.html` com o layout jornal. O deploy n
 ### Pré-requisitos
 
 - Python 3.12+
-- Conta na [Groq](https://console.groq.com) para obter a API key
+- Conta na [Groq](https://console.groq.com) (free tier: 100k tokens/dia)
+- Conta na [SearchAPI](https://www.searchapi.io) (opcional — Google Events)
 
-### Passo a passo
+### Instalação
 
 ```bash
-# 1. Clone o repositório
 git clone https://github.com/MiguelRibasBerlese/RadarLinka.git
 cd RadarLinka
 
-# 2. Crie e ative o ambiente virtual
 python -m venv .venv
-
+# Windows
+.venv\Scripts\activate
 # Linux/macOS
 source .venv/bin/activate
 
-# Windows
-.venv\Scripts\activate
-
-# 3. Instale as dependências
-pip install -r scraper/requirements.txt
-
-# 4. Instale o browser headless
+pip install -r requirements.txt
 playwright install chromium
-
-# 5. Configure as variáveis de ambiente
-cp .env.example .env   # ou crie manualmente
 ```
 
-Edite o `.env` com suas credenciais:
+### Variáveis de ambiente
+
+Crie um `.env` na raiz:
 
 ```env
 GROQ_API_KEY=gsk_xxxxxxxxxxxxxxxxxxxxxxxxxxxx
-SHEETS_CSV_URL=https://docs.google.com/spreadsheets/d/.../export?format=csv
-SHEETS_META_URL=https://docs.google.com/spreadsheets/d/.../export?format=csv&gid=...
+SEARCHAPI_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxx   # opcional
 ```
 
+### Rodando o pipeline
+
 ```bash
-# 6. Rode o pipeline completo (scraping → normalização → classificação → events.json)
-python scraper/main.py
+# Windows (necessário para caracteres UTF-8 no terminal)
+$env:PYTHONIOENCODING='utf-8'; python -m pipeline.run
 
-# 7. Gere o HTML a partir do events.json
-python scraper/renderer.py
-
-# 8. Abra no browser
 # Linux/macOS
-open web/index.html
-
-# Windows
-start web/index.html
+python -m pipeline.run
 ```
 
----
+O pipeline passa por 3 etapas com barra de progresso:
 
-## Testes
+```
+ETAPA 1/3 — Coleta (~8 fontes, ~10min)
+ETAPA 2/3 — Normalização e Filtro
+ETAPA 3/3 — Classificação por IA (~2s por evento ambíguo)
+```
+
+Resultado salvo em `public/data/events.json`, ordenado por data.
+
+> **Limite diário Groq:** o free tier tem 100k tokens/dia. Se o limite for atingido durante a classificação, o pipeline para imediatamente e salva o que já foi processado — sem desperdiçar tempo em backoff inútil.
+
+### Visualizando o frontend
+
+Abra `public/index.html` diretamente no browser, ou sirva com qualquer servidor estático:
 
 ```bash
-pytest tests/ -v
-```
-
-Cobertura atual: **19 testes** distribuídos em 4 módulos.
-
-```
-tests/test_scraper.py     — 4 testes  (conectividade e parsing das fontes)
-tests/test_normalizer.py  — 7 testes  (filtro geográfico, datas ISO 8601)
-tests/test_classifier.py  — 4 testes  (categorização via Groq)
-tests/test_renderer.py    — 4 testes  (geração do HTML)
+cd public && python -m http.server 8000
+# acesse http://localhost:8000
 ```
 
 ---
 
-## Estrutura do projeto
+## Deploy
 
-```
-radar/
-├── .env                      # GROQ_API_KEY, SHEETS_CSV_URL, SHEETS_META_URL
-├── .gitignore
-├── vercel.json
-├── scraper/
-│   ├── config.py             # Configurações globais e constantes
-│   ├── event_scraper.py      # Playwright + BeautifulSoup, 3 fontes
-│   ├── event_normalizer.py   # Filtro geográfico RP, normalização ISO 8601
-│   ├── ai_classifier.py      # Groq API, 8 categorias
-│   ├── renderer.py           # Lê events.json, gera index.html
-│   └── main.py               # Orquestrador do pipeline
-├── web/
-│   ├── events.json           # Eventos classificados (gerado pelo pipeline)
-│   ├── index.html            # Interface jornal (gerada pelo renderer)
-│   └── landing.html          # Página de apresentação do produto
-└── tests/
-    ├── test_scraper.py
-    ├── test_normalizer.py
-    ├── test_classifier.py
-    └── test_renderer.py
+O projeto usa integração GitHub → Vercel. Cada push para `main` triggera um deploy automático.
+
+Para atualizar os eventos em produção:
+
+```bash
+# 1. Rode o pipeline
+$env:PYTHONIOENCODING='utf-8'; python -m pipeline.run
+
+# 2. Commite e suba o events.json gerado
+git add public/data/events.json
+git commit -m "chore: atualizar eventos"
+git push origin main
 ```
 
 ---
 
-## Fontes de dados
+## Features do frontend
 
-| Fonte | URL | Tipo |
-|-------|-----|------|
-| Sympla | sympla.com.br | Ingressos e eventos culturais |
-| EmRibeirão | emribeirao.com.br | Agenda local |
-| RibeirãoShopping | ribeiraoshopping.com.br | Eventos do shopping |
-
----
-
-## Categorias suportadas
-
-| Categoria | Descrição |
-|-----------|-----------|
-| 🎵 Shows & Música | Shows, festivais, apresentações ao vivo |
-| 🎭 Teatro & Dança | Peças, espetáculos, performances |
-| 🎨 Arte & Cultura | Exposições, museus, feiras culturais |
-| 🍷 Gastronomia | Festivais gastronômicos, food parks, degustações |
-| 🎓 Educação | Cursos, workshops, palestras, seminários |
-| 👨‍👩‍👧 Família | Eventos infantis e para toda a família |
-| 🏃 Esporte | Corridas, torneios, competições esportivas |
-| 🎉 Festas & Baladas | Festas, baladas, eventos noturnos |
-
----
-
-## Roadmap
-
-### v2 — Ativações de marcas
-- Painel para marcas locais patrocinarem categorias
-- Destaque visual para eventos patrocinados no layout jornal
-- Integração com Google Sheets para gestão editorial manual
-
-### v3 — WhatsApp CRM
-- Envio semanal automático da agenda por WhatsApp
-- Segmentação por categoria de interesse do usuário
-- Opt-in via link direto na landing page
-
----
-
-## Contribuindo
-
-Pull requests são bem-vindos. Para mudanças grandes, abra uma issue primeiro para discutir o que você quer mudar.
+- **Loading screen** com globo 3D (Three.js) e starfield canvas
+- **Filtros** colapsáveis: data (hoje/fim de semana/semana/mês), categoria, região, busca textual
+- **Chips de filtros ativos** removíveis individualmente
+- **Render progressivo** — 40 cards por vez via IntersectionObserver
+- **Dark/light mode** com preferência salva no localStorage
+- **ORBIT** — chatbot integrado alimentado pela Groq
+- **Acessível** — navegação por teclado nos cards, aria-pressed nos chips, aria-label no chat
 
 ---
 
