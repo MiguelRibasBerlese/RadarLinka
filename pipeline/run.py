@@ -1,6 +1,17 @@
 import time, sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
+
+def _com_retry(fn, tentativas=2, pausa=6):
+    for i in range(tentativas + 1):
+        try:
+            return fn()
+        except Exception as e:
+            if i == tentativas:
+                raise
+            print(f'  ⚠️  Tentativa {i + 1} falhou ({e}). Retentando em {pausa}s...', flush=True)
+            time.sleep(pausa)
+
 from pipeline.sources import (
     scrape_sympla, scrape_eventoon, scrape_sindtur,
     scrape_songkick, scrape_varal, scrape_emribeirao,
@@ -49,19 +60,19 @@ def run():
         nome = fn.__name__.replace('scrape_', '')
         print(f'  [{i}/{total_fontes}] {nome}...', flush=True)
         try:
-            resultado = fn()
+            resultado = _com_retry(fn)
             brutos.extend(resultado)
             print(f'  ✅ {len(resultado)} eventos\n', flush=True)
         except Exception as e:
-            print(f'  ❌ Falha: {e}\n', flush=True)
+            print(f'  ❌ Falha após retentativas: {e}\n', flush=True)
 
     print(f'  [{total_fontes}/{total_fontes}] SearchAPI (Google Events)...', flush=True)
     try:
-        serp = scrape_searchapi_all()
+        serp = _com_retry(scrape_searchapi_all)
         brutos.extend(serp)
         print(f'  ✅ {len(serp)} eventos do Google\n', flush=True)
     except Exception as e:
-        print(f'  ❌ SearchAPI falhou: {e}\n', flush=True)
+        print(f'  ❌ SearchAPI falhou após retentativas: {e}\n', flush=True)
 
     print(f'  📦 Total bruto: {len(brutos)} eventos', flush=True)
 

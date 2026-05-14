@@ -1,5 +1,5 @@
 import json, time, unicodedata
-from groq import Groq
+from groq import Groq, RateLimitError
 from ..settings import GROQ_API_KEY, CATEGORIAS
 
 client = Groq(api_key=GROQ_API_KEY)
@@ -106,6 +106,27 @@ _NOME_CORRETO = {
 }
 
 
+def _groq_request(prompt: str, tentativas: int = 3) -> object:
+    espera = 15
+    for i in range(tentativas):
+        try:
+            return client.chat.completions.create(
+                model='llama-3.3-70b-versatile',
+                messages=[
+                    {'role': 'system', 'content': SYSTEM_PROMPT},
+                    {'role': 'user',   'content': prompt},
+                ],
+                temperature=0.3,
+                max_tokens=120,
+            )
+        except RateLimitError:
+            if i == tentativas - 1:
+                raise
+            print(f'\n  [GROQ] Rate limit. Aguardando {espera}s...', flush=True)
+            time.sleep(espera)
+            espera *= 2
+
+
 def _normalizar(texto: str) -> str:
     t = unicodedata.normalize('NFKD', texto.lower())
     return ''.join(c for c in t if not unicodedata.combining(c))
@@ -136,16 +157,8 @@ def classify(evento: dict) -> dict:
         f'Descricao: {descricao or "sem descricao"}'
     )
     try:
-        resp = client.chat.completions.create(
-            model='llama-3.3-70b-versatile',
-            messages=[
-                {'role': 'system', 'content': SYSTEM_PROMPT},
-                {'role': 'user',   'content': prompt}
-            ],
-            temperature=0.3,
-            max_tokens=120,
-        )
-        raw = resp.choices[0].message.content.strip()
+        resp = _groq_request(prompt)
+        raw  = resp.choices[0].message.content.strip()
         if raw.startswith('```'):
             raw = raw.split('```')[1]
             if raw.startswith('json'):
