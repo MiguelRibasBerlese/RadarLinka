@@ -677,7 +677,7 @@ main, header { position: relative; z-index: 1; }
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: #06060e;
+    background: #080808 url('../assets/textures/ceuestrelado.svg') center/cover no-repeat;
 }
 #canvas-container {
     position: fixed;

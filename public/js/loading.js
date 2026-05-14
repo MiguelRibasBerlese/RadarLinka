@@ -6,18 +6,13 @@
 
     const scene    = new THREE.Scene();
     const camera   = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     document.getElementById('canvas-container').appendChild(renderer.domElement);
     camera.position.z = 4;
 
     const loader = new THREE.TextureLoader();
-
-    // ── FUNDO ESTRELADO ──────────────────────────────────────────────────────────
-    const starsTexture = loader.load('assets/textures/stars.jpg');
-    const bgMat = new THREE.MeshBasicMaterial({ map: starsTexture, side: THREE.BackSide });
-    scene.add(new THREE.Mesh(new THREE.SphereGeometry(500, 32, 32), bgMat));
 
     // ── PLANETA BASE ─────────────────────────────────────────────────────────────
     const planetMat = new THREE.MeshPhongMaterial({
