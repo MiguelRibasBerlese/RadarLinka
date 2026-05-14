@@ -119,10 +119,16 @@ def _groq_request(prompt: str, tentativas: int = 3) -> object:
                 temperature=0.3,
                 max_tokens=120,
             )
-        except RateLimitError:
+        except RateLimitError as e:
+            msg = str(e).lower()
+            # Limite diário esgotado — não adianta esperar segundos
+            if 'tokens per day' in msg or 'tpd' in msg:
+                print('\n  [GROQ] Limite diário de tokens esgotado. '
+                      'Execute novamente amanhã.', flush=True)
+                raise
             if i == tentativas - 1:
                 raise
-            print(f'\n  [GROQ] Rate limit. Aguardando {espera}s...', flush=True)
+            print(f'\n  [GROQ] Rate limit (RPM). Aguardando {espera}s...', flush=True)
             time.sleep(espera)
             espera *= 2
 
@@ -170,6 +176,10 @@ def classify(evento: dict) -> dict:
         narrativa = str(data.get('narrativa', '')).strip()[:200]
         time.sleep(2)
         return {'categoria': categoria, 'narrativa_ia': narrativa}
+    except RateLimitError as e:
+        if 'tokens per day' in str(e).lower() or 'tpd' in str(e).lower():
+            raise  # Propaga para run.py parar a classificação
+        return {'categoria': 'Outro', 'narrativa_ia': ''}
     except json.JSONDecodeError:
         print(f'[WARN classify] JSON malformado para: {titulo!r}')
         return {'categoria': 'Outro', 'narrativa_ia': ''}

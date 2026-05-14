@@ -1,5 +1,6 @@
 import time, sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from groq import RateLimitError
 
 
 def _com_retry(fn, tentativas=2, pausa=6):
@@ -118,15 +119,26 @@ def run():
     classificados = []
     contagem_cats = {}
     inicio_ia = time.time()
+    tpd_esgotado = False
 
     for i, ev in enumerate(normalizados, 1):
-        resultado = classify(ev)
+        try:
+            resultado = classify(ev)
+        except RateLimitError:
+            print(f'\n  ⚠️  Limite diário Groq esgotado em {i}/{total}. '
+                  f'Salvando {len(classificados)} eventos já processados.', flush=True)
+            tpd_esgotado = True
+            break
         ev.update(resultado)
         classificados.append(ev)
         cat = ev['categoria']
         contagem_cats[cat] = contagem_cats.get(cat, 0) + 1
         barra_progresso(i, total, prefixo='Classificando')
         print(f'  [{i:03d}/{total}] [{cat:<12}] {ev["titulo"][:45]}',
+              flush=True)
+
+    if tpd_esgotado:
+        print('  ℹ️  Execute novamente amanhã para classificar os eventos restantes.',
               flush=True)
 
     # ── SALVAR ──────────────────────────────────────────
