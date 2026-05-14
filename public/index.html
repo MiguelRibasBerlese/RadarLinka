@@ -32,52 +32,59 @@
     <div class="rule"></div>
 </header>
 
-<div class="busca-wrapper">
-    <div class="busca-grupo">
-        <label class="busca-label" for="busca-input">Buscar evento</label>
-        <div class="busca-input-wrapper">
-            <input
-                type="text"
-                id="busca-input"
-                class="busca-input"
-                placeholder="Buscar evento ou artista..."
-                oninput="aplicarFiltros()"
-                autocomplete="off"
-            >
-            <button class="busca-clear" id="busca-clear" onclick="limparBusca()" title="Limpar">×</button>
-        </div>
+<div id="painel-filtros">
+    <!-- Busca -->
+    <div class="pf-busca-wrap">
+        <svg class="pf-busca-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="busca-input" class="pf-busca-input" placeholder="Buscar evento, artista ou local..." oninput="aplicarFiltros()" autocomplete="off">
+        <button class="pf-busca-clear" id="busca-clear" onclick="limparBusca()" title="Limpar">×</button>
     </div>
-</div>
 
-<div class="filtros-wrapper">
-    <div class="filtro-grupo">
-        <label class="filtro-label">Tipo de evento</label>
-        <div class="custom-select" id="cs-cat" data-value="todos">
-            <button class="cs-trigger" type="button">
-                <span class="cs-value">Todos os tipos</span>
-                <svg class="cs-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            </button>
-            <ul class="cs-list">
-                <li class="cs-item ativo" data-value="todos">Todos os tipos</li>
-            </ul>
+    <div class="pf-divider"></div>
+
+    <!-- Chips de data -->
+    <div class="pf-chips-row">
+        <span class="pf-section-label">Quando</span>
+        <div class="pf-chips" id="chips-data">
+            <button class="pf-chip ativo" data-value="todos">Todos</button>
+            <button class="pf-chip" data-value="hoje">Hoje</button>
+            <button class="pf-chip" data-value="fds">Fim de semana</button>
+            <button class="pf-chip" data-value="semana">Esta semana</button>
+            <button class="pf-chip" data-value="mes">Este mês</button>
         </div>
     </div>
-    <div class="filtro-grupo">
-        <label class="filtro-label">Cidade</label>
-        <div class="custom-select" id="cs-cidade" data-value="todas">
-            <button class="cs-trigger" type="button">
-                <span class="cs-value">Todas as cidades</span>
-                <svg class="cs-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            </button>
-            <ul class="cs-list">
-                <li class="cs-item ativo" data-value="todas">Todas as cidades</li>
-            </ul>
+
+    <div class="pf-divider"></div>
+
+    <!-- Dropdowns + count -->
+    <div class="pf-dropdowns-row">
+        <div class="pf-drops">
+            <div class="custom-select" id="cs-cat" data-value="todos">
+                <button class="cs-trigger" type="button">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+                    <span class="cs-value">Todos os tipos</span>
+                    <svg class="cs-arrow" width="11" height="7" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+                <ul class="cs-list"><li class="cs-item ativo" data-value="todos">Todos os tipos</li></ul>
+            </div>
+            <div class="custom-select" id="cs-cidade" data-value="todas">
+                <button class="cs-trigger" type="button">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                    <span class="cs-value">Todas as regiões</span>
+                    <svg class="cs-arrow" width="11" height="7" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+                <ul class="cs-list"><li class="cs-item ativo" data-value="todas">Todas as regiões</li></ul>
+            </div>
         </div>
+        <span id="count-label" class="pf-count">carregando...</span>
+    </div>
+
+    <!-- Filtros ativos -->
+    <div class="pf-ativos" id="pf-ativos" style="display:none">
+        <div class="pf-ativos-chips" id="pf-ativos-chips"></div>
+        <button class="pf-limpar-tudo" onclick="limparTodosFiltros()">Limpar tudo</button>
     </div>
 </div>
-<p id="count-label" style="max-width:1200px;margin:-16px auto 20px;padding:0 24px;font-size:11px;color:#aaa;font-family:'Outfit',sans-serif;">
-    carregando...
-</p>
 
 <main class="grid" id="grid-eventos"></main>
 

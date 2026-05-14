@@ -32,6 +32,30 @@ function formatarData(iso) {
     } catch(e) { return iso; }
 }
 
+// ── helpers de data ──────────────────────────────────────────────────────────
+function _hoje() {
+    const d = new Date(); d.setHours(0,0,0,0); return d;
+}
+function _isoParaDate(iso) {
+    if (!iso) return null;
+    const [a, m, d] = iso.split('-').map(Number);
+    const dt = new Date(a, m - 1, d);
+    return isNaN(dt) ? null : dt;
+}
+function _dataOkParaFiltro(iso, filtro) {
+    if (filtro === 'todos') return true;
+    const dt = _isoParaDate(iso);
+    if (!dt) return filtro === 'todos';
+    const hoje = _hoje();
+    const diff = Math.round((dt - hoje) / 86400000);
+    const diaSemana = dt.getDay();
+    if (filtro === 'hoje')   return diff === 0;
+    if (filtro === 'fds')    return diff >= 0 && diff <= 7 && (diaSemana === 5 || diaSemana === 6 || diaSemana === 0);
+    if (filtro === 'semana') return diff >= 0 && diff <= 7;
+    if (filtro === 'mes')    return diff >= 0 && diff <= 31;
+    return true;
+}
+
 function gerarCard(ev) {
     const cat    = ev.categoria || 'Outro';
     const cor    = BADGE_CORES[cat] || '#95A5A6';
@@ -112,38 +136,126 @@ function popularDropdowns(eventos) {
 
     if (listCidade) {
         const atoD = cidadeAtual === 'todas' ? ' ativo' : '';
-        let h = '<li class="cs-item' + atoD + '" data-value="todas">Todas as cidades</li>';
+        let h = '<li class="cs-item' + atoD + '" data-value="todas">Todas as regiões</li>';
         Object.keys(cidades).sort().forEach(ci => {
             const ativo = cidadeAtual === ci ? ' ativo' : '';
             h += '<li class="cs-item' + ativo + '" data-value="' + ci.replace(/"/g,'&quot;') + '">' + ci + ' (' + cidades[ci] + ')</li>';
         });
         listCidade.innerHTML = h;
     }
+
+    // Popula contagem nos chips de data
+    _atualizarContagemChips();
+}
+
+function _atualizarContagemChips() {
+    const chips = document.querySelectorAll('#chips-data .pf-chip');
+    const LABELS = { hoje: 'Hoje', fds: 'Fim de semana', semana: 'Esta semana', mes: 'Este mês', todos: 'Todos' };
+    chips.forEach(chip => {
+        const v = chip.dataset.value;
+        if (v === 'todos') { chip.textContent = 'Todos'; return; }
+        const n = _todosEventos.filter(ev => _dataOkParaFiltro(ev.data_iso, v)).length;
+        chip.textContent = LABELS[v] + (n ? ' · ' + n : '');
+    });
+}
+
+// ── Filtros ativos ───────────────────────────────────────────────────────────
+function _atualizarAtivos() {
+    const cat    = document.getElementById('cs-cat')?.dataset.value    || 'todos';
+    const cidade = document.getElementById('cs-cidade')?.dataset.value || 'todas';
+    const data   = document.querySelector('#chips-data .pf-chip.ativo')?.dataset.value || 'todos';
+    const busca  = document.getElementById('busca-input')?.value?.trim() || '';
+
+    const ativos = [];
+    if (cat    !== 'todos')  ativos.push({ label: cat,    tipo: 'cat' });
+    if (cidade !== 'todas')  ativos.push({ label: cidade, tipo: 'cidade' });
+    if (data   !== 'todos') {
+        const LABELS = { hoje: 'Hoje', fds: 'Fim de semana', semana: 'Esta semana', mes: 'Este mês' };
+        ativos.push({ label: LABELS[data] || data, tipo: 'data' });
+    }
+    if (busca) ativos.push({ label: '"' + busca + '"', tipo: 'busca' });
+
+    const painel  = document.getElementById('pf-ativos');
+    const chipsEl = document.getElementById('pf-ativos-chips');
+    if (!painel || !chipsEl) return;
+
+    if (!ativos.length) { painel.style.display = 'none'; return; }
+
+    painel.style.display = 'flex';
+    chipsEl.innerHTML = ativos.map(a =>
+        '<button class="pf-ativo-chip" data-tipo="' + a.tipo + '" onclick="_removerFiltro(this)">' +
+        a.label +
+        '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l6 6M8 2l-6 6"/></svg>' +
+        '</button>'
+    ).join('');
+}
+
+function _removerFiltro(btn) {
+    const tipo = btn.dataset.tipo;
+    if (tipo === 'cat') {
+        const cs = document.getElementById('cs-cat');
+        cs.dataset.value = 'todos';
+        cs.querySelector('.cs-value').textContent = 'Todos os tipos';
+        cs.querySelectorAll('.cs-item').forEach(i => i.classList.toggle('ativo', i.dataset.value === 'todos'));
+    } else if (tipo === 'cidade') {
+        const cs = document.getElementById('cs-cidade');
+        cs.dataset.value = 'todas';
+        cs.querySelector('.cs-value').textContent = 'Todas as regiões';
+        cs.querySelectorAll('.cs-item').forEach(i => i.classList.toggle('ativo', i.dataset.value === 'todas'));
+    } else if (tipo === 'data') {
+        document.querySelectorAll('#chips-data .pf-chip').forEach(c => c.classList.toggle('ativo', c.dataset.value === 'todos'));
+    } else if (tipo === 'busca') {
+        const input = document.getElementById('busca-input');
+        if (input) input.value = '';
+        document.getElementById('busca-clear')?.classList.remove('visible');
+    }
+    aplicarFiltros();
+}
+
+function limparTodosFiltros() {
+    const csCat = document.getElementById('cs-cat');
+    csCat.dataset.value = 'todos';
+    csCat.querySelector('.cs-value').textContent = 'Todos os tipos';
+    csCat.querySelectorAll('.cs-item').forEach(i => i.classList.toggle('ativo', i.dataset.value === 'todos'));
+
+    const csCidade = document.getElementById('cs-cidade');
+    csCidade.dataset.value = 'todas';
+    csCidade.querySelector('.cs-value').textContent = 'Todas as regiões';
+    csCidade.querySelectorAll('.cs-item').forEach(i => i.classList.toggle('ativo', i.dataset.value === 'todas'));
+
+    document.querySelectorAll('#chips-data .pf-chip').forEach(c => c.classList.toggle('ativo', c.dataset.value === 'todos'));
+
+    const input = document.getElementById('busca-input');
+    if (input) input.value = '';
+    document.getElementById('busca-clear')?.classList.remove('visible');
+
+    aplicarFiltros();
 }
 
 function aplicarFiltros() {
     const cat    = document.getElementById('cs-cat')?.dataset.value    || 'todos';
     const cidade = document.getElementById('cs-cidade')?.dataset.value || 'todas';
+    const data   = document.querySelector('#chips-data .pf-chip.ativo')?.dataset.value || 'todos';
     const busca  = (document.getElementById('busca-input')?.value || '')
-                    .toLowerCase()
-                    .normalize('NFD')
-                    .replace(/[̀-ͯ]/g, '');
-    const btnClear = document.getElementById('busca-clear');
-    if (btnClear) btnClear.classList.toggle('visible', busca.length > 0);
+                    .toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+    document.getElementById('busca-clear')?.classList.toggle('visible', busca.length > 0);
 
     const filtrados = _todosEventos.filter(ev => {
         const catOk    = cat    === 'todos' || (ev.categoria || 'Outro') === cat;
         const cidadeOk = cidade === 'todas' || (ev.cidade    || 'Ribeirão Preto') === cidade;
+        const dataOk   = _dataOkParaFiltro(ev.data_iso, data);
         let buscaOk = true;
-        if (busca.length > 0) {
+        if (busca) {
             const texto = ((ev.titulo || '') + ' ' + (ev.local || '') + ' ' + (ev.narrativa_ia || ''))
                 .toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
             buscaOk = texto.includes(busca);
         }
-        return catOk && cidadeOk && buscaOk;
+        return catOk && cidadeOk && dataOk && buscaOk;
     });
 
     renderizarGrid(filtrados);
+    _atualizarAtivos();
 }
 
 function limparBusca() {
@@ -167,34 +279,41 @@ async function carregarEventos() {
     }
 }
 
-// Dropdowns customizados — event delegation
-(function() {
-    document.querySelectorAll('.custom-select').forEach(cs => {
-        const trigger = cs.querySelector('.cs-trigger');
-        const valueEl = cs.querySelector('.cs-value');
-        const list    = cs.querySelector('.cs-list');
+// ── Chips de data ────────────────────────────────────────────────────────────
+document.querySelectorAll('#chips-data .pf-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+        document.querySelectorAll('#chips-data .pf-chip').forEach(c => c.classList.remove('ativo'));
+        chip.classList.add('ativo');
+        aplicarFiltros();
+    });
+});
 
-        trigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.querySelectorAll('.custom-select.open').forEach(o => { if (o !== cs) o.classList.remove('open'); });
-            cs.classList.toggle('open');
-        });
+// ── Dropdowns customizados ───────────────────────────────────────────────────
+document.querySelectorAll('.custom-select').forEach(cs => {
+    const trigger = cs.querySelector('.cs-trigger');
+    const valueEl = cs.querySelector('.cs-value');
+    const list    = cs.querySelector('.cs-list');
 
-        list.addEventListener('click', (e) => {
-            const item = e.target.closest('.cs-item');
-            if (!item) return;
-            list.querySelectorAll('.cs-item').forEach(i => i.classList.remove('ativo'));
-            item.classList.add('ativo');
-            valueEl.textContent = item.textContent;
-            cs.dataset.value = item.dataset.value;
-            cs.classList.remove('open');
-            aplicarFiltros();
-        });
+    trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.custom-select.open').forEach(o => { if (o !== cs) o.classList.remove('open'); });
+        cs.classList.toggle('open');
     });
 
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.custom-select.open').forEach(o => o.classList.remove('open'));
+    list.addEventListener('click', (e) => {
+        const item = e.target.closest('.cs-item');
+        if (!item) return;
+        list.querySelectorAll('.cs-item').forEach(i => i.classList.remove('ativo'));
+        item.classList.add('ativo');
+        valueEl.textContent = item.textContent;
+        cs.dataset.value = item.dataset.value;
+        cs.classList.remove('open');
+        aplicarFiltros();
     });
-})();
+});
+
+document.addEventListener('click', () => {
+    document.querySelectorAll('.custom-select.open').forEach(o => o.classList.remove('open'));
+});
 
 carregarEventos();
