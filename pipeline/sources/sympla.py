@@ -5,24 +5,60 @@ from playwright.sync_api import sync_playwright
 from ..settings import HEADERS
 
 SYMPLA_URLS = [
+    # Ribeirão Preto e região metropolitana
     'https://www.sympla.com.br/eventos/ribeirao-preto-sp',
+    'https://www.sympla.com.br/eventos/batatais-sp',
+    'https://www.sympla.com.br/eventos/sertaozinho-sp',
+    'https://www.sympla.com.br/eventos/serrana-sp',
+    'https://www.sympla.com.br/eventos/jardinopolis-sp',
+    'https://www.sympla.com.br/eventos/cravinhos-sp',
+    'https://www.sympla.com.br/eventos/brodowski-sp',
+    'https://www.sympla.com.br/eventos/pontal-sp',
+    'https://www.sympla.com.br/eventos/santa-rosa-de-viterbo-sp',
+    'https://www.sympla.com.br/eventos/pradopolis-sp',
+    'https://www.sympla.com.br/eventos/dumont-sp',
+    'https://www.sympla.com.br/eventos/serra-azul-sp',
+    'https://www.sympla.com.br/eventos/luis-antonio-sp',
+    'https://www.sympla.com.br/eventos/guatapara-sp',
+    # Até 100km
+    'https://www.sympla.com.br/eventos/franca-sp',
+    'https://www.sympla.com.br/eventos/araraquara-sp',
+    'https://www.sympla.com.br/eventos/barretos-sp',
+    'https://www.sympla.com.br/eventos/jaboticabal-sp',
+    'https://www.sympla.com.br/eventos/bebedouro-sp',
+    'https://www.sympla.com.br/eventos/guariba-sp',
+    'https://www.sympla.com.br/eventos/monte-alto-sp',
+    # 100km a 200km
+    'https://www.sympla.com.br/eventos/sao-jose-do-rio-preto-sp',
+    'https://www.sympla.com.br/eventos/campinas-sp',
+    'https://www.sympla.com.br/eventos/uberaba-mg',
 ]
 
 _SLUG_PARA_LOCAL = {
-    'ribeirao-preto':        'Ribeirão Preto - SP',
-    'batatais':              'Batatais - SP',
-    'sertaozinho':           'Sertãozinho - SP',
-    'serrana':               'Serrana - SP',
-    'jardinopolis':          'Jardinópolis - SP',
-    'cravinhos':             'Cravinhos - SP',
-    'brodowski':             'Brodowski - SP',
-    'pontal':                'Pontal - SP',
-    'santa-rosa-de-viterbo': 'Santa Rosa de Viterbo - SP',
-    'pradopolis':            'Pradópolis - SP',
-    'dumont':                'Dumont - SP',
-    'serra-azul':            'Serra Azul - SP',
-    'luis-antonio':          'Luís Antônio - SP',
-    'guatapara':             'Guatapará - SP',
+    'ribeirao-preto':         'Ribeirão Preto - SP',
+    'batatais':               'Batatais - SP',
+    'sertaozinho':            'Sertãozinho - SP',
+    'serrana':                'Serrana - SP',
+    'jardinopolis':           'Jardinópolis - SP',
+    'cravinhos':              'Cravinhos - SP',
+    'brodowski':              'Brodowski - SP',
+    'pontal':                 'Pontal - SP',
+    'santa-rosa-de-viterbo':  'Santa Rosa de Viterbo - SP',
+    'pradopolis':             'Pradópolis - SP',
+    'dumont':                 'Dumont - SP',
+    'serra-azul':             'Serra Azul - SP',
+    'luis-antonio':           'Luís Antônio - SP',
+    'guatapara':              'Guatapará - SP',
+    'franca':                 'Franca - SP',
+    'araraquara':             'Araraquara - SP',
+    'barretos':               'Barretos - SP',
+    'jaboticabal':            'Jaboticabal - SP',
+    'bebedouro':              'Bebedouro - SP',
+    'guariba':                'Guariba - SP',
+    'monte-alto':             'Monte Alto - SP',
+    'sao-jose-do-rio-preto':  'São José do Rio Preto - SP',
+    'campinas':               'Campinas - SP',
+    'uberaba':                'Uberaba - MG',
 }
 
 
@@ -31,12 +67,12 @@ def scrape_sympla():
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
         for url in SYMPLA_URLS:
-            cidade_slug = url.split('/')[-1].replace('-sp', '')
+            cidade_slug = url.split('/')[-1].replace('-sp', '').replace('-mg', '')
             local_fallback = _SLUG_PARA_LOCAL.get(cidade_slug, cidade_slug)
             try:
                 page = browser.new_page()
                 page.set_extra_http_headers({'User-Agent': HEADERS['User-Agent']})
-                page.goto(url, wait_until='networkidle', timeout=20000)
+                page.goto(url, wait_until='networkidle', timeout=35000)
                 page.wait_for_timeout(3000)
                 html = page.content()
                 page.close()
@@ -80,7 +116,7 @@ def scrape_sympla():
                         n_adicionados += 1
 
                 print(f'[sympla:{cidade_slug}] {n_adicionados} eventos')
-                time.sleep(random.uniform(1.0, 2.0))
+                time.sleep(random.uniform(3.0, 5.0))
 
             except Exception as e:
                 print(f'[WARN sympla:{cidade_slug}] {e}')
